@@ -312,6 +312,10 @@ body.DesktopUI,
 .gd-cont-name { display: none; margin-top: 14px; font-size: 36px; font-weight: 800; color: #fff; }
 .gd-cont-name.on { display: block; }
 .gd-cont-meta { margin-top: auto; margin-bottom: 14px; font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, .82); }
+/* switch «Continue card: achievements»: a thin bar and the count, between the times and the button */
+.gd-cont-ach { display: flex; align-items: center; gap: 10px; margin: -6px 0 14px; font-size: 12.5px; font-weight: 600; color: rgba(255, 255, 255, .74); }
+.gd-cont-ach i { width: 120px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .2); overflow: hidden; }
+.gd-cont-ach b { display: block; height: 100%; border-radius: inherit; background: var(--gd-accent, var(--gd-house)); }
 .gd-play {
   display: inline-flex;
   align-items: center;
@@ -337,14 +341,19 @@ body.DesktopUI,
    ends the block and keeps the gap the row had below itself */
 .gd-home > .gd-continue:last-child { margin-bottom: 10px; }
 .gd-label { margin: 24px 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gd-ink-faint); }
+/* As many covers as fit across the row, no scrolling sideways: the columns fill the width, and
+   whatever does not fit falls into rows of no height, which the row clips. So the row has no
+   padding under it — a cover that did not fit would show its top edge there — and the gap
+   above is the room a cover needs to rise under the pointer. */
 .gd-shelf {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 148px;
-  gap: 14px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 10px;
+  grid-template-columns: repeat(auto-fill, 148px);
+  grid-auto-rows: 0;
+  grid-template-rows: auto;
+  column-gap: 14px;
+  overflow: hidden;
+  margin: -4px 0 10px;
+  padding-top: 4px;
 }
 .gd-cap { display: flex; flex-direction: column; align-items: stretch; gap: 8px; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
 .gd-cap img,
@@ -369,6 +378,36 @@ body.DesktopUI,
   text-align: center;
   color: var(--gd-ink-soft);
 }
+
+/* switch «Recently played: preview»: the card over a cover that has been pointed at */
+.gd-peek {
+  position: fixed;
+  z-index: 10000;
+  width: 336px;
+  height: 204px;
+  border: var(--gd-glass-edge);
+  border-radius: var(--gd-r-lg);
+  overflow: hidden;
+  background: #0d1018;
+  box-shadow: 0 26px 60px -20px rgba(0, 0, 0, .85);
+  pointer-events: none;
+  animation: gd-peek-in .16s ease;
+}
+.gd-peek[hidden] { display: none; }
+.gd-peek img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gd-peek img:not([src]) { display: none; }
+.gd-peek > div {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 46px 16px 14px;
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 14, .9) 64%);
+}
+.gd-peek strong { overflow: hidden; font-size: 16px; font-weight: 700; color: #fff; text-overflow: ellipsis; white-space: nowrap; }
+.gd-peek span { font-size: 12.5px; font-weight: 600; color: rgba(255, 255, 255, .8); }
+@keyframes gd-peek-in { from { opacity: 0; transform: translateY(6px); } }
 
 /* ═══════════════ game page ═══════════════ */
 

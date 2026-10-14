@@ -2,6 +2,19 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.4 — 2026-10-14
+
+**Library home**
+- Hidden games no longer turn up on the *Continue* card or in the recently played row ([#13](https://github.com/Yareli0i/glass-dusk/pull/13), by @JankyMouse).
+- The recently played row shows as many covers as fit across it, up to eleven, instead of scrolling sideways ([#13](https://github.com/Yareli0i/glass-dusk/pull/13)).
+- Pointing at a cover in that row brings up a card with the game's screenshots, your own first and then the store's, with its name and hours ([#13](https://github.com/Yareli0i/glass-dusk/pull/13), an idea by @JankyMouse). New switch *Recently played: preview*, on by default. The store's screenshots are fetched only when a cover is pointed at.
+- New switch *Home games* ([#14](https://github.com/Yareli0i/glass-dusk/issues/14), asked for by @Mystery14): *Continue* and the recently played row can take their games from the whole library instead of only what is installed. A game that is not installed gets *Install* instead of *Play*.
+- New switch *Continue card: achievements* puts the game's achievement progress on the card ([#14](https://github.com/Yareli0i/glass-dusk/issues/14)).
+- New switch *Add shelf button* hides Steam's *Add shelf* row ([#13](https://github.com/Yareli0i/glass-dusk/pull/13)).
+
+**Game list**
+- With the list on the right, where the theme puts it by default, dragging the divider snapped the list to its narrowest ([#13](https://github.com/Yareli0i/glass-dusk/pull/13), found by @JankyMouse). The list follows the pointer now, and its width is still Steam's own setting.
+
 ## 1.6.3 — 2026-10-11
 
 **Library home**

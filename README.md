@@ -36,7 +36,11 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 | Home number: Hours, 2 weeks, Unplayed, Perfect games | on · **off** | Three more, a switch for each. *Perfect games* are the ones with every achievement unlocked. |
 | Home numbers: second line | on · **off** | A small line under each number: games installed, games played, share of the library, average completion, drives. |
 | Recently played shelf | **on** · off | The row of recently played games under the *Continue* card. |
+| Recently played: preview | **on** · off | Point at a cover in that row: a card with the game's screenshots, its name and hours. The store's screenshots are fetched from Steam at that moment. |
+| Home games | **Installed** · Whole library | Where *Continue* and the recently played row take their games: what is installed here, or the whole library. A game that is not installed gets *Install* instead of *Play*. |
+| Continue card: achievements | on · **off** | Achievement progress of the game on the *Continue* card. |
 | What's New shelf | on · **off** | Steam's What's New shelf on the home page. |
+| Add shelf button | **on** · off | Steam's *Add shelf* row on the home page. |
 | Game list side | **Right** · Left | Where the game list sits. |
 | Big Picture | **Cover** · Steam | Whole-screen art of the focused game, or Big Picture untouched. |
 | Big Picture hours chip | **on** · off | Logo, hours played and last played at the top left. |

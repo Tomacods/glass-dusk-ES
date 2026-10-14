@@ -2,7 +2,7 @@
   "name": "Glass Dusk",
   "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
   "author": "Yareli",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "tags": [
     "Dark",
     "Glass",
@@ -293,6 +293,54 @@
         }
       }
     },
+    "Recently played: preview": {
+      "description": "Point at a cover in the recently played row: a card with the game's screenshots, its name and hours. The store's screenshots are fetched from Steam at that moment.",
+      "tab": "Library",
+      "default": "yes",
+      "values": {
+        "yes": {},
+        "no": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/recent-preview-off.css"
+          }
+        }
+      }
+    },
+    "Home games": {
+      "description": "Where the Continue card and the recently played row take their games: only what is installed on this machine, or everything in the library.",
+      "tab": "Library",
+      "default": "Installed",
+      "values": {
+        "Installed": {},
+        "Whole library": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/home-all.css"
+          }
+        }
+      }
+    },
+    "Continue card: achievements": {
+      "description": "Achievement progress of the game on the Continue card.",
+      "tab": "Library",
+      "default": "no",
+      "values": {
+        "no": {},
+        "yes": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/cont-ach-on.css"
+          }
+        }
+      }
+    },
     "What's New shelf": {
       "description": "Steam's What's New shelf on the library home.",
       "tab": "Library",
@@ -305,6 +353,22 @@
               "^Steam$"
             ],
             "src": "css/options/whatsnew-show.css"
+          }
+        }
+      }
+    },
+    "Add shelf button": {
+      "description": "Steam's row for adding a shelf to the library home.",
+      "tab": "Library",
+      "default": "yes",
+      "values": {
+        "yes": {},
+        "no": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/add-shelf-hide.css"
           }
         }
       }

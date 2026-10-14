@@ -1,0 +1,3 @@
+/* Add shelf button: no — Steam's row for adding a shelf to the library home is not shown.
+   html prefix: option files load before css/steam.css and must outweigh its rules. */
+html .AddShowcaseRow { display: none !important; }

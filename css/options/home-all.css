@@ -1,0 +1,3 @@
+/* Home games: Whole library — the Continue card and the recent row also take games that are
+   not installed on this machine; js/dusk.js reads --gd-home-games */
+:root { --gd-home-games: all; }

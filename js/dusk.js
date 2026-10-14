@@ -371,21 +371,33 @@
   const heroElement = () => [...document.querySelectorAll('.Header img, .HeaderBackgroundImage img')]
     .find(i => /library_hero\.(jpg|png)|\/customimages\/\d+_hero\./.test(i.src));
 
-  // Installed on this machine. «Continue» and the recent shelf come from here:
-  // they are for what can be launched right now.
-  const installedApps = o => o.appStore.allApps.filter(a => {
-    try { return a.per_client_data && [...a.per_client_data].some(c => c.installed); } catch (e) { return false; }
-  });
+  // Installed on this machine: what can be launched right now.
+  const isInstalled = a => {
+    try { return !!a.per_client_data && [...a.per_client_data].some(c => c.installed); } catch (e) { return false; }
+  };
+  const installedApps = o => o.appStore.allApps.filter(isInstalled);
+  // Steam's own list of hidden games: nothing on the home shows them (#13)
+  const hiddenIn = o => id => { try { return o.collectionStore.BIsHidden(id); } catch (e) { return false; } };
 
   // The header's numbers are about the whole library, installed or not: every
   // game Steam lists (family-shared ones too), minus the ones the user has hidden.
   const libraryGames = o => {
-    const hidden = id => { try { return o.collectionStore.BIsHidden(id); } catch (e) { return false; } };
+    const hidden = hiddenIn(o);
     return o.appStore.allApps.filter(a => a.app_type === 1 && a.visible_in_game_list !== false && !hidden(a.appid));
   };
 
+  // «Continue» and the recent row take their games from what is installed here, or — switch
+  // «Home games → Whole library» (css/options/home-all.css) — from everything in the library,
+  // for those who uninstall a game the moment they are done with it (#14).
+  const homeApps = o => {
+    const hidden = hiddenIn(o);
+    const whole = getComputedStyle(root).getPropertyValue('--gd-home-games').trim() === 'all';
+    return (whole ? o.appStore.allApps.filter(a => a.visible_in_game_list !== false) : installedApps(o))
+      .filter(a => !hidden(a.appid));
+  };
+
   const lastPlayed = o => {
-    const apps = installedApps(o);
+    const apps = homeApps(o);
     const games = apps.filter(a => a.app_type === 1);
     return (games.length ? games : apps)
       .filter(a => a.rt_last_time_played)
@@ -420,9 +432,10 @@
   const locale = () => (isUk() ? 'uk' : 'en');
   // `sub` is the small second line under each number (switch «Home numbers: second line»)
   const WORDS = {
-    uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', games: 'Ігор', hours: 'Награно, год',
+    uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', install: 'Встановити', games: 'Ігор', hours: 'Награно, год',
         disk: 'На дисках, ГБ', twoWeeks: 'За 2 тижні, год', unplayed: 'Не запущено', perfect: 'Ідеальні ігри',
         today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні',
+        ach: (n, of) => `${n} з ${of} досягнень`,
         sub: {
           games: n => `${n} встановлено`,
           inGames: n => `у ${n} ${plural(n, { one: 'грі', other: 'іграх' })}`,
@@ -431,9 +444,10 @@
           drives: n => `на ${n} ${plural(n, { one: 'диску', other: 'дисках' })}`,
         },
         hello: h => (h < 5 ? 'Доброї ночі,' : h < 12 ? 'Доброго ранку,' : h < 18 ? 'Доброго дня,' : h < 23 ? 'Доброго вечора,' : 'Доброї ночі,') },
-    en: { cont: 'Continue', recent: 'Recently played', play: 'Play', stop: 'Stop', cancel: 'Cancel', games: 'Games', hours: 'Hours played',
+    en: { cont: 'Continue', recent: 'Recently played', play: 'Play', stop: 'Stop', cancel: 'Cancel', install: 'Install', games: 'Games', hours: 'Hours played',
         disk: 'On disk, GB', twoWeeks: 'Hours, 2 weeks', unplayed: 'Unplayed', perfect: 'Perfect games',
         today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks',
+        ach: (n, of) => `${n} of ${of} achievements`,
         sub: {
           games: n => `${n} installed`,
           inGames: n => `in ${n} ${plural(n, { one: 'game', other: 'games' })}`,
@@ -770,6 +784,15 @@
     } catch (e) { /* no such cache in this client: the number shows a dash */ }
   };
 
+  // One game's entry in that cache, for the Continue card (switch «Continue card: achievements»,
+  // css/options/cont-ach-on.css). Null for a game with no achievements, or none known yet.
+  const achievementsOf = (o, app) => {
+    try {
+      const e = o.appAchievementProgressCache.m_achievementProgress.mapCache.get(app.appid);
+      return e && e.total > 0 ? e : null;
+    } catch (e) { return null; }
+  };
+
   // "· 1.4 h in two weeks" for the Continue card. Nothing when it would say zero or only
   // repeat the total next to it.
   const twoWeeksOf = app => {
@@ -778,7 +801,8 @@
   };
 
   // The Continue button follows its game the way the button on the game's own page does:
-  // Play, Cancel while Steam is starting it, Stop while it runs (#11). Steam keeps the
+  // Play, Cancel while Steam is starting it, Stop while it runs (#11), Install when the game
+  // is not on this machine (it can be, with «Home games → Whole library»). Steam keeps the
   // state per client; the numbers are its EDisplayStatus.
   const LAUNCHING = 1, RUNNING = 4, TERMINATING = 36;
   const playState = app => {
@@ -787,16 +811,18 @@
       const local = app.local_per_client_data;
       status = local && local.display_status !== undefined ? local.display_status : app.display_status;
     } catch (e) { /* an overview without it: Play */ }
-    return status === LAUNCHING ? 'cancel' : status === RUNNING || status === TERMINATING ? 'stop' : 'play';
+    return status === LAUNCHING ? 'cancel' : status === RUNNING || status === TERMINATING ? 'stop'
+      : isInstalled(app) ? 'play' : 'install';
   };
   const PLAY_ICONS = {
     play: '<path fill="currentColor" d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l10.9-6.8a.8.8 0 0 0 0-1.4L9.2 4.5A.8.8 0 0 0 8 5.2z"/>',
     cross: '<path fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" d="M6.5 6.5l11 11m0-11l-11 11"/>',
+    install: '<path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5.5 19.5h13"/>',
   };
   const paintPlay = (button, state) => {
     if (button.dataset.state === state) return;
     button.dataset.state = state;
-    button.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">${state === 'play' ? PLAY_ICONS.play : PLAY_ICONS.cross}</svg>${W()[state]}`;
+    button.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">${PLAY_ICONS[state] || PLAY_ICONS.cross}</svg>${W()[state]}`;
   };
   // The header is rebuilt only when what it shows changes, and that would redraw the art
   // too. A game starting or stopping changes the button alone, so it is repainted in place.
@@ -810,13 +836,111 @@
     } catch (e) { /* the button stays as it is */ }
   };
 
+  /* ── the recent row: a look at the game under the pointer ── */
+
+  // Switch «Recently played: preview» (on by default; css/options/recent-preview-off.css turns it
+  // off), an idea from #13.
+  // Nothing is asked for until a cover has been pointed at for a moment. Then the game's hero
+  // art goes up at once, and over it, in turn: the user's own screenshots of that game, newest
+  // first (Steam's list of them, read once), and the store's (its small versions, asked once
+  // per game). The card sits on <body>: the pane the home is in clips anything fixed inside it.
+  const SHOT_EVERY = 3500;
+  const storeShots = new Map();   // appid → promise of addresses
+  const storeShotsOf = appid => {
+    if (!storeShots.has(appid)) {
+      storeShots.set(appid, fetch(`https://store.steampowered.com/api/appdetails?appids=${appid}&filters=screenshots`)
+        .then(r => r.json())
+        .then(j => ((j && j[appid] && j[appid].data && j[appid].data.screenshots) || [])
+          .map(s => s && s.path_thumbnail).filter(u => /^https:\/\//.test(u || '')).slice(0, 8))
+        .catch(() => { storeShots.delete(appid); return []; }));
+    }
+    return storeShots.get(appid);
+  };
+  let ownShots = null;            // promise of every local screenshot's record
+  const ownShotsOf = (o, appid) => {
+    if (!ownShots) {
+      try {
+        const api = o.SteamClient.Screenshots;
+        ownShots = api.GetAllAppsLocalScreenshotsCount()
+          .then(n => (n > 0 ? api.GetAllAppsLocalScreenshotsRange(0, n - 1) : []))
+          .catch(() => { ownShots = null; return []; });
+      } catch (e) { return Promise.resolve([]); }
+    }
+    return ownShots.then(all => (Array.isArray(all) ? all : [])
+      .filter(s => s && String(s.strGameID) === String(appid) && s.strUrl)
+      .sort((a, b) => (b.nCreated || 0) - (a.nCreated || 0))
+      .slice(0, 4).map(s => '/' + String(s.strUrl).replace(/^\/+/, '')));
+  };
+
+  let peek = null;                // the card of the home that is on screen, and how to put it away
+  const dropPeek = () => { if (peek) { peek.hide(); peek.card.remove(); peek = null; } };
+  addEventListener('scroll', () => peek && peek.hide(), true);
+  const wirePeek = (o, block, shelf) => {
+    const card = document.createElement('div');
+    card.className = 'gd-peek';
+    card.hidden = true;
+    card.innerHTML = '<img alt=""><div><strong></strong><span></span></div>';
+    const img = card.querySelector('img'), title = card.querySelector('strong'), line = card.querySelector('span');
+    let wait = 0, turn = 0, shown = null;
+    const hide = () => { clearTimeout(wait); clearTimeout(turn); shown = null; card.hidden = true; };
+    const show = cap => {
+      const app = shelf.find(a => String(a.appid) === cap.dataset.app);
+      if (!app) return;
+      shown = app.appid;
+      title.textContent = app.display_name;
+      line.textContent = `${hoursOf(app.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(app)}`;
+      img.onerror = null;
+      img.removeAttribute('src');
+      const at = cap.getBoundingClientRect();
+      card.hidden = false;
+      const w = card.offsetWidth, h = card.offsetHeight;
+      card.style.left = `${Math.max(12, Math.min(innerWidth - w - 12, at.left + at.width / 2 - w / 2))}px`;
+      // under the cover while there is room: over it, the card would hide the Continue card's button
+      card.style.top = `${at.bottom + 12 + h <= innerHeight - 12 ? at.bottom + 12 : Math.max(12, at.top - h - 12)}px`;
+      detailsReady(o, app).promise.then(() => { if (shown === app.appid && !img.getAttribute('src')) chain(img, artFor(o, app).hero); });
+      Promise.all([ownShotsOf(o, app.appid), storeShotsOf(app.appid)]).then(([own, store]) => {
+        const urls = [...own, ...store];
+        let i = 0;
+        const next = () => {
+          if (shown !== app.appid || !urls.length) return;
+          const url = urls[i % urls.length];
+          const probe = new Image();
+          probe.onload = () => {
+            if (shown !== app.appid) return;
+            img.onerror = null;
+            img.src = url;
+            i++;
+            if (urls.length > 1) turn = setTimeout(next, SHOT_EVERY);
+          };
+          probe.onerror = () => { urls.splice(i % urls.length, 1); next(); };
+          probe.src = url;
+        };
+        next();
+      });
+    };
+    block.addEventListener('pointerover', e => {
+      const cap = e.target.closest('.gd-cap');
+      if (!cap || cap.contains(e.relatedTarget)) return;
+      clearTimeout(wait);
+      wait = setTimeout(() => { if (cap.isConnected) show(cap); }, 350);
+    });
+    block.addEventListener('pointerout', e => {
+      const cap = e.target.closest('.gd-cap');
+      if (cap && !cap.contains(e.relatedTarget)) hide();
+    });
+    block.addEventListener('pointerdown', hide);
+    document.body.appendChild(card);
+    peek = { card, hide };
+  };
+
   const buildHome = () => {
     const o = shared();
     const host = document.querySelector('.LibraryHome');
-    if (!o || !host) return;
+    if (!o || !host) { dropPeek(); return; }
     // switch «Library home → Steam» (css/options/home-steam.css)
     if (getComputedStyle(root).getPropertyValue('--gd-home').trim() === 'steam') {
       host.querySelectorAll('.gd-home').forEach(b => b.remove());
+      dropPeek();
       homeSig = '';
       return;
     }
@@ -830,14 +954,20 @@
 
     const apps = installedApps(o);
     const games = libraryGames(o);
-    const last = lastPlayed(o);   // null when nothing installed has been played yet
+    const last = lastPlayed(o);   // null when nothing the home may show has been played yet
     if (!games.length && !apps.length) return;
 
-    // switch «Recently played shelf» (css/options/recent-hide.css)
+    // switch «Recently played shelf» (css/options/recent-hide.css). Up to eleven games; the row
+    // itself shows as many of them as fit across it (css/steam.css).
     const rowOff = getComputedStyle(root).getPropertyValue('--gd-recent').trim() === 'off';
-    const shelf = !last || rowOff ? [] : apps.filter(a => a.rt_last_time_played && a.app_type === 1 && a.appid !== last.appid)
+    const shelf = !last || rowOff ? [] : homeApps(o).filter(a => a.rt_last_time_played && a.app_type === 1 && a.appid !== last.appid)
       .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played)
-      .slice(0, 7);
+      .slice(0, 11);
+    const peeking = getComputedStyle(root).getPropertyValue('--gd-recent-preview').trim() !== 'off';
+    // switch «Continue card: achievements»: the card keeps that one entry of Steam's cache current
+    const wantAch = !!last && getComputedStyle(root).getPropertyValue('--gd-cont-ach').trim() === 'on';
+    if (wantAch) renewAchievements(o, [last]);
+    const lastAch = wantAch ? achievementsOf(o, last) : null;
     const minutes = games.reduce((s, a) => s + (a.minutes_playtime_forever || 0), 0);
     askDisk(o, apps.length);
     // until Steam answers, the installed apps' own sizes (no workshop items or shaders)
@@ -865,9 +995,11 @@
 
     const sig = [locale(), new Date().getHours(), name, ...stats.map(s => `${s.label}=${s.value}/${s.sub}`),
       ...(last ? [last.rt_last_time_played, last.minutes_playtime_forever, last.minutes_playtime_last_two_weeks || 0] : []),
+      lastAch ? `${lastAch.unlocked}/${lastAch.total}` : '',
       ...(last ? [last, ...shelf] : []).map(a => `${a.appid}:${a.rt_custom_image_mtime || 0}`)].join('|');
     if (existing && sig === homeSig) return;
     homeSig = sig;
+    dropPeek();
 
     const block = document.createElement('div');
     block.className = 'gd-home';
@@ -888,14 +1020,15 @@
           <img class="gd-cont-logo" alt="">
           <span class="gd-cont-name">${esc(last.display_name)}</span>
           <div class="gd-cont-meta">${relDay(last.rt_last_time_played)}, ${clock.format(new Date(last.rt_last_time_played * 1000))}
-            · ${hoursOf(last.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(last)}</div>
+            · ${hoursOf(last.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(last)}</div>${!lastAch ? '' : `
+          <div class="gd-cont-ach"><i><b style="width: ${Math.round(lastAch.unlocked / lastAch.total * 100)}%"></b></i>${esc(W().ach(lastAch.unlocked, lastAch.total))}</div>`}
           <button class="gd-play" data-game="${esc(gameIdOf(last))}"></button>
         </div>
       </div>${!shelf.length ? '' : `
       <h4 class="gd-label">${W().recent}</h4>
       <div class="gd-shelf">
         ${shelf.map(a => `
-          <button class="gd-cap" data-app="${a.appid}" title="${esc(a.display_name)}">
+          <button class="gd-cap" data-app="${a.appid}"${peeking ? '' : ` title="${esc(a.display_name)}"`}>
             <img alt="">
             <span>${relDay(a.rt_last_time_played)}</span>
           </button>`).join('')}
@@ -936,6 +1069,7 @@
         try {
           if (play.dataset.state === 'stop') o.SteamClient.Apps.TerminateApp(id, false);
           else if (play.dataset.state === 'cancel') o.SteamClient.Apps.CancelLaunch(id);
+          else if (play.dataset.state === 'install') o.SteamClient.URL.ExecuteSteamURL('steam://install/' + play.closest('.gd-continue').dataset.app);
           else o.SteamClient.Apps.RunGame(id, '', -1, 100);
         } catch (err) { console.warn('[Glass Dusk] кнопка гри не спрацювала', err); }
         return;
@@ -948,8 +1082,42 @@
 
     if (existing) existing.replaceWith(block);
     else anchor.insertBefore(block, anchor.firstElementChild);
+    if (peeking && shelf.length) wirePeek(o, block, shelf);
     state.home++;
   };
+
+  /* ═════════════ the divider beside a game list on the right ═════════════ */
+
+  // Steam sizes the list from the list's own left edge to the pointer. That holds while the
+  // list is on the left; on the right (the theme's default) the edge under the pointer is the
+  // one that moves, so the list snapped to its narrowest and would not come back (#13).
+  // While that divider is held, Steam is handed a pointer position that yields the width the
+  // real pointer asks for. The width stays Steam's own setting, kept across restarts.
+  let held = null;
+  const steered = new WeakSet();
+  const steer = e => {
+    if (!held || steered.has(e)) return;
+    const list = held.layout.querySelector(':scope > .LeftListSizableContainer');
+    if (!list || (e.type === 'mousemove' && !e.buttons)) { held = null; return; }
+    e.stopImmediatePropagation();
+    const width = held.layout.getBoundingClientRect().right - (e.clientX - held.grab);
+    const told = new MouseEvent(e.type, { bubbles: true, cancelable: true, view: window,
+      clientX: list.getBoundingClientRect().left + width, clientY: e.clientY,
+      screenX: e.screenX, screenY: e.screenY, button: e.button, buttons: e.buttons });
+    steered.add(told);
+    e.target.dispatchEvent(told);
+    if (e.type === 'mouseup') held = null;
+  };
+  addEventListener('mousedown', e => {
+    const divider = e.button === 0 && e.target.closest ? e.target.closest('.LibraryWindowDivider') : null;
+    const layout = divider && divider.parentElement;
+    const list = layout && layout.querySelector(':scope > .LeftListSizableContainer');
+    if (list && getComputedStyle(layout).flexDirection === 'row-reverse') {
+      held = { layout, grab: e.clientX - list.getBoundingClientRect().left };
+    }
+  }, true);
+  addEventListener('mousemove', steer, true);
+  addEventListener('mouseup', steer, true);
 
   const tick = () => {
     mountLayer();
