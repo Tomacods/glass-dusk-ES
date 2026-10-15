@@ -483,6 +483,27 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
 .Header .TopGradient,
 .Header .HeaderFeatures { display: none !important; }
 
+/* Adjust Logo Position (right click on the art): Steam puts its Done button in the bottom
+   right corner of the art. That corner fades out here, and HLTB for Steam sits on it above
+   everything else, so Done could be neither seen nor pressed. While the logo is being placed,
+   the button goes to the top right corner and stays above plugins. The strip around it lets
+   the pointer through, so the logo can still be dragged up there. The same for the Done of
+   the Custom Logo Position plugin. */
+.Header .TopCapsule .TitleSection:has(.ExitEditModeButton) {
+  top: 0 !important;
+  bottom: auto !important;
+  padding-top: 20px !important;
+  padding-bottom: 0 !important;
+  z-index: 101;
+  pointer-events: none;
+}
+.Header .TopCapsule .TitleSection .ExitEditModeButton { pointer-events: auto; }
+.Header .TopCapsule > .logo-move-done-button {
+  top: 20px !important;
+  bottom: auto !important;
+  z-index: 101;
+}
+
 /* the bar under the art: one flat card, everything in it on one line */
 .AppDetailsOverviewPanel .Container.InPage { margin-top: 0 !important; padding: 0 20px; }
 .AppDetailsOverviewPanel .Container.InPage .Row {

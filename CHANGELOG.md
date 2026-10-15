@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.5 — 2026-10-15
+
+**Game page**
+- *Adjust Logo Position* (right click on the art): Steam's *Done* button sat in the bottom right corner of the art, which fades out in this theme, and with HLTB for Steam installed its box covered the button, so a click went to HLTB's *View details* instead (reported on Discord by Eng.REVY). While the logo is being placed, *Done* sits in the top right corner now, above any plugin. The same goes for the *Done* of the Custom Logo Position plugin.
+
 ## 1.6.4 — 2026-10-14
 
 **Library home**
