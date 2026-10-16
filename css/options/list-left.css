@@ -2,3 +2,4 @@
    html prefix: option files load before css/steam.css and must outweigh its rules. */
 html [class*=LibraryDisplaySize] { flex-direction: row !important; }
 html .MainPanel > .AppDetailsTransitionGroup { margin: 4px 14px 16px 0 !important; }
+html .AdvancedSearchPane { left: 42px !important; right: auto !important; transform-origin: 0 0 !important; }

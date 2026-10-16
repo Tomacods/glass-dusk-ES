@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.6 — 2026-10-16
+
+**Game list**
+- The *Library Filters* panel, behind the button next to the list's search, could not be used ([#15](https://github.com/Yareli0i/glass-dusk/issues/15), reported by @Beastmodplayer). Steam opens it to the right of the button, which with the list on the right is past the edge of the window, and with the list on the left the list's glass cut it off. It now opens towards the middle of the window, above the game page, on a solid ground so the list doesn't read through it.
+
 ## 1.6.5 — 2026-10-15
 
 **Game page**

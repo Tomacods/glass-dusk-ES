@@ -910,9 +910,22 @@ body.DesktopUI,
 .SearchInput input::placeholder,
 .HomeBox input::placeholder { color: var(--gd-ink-faint) !important; }
 .MenuHeader { background: var(--gd-soft) !important; border-radius: var(--gd-r-sm) !important; }
-[class*=AdvancedSearchPane] {
-  background: rgba(16, 19, 30, .96) !important;
+/* Library Filters, the button next to the game list's search. Steam opens the panel to the
+   right of the button: with the list on the right that is past the edge of the window, and
+   the list's own glass cut off whatever stuck out of it on either side. The panel now opens
+   towards the middle of the window and sits above the main pane while it is open. Its ground
+   is solid: inside the list's glass a blur has nothing behind it to blur, so the game names
+   read straight through. css/options/list-left.css turns the direction back. */
+.LeftListSizableContainer:has(.AdvancedSearchPaneContainer.Visible) { z-index: 30 !important; }
+.LeftListSizableContainer > .Container:has(.AdvancedSearchPaneContainer.Visible) { overflow: visible !important; }
+.AdvancedSearchPane {
+  left: auto !important;
+  right: 42px !important;
+  transform-origin: 100% 0 !important;
+  background: #10131e !important;
+  border: 1px solid rgba(255, 255, 255, .1);
   border-radius: var(--gd-r-md) !important;
+  box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .75);
 }
 
 /* Steam sets the game description on a dark slab of its own, and its edge reads as a border */
