@@ -434,6 +434,10 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
 .FeaturedItemHeader { color: var(--gd-accent, var(--gd-house)) !important; }
 /* the date badge on shelf tiles */
 .LibraryItemBoxSubscript { background: var(--gd-soft) !important; border-radius: 6px !important; }
+/* Game covers wherever Steam lays them out (a collection's page, the home's shelves) are
+   rounded like the theme's own row. The box already clips its picture, the shine and the
+   hover tilt, and its shadow follows the corners. */
+.LibraryItemBox { border-radius: var(--gd-r-md) !important; }
 /* trading-card tiles and the news cards in the activity feed */
 .CardContainer { background: var(--gd-soft) !important; border-radius: var(--gd-r-sm) !important; }
 /* A substring match also caught `_Title`, `_Summary` and `_TextColumn`: the gradient

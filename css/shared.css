@@ -126,14 +126,20 @@ body.DesktopUI .contextMenu.DropDown:not(:has(> .contextMenuContents)) .DialogCh
   background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 28%, transparent);
 }
 body.DesktopUI .contextMenu.DropDown:not(:has(> .contextMenuContents)) .Rule { background: var(--gd-line) !important; }
-/* Steam's green "Play" row at the top of a game's menu */
+/* The action row at the top of a game's menu. Steam paints it green for Play (and Launch,
+   Stream…) and blue for Install, Update, Download, Stop and the rest; each wears the accent. */
+body.DesktopUI .contextMenuItem.ContextMenuAction,
+body.DesktopUI .contextMenuItem.ContextMenuAction:hover,
 body.DesktopUI .contextMenuItem.Play,
 body.DesktopUI .contextMenuItem.Play:hover {
   background: var(--gd-accent, var(--gd-house)) !important;
   color: var(--gd-accent-ink, #fff) !important;
   font-weight: 600;
 }
+body.DesktopUI .contextMenuItem.ContextMenuAction:hover,
 body.DesktopUI .contextMenuItem.Play:hover { filter: brightness(1.08); }
+body.DesktopUI .contextMenuItem.ContextMenuAction svg,
+body.DesktopUI .contextMenuItem.ContextMenuAction svg *,
 body.DesktopUI .contextMenuItem.Play svg,
 body.DesktopUI .contextMenuItem.Play svg * { fill: currentColor !important; }
 /* Steam draws a separator as a top border on the row below it; on a rounded row it bends */

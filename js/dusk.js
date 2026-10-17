@@ -376,6 +376,13 @@
     try { return !!a.per_client_data && [...a.per_client_data].some(c => c.installed); } catch (e) { return false; }
   };
   const installedApps = o => o.appStore.allApps.filter(isInstalled);
+  // A game added to the library from outside Steam (a shortcut) has a type of its own. It
+  // belongs on the home like any game: «Continue» and the recent row take it too. Steam counts
+  // no playtime for it, so no "0 min" either.
+  const SHORTCUT = 1073741824;
+  const playable = a => a.app_type === 1 || a.app_type === SHORTCUT;
+  const playedOf = app => (app.app_type === SHORTCUT && !(app.minutes_playtime_forever > 0) ? ''
+    : `${hoursOf(app.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(app)}`);
   // Steam's own list of hidden games: nothing on the home shows them (#13)
   const hiddenIn = o => id => { try { return o.collectionStore.BIsHidden(id); } catch (e) { return false; } };
 
@@ -398,7 +405,7 @@
 
   const lastPlayed = o => {
     const apps = homeApps(o);
-    const games = apps.filter(a => a.app_type === 1);
+    const games = apps.filter(playable);
     return (games.length ? games : apps)
       .filter(a => a.rt_last_time_played)
       .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played)[0] || null;
@@ -460,7 +467,10 @@
   const W = () => WORDS[locale()];
   // "one" or everything else is all the header's phrases need, in either language
   const plural = (n, forms) => (new Intl.PluralRules(locale()).select(n) === 'one' ? forms.one : forms.other);
-  const dayShort = { format: d => new Intl.DateTimeFormat(locale(), { day: 'numeric', month: 'short' }).format(d) };
+  // A day of this year needs no year. An older one does, or "12 Oct" could be any October; with
+  // «Home games → Whole library» the home shows games last played years ago.
+  const dayShort = { format: d => new Intl.DateTimeFormat(locale(), d.getFullYear() === new Date().getFullYear()
+    ? { day: 'numeric', month: 'short' } : { day: 'numeric', month: 'short', year: 'numeric' }).format(d) };
   const clock = { format: d => new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit' }).format(d) };
 
   const relDay = ts => {
@@ -513,7 +523,11 @@
       if (m < 1440) return isUk() ? `${Math.round(m / 60)} год тому` : `${Math.round(m / 60)} h ago`;
       const d = Math.round(m / 1440);
       if (d === 1) return W().yday.toLowerCase();
-      return isUk() ? `${d} дн. тому` : `${d} days ago`;
+      if (d < 45) return isUk() ? `${d} дн. тому` : `${d} days ago`;
+      // past a month and a half, months; past a year, years ("843 days ago" says little)
+      if (d < 365) { const mo = Math.round(d / 30.44); return isUk() ? `${mo} міс. тому` : `${mo} ${mo === 1 ? 'month' : 'months'} ago`; }
+      const y = Math.floor(d / 365.25);
+      return isUk() ? `${y} р. тому` : `${y} ${y === 1 ? 'year' : 'years'} ago`;
     };
     const hours = min => (min < 60 ? `${min} ${isUk() ? 'хв' : 'min'}`
       : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${isUk() ? 'год' : 'h'}`);
@@ -553,7 +567,9 @@
       const mine = ++chipToken;
       if (!header || !app) { chip.remove(); return; }
       const min = app.minutes_playtime_forever || 0;
-      const stats = `<span>${min || app.rt_last_time_played ? `<b>${hours(min)}</b> · ` : ''}${ago(app.rt_last_time_played)}</span>`;
+      // a game from outside Steam has no playtime Steam knows of: no "0 h" for it
+      const timed = min > 0 || (app.rt_last_time_played && app.app_type !== SHORTCUT);
+      const stats = `<span>${timed ? `<b>${hours(min)}</b> · ` : ''}${ago(app.rt_last_time_played)}</span>`;
       const put = head => {
         if (mine !== chipToken) return;
         chip.textContent = '';
@@ -857,7 +873,7 @@
     return storeShots.get(appid);
   };
   let ownShots = null;            // promise of every local screenshot's record
-  const ownShotsOf = (o, appid) => {
+  const ownShotsOf = (o, app) => {
     if (!ownShots) {
       try {
         const api = o.SteamClient.Screenshots;
@@ -866,8 +882,9 @@
           .catch(() => { ownShots = null; return []; });
       } catch (e) { return Promise.resolve([]); }
     }
+    const ids = new Set([String(app.appid), gameIdOf(app)]);
     return ownShots.then(all => (Array.isArray(all) ? all : [])
-      .filter(s => s && String(s.strGameID) === String(appid) && s.strUrl)
+      .filter(s => s && ids.has(String(s.strGameID)) && s.strUrl)
       .sort((a, b) => (b.nCreated || 0) - (a.nCreated || 0))
       .slice(0, 4).map(s => '/' + String(s.strUrl).replace(/^\/+/, '')));
   };
@@ -888,7 +905,7 @@
       if (!app) return;
       shown = app.appid;
       title.textContent = app.display_name;
-      line.textContent = `${hoursOf(app.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(app)}`;
+      line.textContent = playedOf(app);
       img.onerror = null;
       img.removeAttribute('src');
       const at = cap.getBoundingClientRect();
@@ -898,7 +915,8 @@
       // under the cover while there is room: over it, the card would hide the Continue card's button
       card.style.top = `${at.bottom + 12 + h <= innerHeight - 12 ? at.bottom + 12 : Math.max(12, at.top - h - 12)}px`;
       detailsReady(o, app).promise.then(() => { if (shown === app.appid && !img.getAttribute('src')) chain(img, artFor(o, app).hero); });
-      Promise.all([ownShotsOf(o, app.appid), storeShotsOf(app.appid)]).then(([own, store]) => {
+      // the store knows nothing of a game from outside Steam; its screenshots carry its long id
+      Promise.all([ownShotsOf(o, app), app.app_type === SHORTCUT ? [] : storeShotsOf(app.appid)]).then(([own, store]) => {
         const urls = [...own, ...store];
         let i = 0;
         const next = () => {
@@ -960,7 +978,7 @@
     // switch «Recently played shelf» (css/options/recent-hide.css). Up to eleven games; the row
     // itself shows as many of them as fit across it (css/steam.css).
     const rowOff = getComputedStyle(root).getPropertyValue('--gd-recent').trim() === 'off';
-    const shelf = !last || rowOff ? [] : homeApps(o).filter(a => a.rt_last_time_played && a.app_type === 1 && a.appid !== last.appid)
+    const shelf = !last || rowOff ? [] : homeApps(o).filter(a => a.rt_last_time_played && playable(a) && a.appid !== last.appid)
       .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played)
       .slice(0, 11);
     const peeking = getComputedStyle(root).getPropertyValue('--gd-recent-preview').trim() !== 'off';
@@ -1019,8 +1037,8 @@
           <small>${W().cont}</small>
           <img class="gd-cont-logo" alt="">
           <span class="gd-cont-name">${esc(last.display_name)}</span>
-          <div class="gd-cont-meta">${relDay(last.rt_last_time_played)}, ${clock.format(new Date(last.rt_last_time_played * 1000))}
-            · ${hoursOf(last.minutes_playtime_forever || 0)} ${W().inGame}${twoWeeksOf(last)}</div>${!lastAch ? '' : `
+          <div class="gd-cont-meta">${relDay(last.rt_last_time_played)}, ${clock.format(new Date(last.rt_last_time_played * 1000))}${
+            playedOf(last) ? ` · ${playedOf(last)}` : ''}</div>${!lastAch ? '' : `
           <div class="gd-cont-ach"><i><b style="width: ${Math.round(lastAch.unlocked / lastAch.total * 100)}%"></b></i>${esc(W().ach(lastAch.unlocked, lastAch.total))}</div>`}
           <button class="gd-play" data-game="${esc(gameIdOf(last))}"></button>
         </div>

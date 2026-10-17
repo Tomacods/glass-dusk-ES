@@ -2,6 +2,19 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.7 — 2026-10-17
+
+**Library home**
+- Games added to Steam from outside it (non-Steam games) turn up on the *Continue* card and in the recently played row like any other game (asked for on Discord). With custom art, from SteamGridDB for example, they get their hero, logo and cover; without it, the card shows the name. Steam counts no playtime for them, so the card says only when the game was last played.
+- A date from an earlier year comes with its year: on the *Continue* card and under the covers of the recently played row "Oct 12" could have been any October, and with *Home games → Whole library* the home shows games last played years ago.
+
+**Library**
+- Game covers on a collection's page and on Steam's shelves are rounded like the rest of the theme, and follow the *Corners* setting (asked for on Discord).
+- The action row at the top of a game's menu wears the accent whatever it says. Only *Play* did; *Install*, *Update*, *Download*, *Stop* and the rest stayed in Steam's blue, *Launch* in its green.
+
+**Big Picture**
+- The hours chip says nothing about playtime for a non-Steam game, where it said "0 h", and a game last played long ago is "3 months ago" or "2 years ago" there instead of "843 days ago".
+
 ## 1.6.6 — 2026-10-16
 
 **Game list**
