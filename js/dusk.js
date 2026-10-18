@@ -387,11 +387,15 @@
   const hiddenIn = o => id => { try { return o.collectionStore.BIsHidden(id); } catch (e) { return false; } };
 
   // The header's numbers are about the whole library, installed or not: every
-  // game Steam lists (family-shared ones too), minus the ones the user has hidden.
+  // game Steam lists (family-shared ones too, and games added from outside Steam), minus the
+  // ones the user has hidden. Steam keeps no hours for a game from outside it; a plugin such as
+  // Non-Steam Playtimes writes them into the same fields, and the numbers take them from there.
   const libraryGames = o => {
     const hidden = hiddenIn(o);
-    return o.appStore.allApps.filter(a => a.app_type === 1 && a.visible_in_game_list !== false && !hidden(a.appid));
+    return o.appStore.allApps.filter(a => playable(a) && a.visible_in_game_list !== false && !hidden(a.appid));
   };
+  // a game from outside Steam may have been run with no hours to show for it
+  const wasPlayed = a => a.minutes_playtime_forever > 0 || (a.app_type === SHORTCUT && a.rt_last_time_played > 0);
 
   // «Continue» and the recent row take their games from what is installed here, or — switch
   // «Home games → Whole library» (css/options/home-all.css) — from everything in the library,
@@ -789,6 +793,7 @@
       const known = (cache.m_achievementProgress && cache.m_achievementProgress.mapCache) || new Map();
       let room = ACH_BATCH;
       for (const a of games) {
+        if (a.app_type === SHORTCUT) continue;   // nothing to ask Steam about a game from outside it
         if (!(a.minutes_playtime_forever > 0) || now - (achAsked.get(a.appid) || 0) < ACH_ASK_GAP) continue;
         const e = known.get(a.appid);
         if (e && a.rt_last_time_played <= e.cache_time && now / 1000 - e.cache_time < ACH_MAX_AGE) continue;
@@ -997,7 +1002,7 @@
     // every number the header can show, with the small line that may go under it
     const shown = statsShown();
     const installed = new Set(apps.map(a => a.appid));
-    const played = games.filter(a => a.minutes_playtime_forever > 0).length;
+    const played = games.filter(wasPlayed).length;
     const recent = games.filter(a => a.minutes_playtime_last_two_weeks > 0);
     if (shown.list.includes('perfect')) renewAchievements(o, games);
     const ach = shown.list.includes('perfect') ? achievements(o, games) : null;

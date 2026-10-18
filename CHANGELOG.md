@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.9 — 2026-10-18
+
+**Library home**
+- The header's numbers count games added from outside Steam too (reported on Discord): *Games*, and the hours, the hours of two weeks and the games played when a plugin such as Non-Steam Playtimes keeps their time. Without one, Steam keeps no hours for them, so such a game adds to *Games*, and once it has been run it no longer counts as unplayed.
+
 ## 1.6.8 — 2026-10-18
 
 **Game page**
