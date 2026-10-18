@@ -42,6 +42,7 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 | What's New shelf | on · **off** | Steam's What's New shelf on the home page. |
 | Add shelf button | **on** · off | Steam's *Add shelf* row on the home page. |
 | Game list side | **Right** · Left | Where the game list sits. |
+| Game page: collection tags | **on** · off | The collections a game is in, at the top right of its art, as Steam shows them. A click opens the collection. |
 | Big Picture | **Cover** · Steam | Whole-screen art of the focused game, or Big Picture untouched. |
 | Big Picture hours chip | **on** · off | Logo, hours played and last played at the top left. |
 | Overlay background | **Transparent** · Steam | Behind the Shift+Tab panels. |

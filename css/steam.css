@@ -484,8 +484,29 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
 /* the low-res blur copy stays out of the flow so it cannot set the height */
 .Header .TopCapsule .HeaderBackgroundImage > img.ImgBlur { position: absolute !important; inset: 0 !important; height: 100% !important; }
 .Header .TopCapsule .ImgBlurBackdrop,
-.Header .TopGradient,
-.Header .HeaderFeatures { display: none !important; }
+.Header .TopGradient { display: none !important; }
+
+/* The collections the game is in, at the top right of the art (#16): Steam's own tags, as
+   glass pills. A click opens the collection. css/options/collection-tags-off.css hides them. */
+.Header .HeaderFeatures .InCollection {
+  padding: 3px 11px !important;
+  background: rgba(10, 12, 20, .52) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .14) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink, #eef1f8) !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+.Header .HeaderFeatures .InCollection:hover {
+  background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 55%, rgba(10, 12, 20, .52)) !important;
+  border-color: rgba(255, 255, 255, .24) !important;
+  color: #fff !important;
+}
+/* "Hidden": Steam's larger lilac tag */
+.Header .HeaderFeatures .InCollection.InHidden { color: rgba(237, 196, 253, .9) !important; }
 
 /* Adjust Logo Position (right click on the art): Steam puts its Done button in the bottom
    right corner of the art. That corner fades out here, and HLTB for Steam sits on it above

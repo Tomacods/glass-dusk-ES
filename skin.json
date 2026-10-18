@@ -2,7 +2,7 @@
   "name": "Glass Dusk",
   "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
   "author": "Yareli",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "tags": [
     "Dark",
     "Glass",
@@ -385,6 +385,22 @@
               "^Steam$"
             ],
             "src": "css/options/list-left.css"
+          }
+        }
+      }
+    },
+    "Game page: collection tags": {
+      "description": "The collections a game is in, shown at the top right of its art on the game page, as Steam does. A click opens the collection.",
+      "tab": "Library",
+      "default": "yes",
+      "values": {
+        "yes": {},
+        "no": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/collection-tags-off.css"
           }
         }
       }

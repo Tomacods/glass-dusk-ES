@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.8 — 2026-10-18
+
+**Game page**
+- The collections a game is in show at the top right of its art again, as Steam draws them, now as glass pills ([#16](https://github.com/Yareli0i/glass-dusk/issues/16), asked for by @YuujiNana). The theme had hidden them. A click opens the collection. New switch *Game page: collection tags*, on by default.
+
 ## 1.6.7 — 2026-10-17
 
 **Library home**

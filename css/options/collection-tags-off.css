@@ -1,0 +1,2 @@
+/* Game page: collection tags → no. The theme hid them before #16. */
+html .Header .HeaderFeatures { display: none !important; }
