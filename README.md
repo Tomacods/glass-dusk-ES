@@ -31,6 +31,7 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 | Accent colour | **Game art** · Fixed | *Fixed* keeps the Accent colour from the Colors tab everywhere. |
 | Glass | **Normal** · Denser · Sheerer | How see-through the panels are. |
 | Corners | **Normal** · Softer · Sharper | Radius of panels and cards. |
+| Sign-in screen | **Game art** · Dusk · Steam's wall · Steam | The account chooser when Steam starts (*Who's playing?*) and the signing-in screen after it: the art of the game you played last, plain dusk or Steam's wall of covers, each with the theme's glass and colour; or Steam's own look. It only shows if Steam asks which account to use. |
 | Library home | **Theme** · Steam | The theme's home header, or Steam's shelves only. |
 | Home number: Games, Hours played, On disk | **on** · off | Three numbers in the home header, a switch for each. |
 | Home number: Hours, 2 weeks, Unplayed, Perfect games | on · **off** | Three more, a switch for each. *Perfect games* are the ones with every achievement unlocked. |
@@ -42,6 +43,7 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 | What's New shelf | on · **off** | Steam's What's New shelf on the home page. |
 | Add shelf button | **on** · off | Steam's *Add shelf* row on the home page. |
 | Game list side | **Right** · Left | Where the game list sits. |
+| Store: game list | **Off** · Pinned · On hover · Rail | Your game list beside the store and other web pages of the client: pinned there, coming out when you point at the window's edge, or a rail of your last games' covers with a button that opens the list. It is Steam's own list, with its collections, search and filters. |
 | Game page: collection tags | **on** · off | The collections a game is in, at the top right of its art, as Steam shows them. A click opens the collection. |
 | Big Picture | **Cover** · Steam | Whole-screen art of the focused game, or Big Picture untouched. |
 | Big Picture hours chip | **on** · off | Logo, hours played and last played at the top left. |

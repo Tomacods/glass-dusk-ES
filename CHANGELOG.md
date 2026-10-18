@@ -2,6 +2,15 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.10 — 2026-10-18
+
+**Sign-in**
+- The account chooser Steam shows when it starts (*Who's playing?*), and the signing-in screen after it, are in the theme ([#17](https://github.com/Yareli0i/glass-dusk/issues/17), asked for by @kofbd). New switch *Sign-in screen*: the art of the game you played last with its colour (by default; plain dusk until there is a game to take it from), plain dusk, or Steam's wall of covers dimmed, each with the chooser on a card of glass, rounded avatars and the spinner in the theme's colour. *Steam* leaves both as Steam draws them.
+
+**Game list**
+- Your game list can stay beside the store and the other web pages of the client ([#17](https://github.com/Yareli0i/glass-dusk/issues/17), asked for by @kofbd). New switch *Store: game list*: *Pinned* keeps Steam's own list there, with its collections, search and filters; *On hover* leaves a strip at the window's edge and the list comes out when you point at it; *Rail* shows your last games' covers, and a button opens the full list (the theme remembers which). The page narrows beside the list. Off by default.
+- When Steam starts on the store, the library is shown for a moment so the list is there, and the store page loads once more after it, as it does whenever you switch from the library to the store.
+
 ## 1.6.9 — 2026-10-18
 
 **Library home**

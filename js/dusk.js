@@ -283,11 +283,22 @@
   // client's own cache, then the CDN. A missing custom file still answers 200
   // with a small HTML stub, so the only honest test is whether the image decodes
   // — which is exactly how the library itself picks its art.
+  // The sign-in window (switch «Sign-in screen → Game art») wears the art of the game played
+  // last. gd-art follows whatever page the main window shows, and is empty when Steam was
+  // closed on the store, so the home's pick is kept apart: the picture, its game (Steam's own
+  // copy stands in if the custom one is not served before sign-in) and its colour.
+  let artFromHome = 0;
+  const rememberForSignIn = (src, appid, picked) => {
+    try { localStorage.setItem('gd-signin', JSON.stringify({ src, appid, accent: picked.accent, ink: picked.ink })); }
+    catch (e) { /* no storage: the sign-in window falls back to dusk */ }
+  };
+
   const applyArt = list => {
     const urls = (Array.isArray(list) ? list : [list]).filter(Boolean);
     const key = urls.join('|');
     if (key === state.art) return;
     state.art = key;
+    const homeId = artFromHome;
 
     const clear = () => {
       paint(null, null);
@@ -308,6 +319,7 @@
         state.accent = picked.accent;
         paint(src, picked.accent, picked.ink);
         publish(src, picked.accent, picked.ink);
+        if (homeId) rememberForSignIn(src, homeId, picked);
       };
       img.onerror = () => attempt(i + 1);
       img.src = src;
@@ -416,6 +428,7 @@
   };
 
   const wantedArt = () => {
+    artFromHome = 0;
     const hero = heroElement();
     if (hero) return hero.complete && hero.naturalWidth > 0 ? [hero.src] : KEEP;   // a game page is open
 
@@ -431,9 +444,59 @@
     const last = o ? lastPlayed(o) : null;
     if (!last) return null;
     const ready = detailsReady(o, last);
-    if (ready.done) return artFor(o, last).hero;
+    if (ready.done) { artFromHome = last.appid; return artFor(o, last).hero; }
     if (!ready.woken) { ready.woken = true; ready.promise.then(() => soon()); }
     return KEEP;
+  };
+
+  /* ═════════════ the sign-in window ═════════════ */
+
+  // It carries the main window's body class, so it runs this branch too. While its account
+  // chooser ("Who's playing?") or the signing-in screen after it is up, the window is marked
+  // for css/shared.css:
+  // html[data-gd-login=art|dusk|wall] (switch «Sign-in screen», css/options/login-*.css; Game
+  // art by default), and the block holding Steam's backdrop gets [data-gd-login-frame].
+  // Game art falls back to dusk until the picture decodes, or when there is none yet.
+  let signInArt = null;   // null: not looked for yet; '': none; otherwise the picture shown
+  const signInPicture = () => {
+    signInArt = '';
+    let kept = null;
+    try { kept = JSON.parse(localStorage.getItem('gd-signin') || 'null'); } catch (e) { /* none */ }
+    if (!kept || !kept.appid) return;
+    const urls = [kept.src, `${CDN(kept.appid)}/library_hero.jpg`].filter(Boolean);
+    const attempt = i => {
+      if (i >= urls.length) return;
+      const img = new Image();
+      img.onload = () => { signInArt = urls[i]; paint(urls[i], kept.accent, kept.ink); soon(); };
+      img.onerror = () => attempt(i + 1);
+      img.src = urls[i];
+    };
+    attempt(0);
+  };
+  const signIn = () => {
+    const login = document.querySelector('.Login.DesktopUI');
+    if (!login) return false;
+    const want = getComputedStyle(root).getPropertyValue('--gd-login').trim() || 'art';
+    const frame = login.parentElement;
+    // the password form and Steam Guard stay Steam's own
+    if (want === 'steam' || !login.querySelector('.UserChooser, .StatusThrobber')) {
+      root.removeAttribute('data-gd-login');
+      if (frame) frame.removeAttribute('data-gd-login-frame');
+      paint(null, null);
+      return true;
+    }
+    if (frame) frame.setAttribute('data-gd-login-frame', '');
+    if (want === 'art' && signInArt === null) signInPicture();
+    const mode = want === 'art' && !signInArt ? 'dusk' : want;
+    root.setAttribute('data-gd-login', mode);
+    if (mode !== 'art') paint(null, null);
+    // the signing-in spinner is a picture in Steam's blue: turned round the colour wheel to the accent
+    const m = /^#?([0-9a-f]{6})$/i.exec(getComputedStyle(root).getPropertyValue('--gd-accent').trim());
+    if (m) {
+      const [h] = rgb2hsv(...[0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16)));
+      root.style.setProperty('--gd-login-hue', `${Math.round(h * 360 - 205)}deg`);
+    }
+    return true;
   };
 
   /* ═════════════ the home header ═════════════ */
@@ -446,6 +509,7 @@
     uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', install: 'Встановити', games: 'Ігор', hours: 'Награно, год',
         disk: 'На дисках, ГБ', twoWeeks: 'За 2 тижні, год', unplayed: 'Не запущено', perfect: 'Ідеальні ігри',
         today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні',
+        slOpen: 'Показати список ігор', slClose: 'Сховати список ігор',
         ach: (n, of) => `${n} з ${of} досягнень`,
         sub: {
           games: n => `${n} встановлено`,
@@ -458,6 +522,7 @@
     en: { cont: 'Continue', recent: 'Recently played', play: 'Play', stop: 'Stop', cancel: 'Cancel', install: 'Install', games: 'Games', hours: 'Hours played',
         disk: 'On disk, GB', twoWeeks: 'Hours, 2 weeks', unplayed: 'Unplayed', perfect: 'Perfect games',
         today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks',
+        slOpen: 'Show the game list', slClose: 'Hide the game list',
         ach: (n, of) => `${n} of ${of} achievements`,
         sub: {
           games: n => `${n} installed`,
@@ -1142,8 +1207,142 @@
   addEventListener('mousemove', steer, true);
   addEventListener('mouseup', steer, true);
 
+  /* ═════════════ the game list beside the store ═════════════ */
+
+  // Switch «Store: game list» (css/options/storelist-*.css → --gd-store-list): Steam's own game
+  // list stays beside the web pages of the main window (store, community) — pinned, coming out
+  // when pointed at, or as a rail of the last games' covers that opens into it (#17). Steam
+  // hides the library under .LocalContentContainer with an inline display: none and keeps it
+  // mounted once it has been shown; css/steam.css brings the list back as a layer, and the page,
+  // a separate view that takes its bounds from .BrowserWrapper, narrows beside it.
+  // Marks on <html>: gd-sl-<mode>, gd-on-web while a web page is shown, gd-sl-open while the
+  // list is out (On hover, Rail). --gd-list-w is the list's width, which stays Steam's setting.
+  const SL_MODES = ['pinned', 'hover', 'rail'];
+  let slMode = '', slPrimed = false, slTimer = 0, slWatched = null;
+  const slRailKept = () => { try { return localStorage.getItem('gd-sl-rail-open') === '1'; } catch (e) { return false; } };
+  const slSetOpen = (open, delay) => {
+    clearTimeout(slTimer);
+    slTimer = setTimeout(() => {
+      root.classList.toggle('gd-sl-open', open);
+      if (slMode === 'rail') { try { localStorage.setItem('gd-sl-rail-open', open ? '1' : '0'); } catch (e) { /* not kept */ } }
+    }, delay || 0);
+  };
+  // On hover: out after a moment over the list (or a menu it opened), back in when the pointer
+  // leaves for the page. The page is not part of this document, so leaving for it shows as a
+  // pointerout with nowhere to go.
+  const slInside = el => !!(el && el.closest && el.closest('.LeftListSizableContainer, .contextMenu, .DropDown'));
+  addEventListener('pointerover', e => {
+    if (slMode === 'hover' && root.classList.contains('gd-on-web') && slInside(e.target)) slSetOpen(true, 120);
+  }, true);
+  addEventListener('pointerout', e => {
+    if (slMode === 'hover' && root.classList.contains('gd-on-web') && slInside(e.target) && !slInside(e.relatedTarget)) slSetOpen(false, 200);
+  }, true);
+  // The list is only there once the library has been shown in this session. When Steam starts
+  // on a web page, the library is visited for a moment and the page comes straight back. Steam
+  // unloads the page for that visit (its place in the page's history goes to a blank stand-in)
+  // and loads it again on the way back, as it does whenever you switch Library → Store; going
+  // back before the stand-in is in left the page blank, so the return waits for it.
+  const slPrime = () => {
+    if (slPrimed) return;
+    let o = null, h = null;
+    try { o = shared(); h = o.SteamUIStore.WindowStore.MainWindowInstance.m_history; } catch (e) { return; }
+    // only once the window is really on a web page (at start it is still on /init)
+    if (!h || !/^\/browser/.test(h.location.pathname)) return;
+    const m = o.MainWindowBrowserManager;
+    const url = m && m.m_URL;
+    // and once the page itself is in: at start Steam shows a blank one first, and coming back
+    // to that would leave the window empty
+    if (m && (!url || /^data:/.test(url))) return;
+    slPrimed = true;
+    const t0 = Date.now();
+    h.push('/library/home');
+    const back = () => {
+      const ready = document.querySelector('.LeftListSizableContainer') && (!m || /^data:/.test(m.m_URL || ''));
+      if (!ready && Date.now() - t0 < 6000) { setTimeout(back, 100); return; }
+      setTimeout(() => {
+        h.goBack();
+        setTimeout(() => {
+          try {
+            // no "forward" to that visit: Steam's arrow would offer it
+            const e = h.entries;
+            if (Array.isArray(e) && e.length === h.index + 2 && /^\/library\/home/.test(e[e.length - 1].pathname)) { e.splice(h.index + 1); h.length = e.length; }
+            // and if the page did not come back, it is opened again
+            if (m && url && /^data:/.test(m.m_URL || '')) m.ShowURL(url);
+          } catch (err) { /* the page is a click away */ }
+        }, 1500);
+      }, 300);
+    };
+    setTimeout(back, 100);
+  };
+  const slRail = o => {
+    const frame = document.querySelector('.ContentFrame');
+    if (!frame) return;
+    let rail = document.getElementById('gd-rail');
+    if (!rail) {
+      rail = document.createElement('div');
+      rail.id = 'gd-rail';
+      rail.innerHTML = '<button class="gd-rail-open"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M14.5 6l-6 6 6 6"/></svg></button><div class="gd-rail-caps"></div>';
+      const close = document.createElement('button');
+      close.id = 'gd-rail-close';
+      close.innerHTML = '<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M9.5 6l6 6-6 6"/></svg>';
+      rail.addEventListener('click', e => {
+        if (e.target.closest('.gd-rail-open')) { slSetOpen(true); return; }
+        const cap = e.target.closest('.gd-rail-cap');
+        if (cap) { try { shared().SteamUIStore.Navigate('/library/app/' + cap.dataset.app); } catch (err) { /* stays */ } }
+      });
+      close.addEventListener('click', () => slSetOpen(false));
+      rail.close = close;
+    }
+    rail.querySelector('.gd-rail-open').title = W().slOpen;
+    rail.close.title = W().slClose;
+    if (rail.parentElement !== frame) frame.appendChild(rail);
+    if (rail.close.parentElement !== frame) frame.appendChild(rail.close);
+    const hidden = hiddenIn(o);
+    const games = o.appStore.allApps.filter(a => playable(a) && a.rt_last_time_played && a.visible_in_game_list !== false && !hidden(a.appid))
+      .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played).slice(0, 14);
+    const sig = games.map(a => `${a.appid}:${a.rt_custom_image_mtime || 0}`).join('|');
+    // kept on the rail itself: Steam may throw it out with the frame's content, and a new one is empty
+    if (sig === rail.dataset.sig) return;
+    rail.dataset.sig = sig;
+    const caps = rail.querySelector('.gd-rail-caps');
+    caps.innerHTML = games.map(a => `<button class="gd-rail-cap" data-app="${a.appid}" title="${esc(a.display_name)}"><img alt=""></button>`).join('');
+    caps.querySelectorAll('.gd-rail-cap').forEach((cap, i) => {
+      const img = cap.querySelector('img');
+      chain(img, artFor(o, games[i]).portrait, () => {
+        const tile = document.createElement('span');
+        tile.textContent = games[i].display_name;
+        img.replaceWith(tile);
+      });
+    });
+  };
+  const storeList = () => {
+    const want = getComputedStyle(root).getPropertyValue('--gd-store-list').trim();
+    const mode = SL_MODES.includes(want) ? want : '';
+    if (mode !== slMode) {
+      for (const m of SL_MODES) root.classList.toggle('gd-sl-' + m, m === mode);
+      slMode = mode;
+      root.classList.toggle('gd-sl-open', mode === 'rail' && slRailKept());
+    }
+    const lc = document.querySelector('.LocalContentContainer');
+    // a web page in the main window: Steam hides the library; watch for it to come and go
+    if (lc && lc !== slWatched) { slWatched = lc; new MutationObserver(() => soon()).observe(lc, { attributes: true, attributeFilter: ['style'] }); }
+    const onWeb = !!lc && lc.style.display === 'none';
+    root.classList.toggle('gd-on-web', !!mode && onWeb);
+    if (!mode || !onWeb) return;
+    const list = document.querySelector('.LeftListSizableContainer');
+    if (!list) slPrime();   // at start, whatever the mode: opening the rail later then reloads nothing
+    if (list) {
+      const w = Math.round(list.getBoundingClientRect().width);
+      if (w > 0) root.style.setProperty('--gd-list-w', w + 'px');
+    }
+    const o = shared();
+    if (mode === 'rail' && o) slRail(o);
+  };
+
   const tick = () => {
     mountLayer();
+    if (signIn()) return;
+    try { storeList(); } catch (e) { /* the list beside the store is a bonus */ }
     const want = wantedArt();
     if (want !== KEEP) applyArt(want);
     try { buildHome(); } catch (e) { /* the home header is a bonus, never break the client over it */ }

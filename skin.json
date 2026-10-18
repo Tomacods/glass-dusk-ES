@@ -2,7 +2,7 @@
   "name": "Glass Dusk",
   "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
   "author": "Yareli",
-  "version": "1.6.9",
+  "version": "1.6.10",
   "tags": [
     "Dark",
     "Glass",
@@ -145,6 +145,38 @@
               ".*"
             ],
             "src": "css/options/radius-sharp.css"
+          }
+        }
+      }
+    },
+    "Sign-in screen": {
+      "description": "The account chooser when Steam starts (Who's playing?): the art of the game you played last, plain dusk or Steam's wall of covers, each with the theme's glass, or Steam's own look. It shows only if Steam asks which account to use.",
+      "tab": "Look",
+      "default": "Game art",
+      "values": {
+        "Game art": {},
+        "Dusk": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/login-dusk.css"
+          }
+        },
+        "Steam's wall": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/login-wall.css"
+          }
+        },
+        "Steam": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/login-steam.css"
           }
         }
       }
@@ -401,6 +433,38 @@
               "^Steam$"
             ],
             "src": "css/options/collection-tags-off.css"
+          }
+        }
+      }
+    },
+    "Store: game list": {
+      "description": "Your game list beside the store and other web pages of the main window: off, pinned there, coming out when you point at the window's edge, or a rail of your last games' covers that opens into the list.",
+      "tab": "Library",
+      "default": "Off",
+      "values": {
+        "Off": {},
+        "Pinned": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/storelist-pinned.css"
+          }
+        },
+        "On hover": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/storelist-hover.css"
+          }
+        },
+        "Rail": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/storelist-rail.css"
           }
         }
       }

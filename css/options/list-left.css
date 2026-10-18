@@ -3,3 +3,14 @@
 html [class*=LibraryDisplaySize] { flex-direction: row !important; }
 html .MainPanel > .AppDetailsTransitionGroup { margin: 4px 14px 16px 0 !important; }
 html .AdvancedSearchPane { left: 42px !important; right: auto !important; transform-origin: 0 0 !important; }
+/* the game list beside the store, on the left too: the page to its right, and everything
+   slides out and back on the left */
+html:root.gd-on-web .BrowserWrapper { margin-left: auto !important; }
+html:root.gd-on-web.gd-sl-hover:not(.gd-sl-open) .LocalContentContainer .LeftListSizableContainer { transform: translateX(calc(-100% + 26px)); }
+html:root.gd-on-web.gd-sl-hover .LocalContentContainer::after { right: auto; left: 8px; }
+html:root.gd-on-web.gd-sl-rail:not(.gd-sl-open) .LocalContentContainer .LeftListSizableContainer { transform: translateX(calc(-100% - 24px)); }
+html:root.gd-on-web.gd-sl-rail #gd-rail { right: auto; left: 10px; }
+html:root.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail { transform: translateX(calc(-100% - 24px)); }
+html:root.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail-close { right: auto; left: calc(var(--gd-list-w, 320px) + 1px); }
+html:root.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail-close svg,
+html:root.gd-on-web.gd-sl-rail #gd-rail .gd-rail-open svg { transform: scaleX(-1); }

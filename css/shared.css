@@ -485,4 +485,74 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
 &::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* ═══════════════ the sign-in window: "Who's playing?" ═══════════════
+   js/dusk.js marks the window while its account chooser, or the signing-in screen after it, is up:
+   html[data-gd-login=art|dusk|wall] (switch «Sign-in screen», css/options/login-*.css), and
+   [data-gd-login-frame] on the block that holds Steam's backdrop (a wall of covers). The
+   window has a size of its own, so the chooser may get a card of glass with room around it. */
+&[data-gd-login] [data-gd-login-frame] { background: none !important; background-image: none !important; }
+&[data-gd-login] [data-gd-login-frame] > .Login { background: none !important; }
+&[data-gd-login]:not([data-gd-login=wall]) [data-gd-login-frame] > .Show { display: none !important; }
+&[data-gd-login=dusk] body { background: radial-gradient(120% 90% at 20% 0%, #1b2350 0%, var(--gd-night, #0c1234) 45%, #0b0f18 100%) !important; }
+&[data-gd-login=art] body { background: #0b0f18 !important; }
+/* the last game's art, sharper and brighter than behind the other windows */
+&[data-gd-login=art] #gd-art.on { opacity: .95; filter: blur(14px) brightness(.66) saturate(1.25); transform: scale(1.08); }
+/* Steam's wall of covers, dimmed into dusk */
+&[data-gd-login=wall] [data-gd-login-frame] > .Show { filter: brightness(.75); }
+&[data-gd-login=wall] [data-gd-login-frame]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 18, 52, .55);
+  pointer-events: none;
+}
+/* the chooser: heading, accounts and the switch on one card */
+&[data-gd-login] .UserChooser .AvatarContainer {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 18px 46px 22px;
+  box-sizing: border-box;
+  border-radius: 24px;
+}
+&[data-gd-login]:not([data-gd-login=wall]) .UserChooser .AvatarContainer {
+  background: linear-gradient(135deg, rgba(12, 13, 19, .44), rgba(5, 6, 10, .3));
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .8);
+}
+/* the row clips what sticks out of it, and the ring of the account under the pointer does */
+&[data-gd-login] .UserChooser .CachedUsers { padding: 14px !important; margin: -14px !important; }
+&[data-gd-login] .UserChooser .User { margin: 0 11px !important; }
+&[data-gd-login] .UserChooser .User .Icon { border-radius: 16px !important; overflow: hidden; }
+&[data-gd-login] .UserChooser .User .Icon img { border-radius: 16px; }
+&[data-gd-login] .UserChooser .User:is(:hover, :focus-visible, .gpfocus) .Icon {
+  outline: 3px solid var(--gd-accent, var(--gd-house));
+  outline-offset: 4px;
+}
+/* "Add Account": a tile of the same size, drawn with a dashed edge */
+&[data-gd-login] .UserChooser .User.New { width: 100px !important; min-width: 100px !important; }
+&[data-gd-login] .UserChooser .User.New .Icon {
+  width: 100px !important;
+  height: 100px !important;
+  box-sizing: border-box;
+  border: 2px dashed rgba(238, 241, 248, .32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+&[data-gd-login] .UserChooser .User.New .Icon svg { width: 44px; height: 44px; }
+&[data-gd-login] .UserChooser .User.New .Icon svg,
+&[data-gd-login] .UserChooser .User.New .Icon svg * { color: rgba(238, 241, 248, .85); fill: currentColor; }
+&[data-gd-login] .UserChooser .User.New:is(:hover, :focus-visible, .gpfocus) .Icon { border-color: transparent; background: rgba(255, 255, 255, .08); }
+/* signing in: the spinner, the bar under the status line and the account in the accent */
+&[data-gd-login] .StatusThrobber img.Small { filter: hue-rotate(var(--gd-login-hue, 0deg)); }
+&[data-gd-login] .StatusThrobber .ProgressBar {
+  background: rgba(255, 255, 255, .1) !important;
+  border-radius: 999px;
+  overflow: hidden;
+}
+&[data-gd-login] .StatusThrobber .Percent { background: var(--gd-accent, var(--gd-house)) !important; border-radius: 999px; }
+&[data-gd-login] .StatusThrobber .UserContainer .Avatar img { border-radius: 8px; }
+
 }   /* :where(:root:not(.MillenniumWindow_SteamBrowser)) */

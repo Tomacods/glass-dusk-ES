@@ -1018,3 +1018,159 @@ body.DesktopUI,
   background-image: none !important;
   color: var(--gd-accent-ink, #fff) !important;
 }
+
+/* ═══════════════ the game list beside the store ═══════════════
+   Switch «Store: game list» (#17). js/dusk.js marks <html>: gd-sl-pinned | gd-sl-hover |
+   gd-sl-rail, gd-on-web while the main window shows a web page (store, community), gd-sl-open
+   while the list is out; --gd-list-w is the list's width. Steam hides the library with an
+   inline display: none and keeps it mounted. Here it comes back as a layer over the content
+   frame with only the list in it, and the page beside it narrows: it is a separate view that
+   takes its bounds from .BrowserWrapper, so nothing in this document can lie over it.
+   The list slides like a drawer. The page cannot follow smoothly (Steam resizes it a few times
+   a second and it lays itself out again each time), so it makes room in one step: at once when
+   the list comes out, and a moment after the list starts back in. */
+html.gd-on-web .LocalContentContainer {
+  display: flex !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2;
+  /* clip, not hidden: a hidden box can still be scrolled, and Steam, bringing the selected game
+     into view, scrolled it sideways towards the list waiting past the edge — all of it slid over */
+  overflow: clip !important;
+  pointer-events: none;
+}
+html.gd-on-web .LocalContentContainer .MainPanel { visibility: hidden !important; }
+/* out unhurried, back in quickly */
+html.gd-on-web .LocalContentContainer .LeftListSizableContainer {
+  pointer-events: auto;
+  transition: transform .16s cubic-bezier(.4, 0, .9, .6);
+}
+html.gd-on-web.gd-sl-open .LocalContentContainer .LeftListSizableContainer { transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
+html.gd-on-web .LocalContentContainer .LeftListSizableContainer > .Container > * { transition: opacity .2s ease; }
+
+/* the page beside it: narrows at once, widens as the list goes (it covers the rest of the way) */
+html.gd-on-web .BrowserWrapper { transition: width 0s .08s; }
+html.gd-on-web.gd-sl-open .BrowserWrapper { transition: width 0s 0s; }
+html.gd-on-web:is(.gd-sl-pinned, .gd-sl-hover.gd-sl-open) .BrowserWrapper { width: calc(100% - var(--gd-list-w, 320px)) !important; }
+html.gd-on-web.gd-sl-hover:not(.gd-sl-open) .BrowserWrapper { width: calc(100% - 26px) !important; }
+html.gd-on-web.gd-sl-rail:not(.gd-sl-open) .BrowserWrapper { width: calc(100% - 96px) !important; }
+html.gd-on-web.gd-sl-rail.gd-sl-open .BrowserWrapper { width: calc(100% - var(--gd-list-w, 320px) - 42px) !important; }
+
+/* On hover, while the list is in: only its glass edge shows at the window's side */
+html.gd-on-web.gd-sl-hover:not(.gd-sl-open) .LocalContentContainer .LeftListSizableContainer { transform: translateX(calc(100% - 26px)); }
+html.gd-on-web.gd-sl-hover:not(.gd-sl-open) .LocalContentContainer .LeftListSizableContainer > .Container > * { opacity: 0; }
+html.gd-on-web.gd-sl-hover .LocalContentContainer::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 4px;
+  height: 56px;
+  margin-top: -28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .3);
+  transition: opacity .2s ease;
+}
+html.gd-on-web.gd-sl-hover.gd-sl-open .LocalContentContainer::after { opacity: 0; }
+/* Rail, while the list is in: the list waits past the window's side */
+html.gd-on-web.gd-sl-rail:not(.gd-sl-open) .LocalContentContainer .LeftListSizableContainer { transform: translateX(calc(100% + 24px)); }
+
+/* Rail: the last games' covers, and a button that opens the list */
+#gd-rail,
+#gd-rail-close { display: none; }
+html.gd-on-web.gd-sl-rail #gd-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  bottom: 16px;
+  width: 76px;
+  padding: 10px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 3;
+  background: var(--gd-glass-fill) !important;
+  -webkit-backdrop-filter: blur(var(--gd-blur)) saturate(1.25);
+  backdrop-filter: blur(var(--gd-blur)) saturate(1.25);
+  border: var(--gd-glass-edge);
+  border-radius: var(--gd-r-xl);
+  box-shadow: var(--gd-glass-shadow);
+  transition: transform .26s cubic-bezier(.2, .8, .2, 1), opacity .2s ease;
+}
+/* it steps out of the way while the list comes in */
+html.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail {
+  transform: translateX(calc(100% + 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+#gd-rail button,
+#gd-rail-close {
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  color: var(--gd-ink);
+  font: inherit;
+}
+#gd-rail .gd-rail-open,
+html.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail-close {
+  flex: none;
+  width: 40px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--gd-field);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#gd-rail .gd-rail-open:hover,
+#gd-rail-close:hover { background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 45%, transparent); }
+#gd-rail svg,
+#gd-rail-close svg { width: 18px; height: 18px; }
+#gd-rail .gd-rail-caps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+#gd-rail .gd-rail-cap {
+  flex: none;
+  width: 56px;
+  height: 84px;
+  border-radius: var(--gd-r-sm);
+  overflow: hidden;
+  background: var(--gd-field);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#gd-rail .gd-rail-cap:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px var(--gd-accent, var(--gd-house));
+}
+#gd-rail .gd-rail-cap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#gd-rail .gd-rail-cap span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
+  overflow: hidden;
+}
+/* Rail, opened: a button in the gap beside the list puts it back */
+html.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail-close {
+  position: absolute;
+  top: 10px;
+  right: calc(var(--gd-list-w, 320px) + 1px);
+  width: 34px;
+  height: 34px;
+  z-index: 3;
+  animation: gd-rail-close-in .26s ease both;
+}
+@keyframes gd-rail-close-in { from { opacity: 0; transform: translateX(12px); } }

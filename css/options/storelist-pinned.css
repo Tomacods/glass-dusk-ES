@@ -1,0 +1,2 @@
+/* Store: game list → Pinned: read by js/dusk.js in the main window */
+:root { --gd-store-list: pinned; }
