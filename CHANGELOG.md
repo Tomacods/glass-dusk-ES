@@ -2,6 +2,12 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.11 — 2026-10-19
+
+**Game list**
+- With *Store: game list* on, bits of the last game page opened in the library came through over the store and the other web pages while one was loading: the play bar's *Cloud Status* in a dark box, while Steam synced a game's saves ([#18](https://github.com/Yareli0i/glass-dusk/issues/18), reported by @kofbd). Nothing of the library behind the list is drawn now.
+- The *Collections* button beside *Home* is a round button like the sort and filter ones under it, with its four squares in the theme's ink, and it takes the accent while the Collections page is open (asked about on Discord). Steam drew it as grey squares on two grounds at once, pressed into the corner of the list's glass.
+
 ## 1.6.10 — 2026-10-18
 
 **Sign-in**

@@ -238,7 +238,6 @@ body.DesktopUI,
 .GameListHomeAndSearch .HomeBox .Bar { width: 100% !important; }
 .GameListHomeAndSearch .CollectionsButton { flex: 0 0 auto !important; }
 .HomeBox .Bar,
-.CollectionsButton .CollectionBar,
 .SearchInput .DialogInput,
 .SearchInput .DialogInput_Wrapper.Panel,
 .AdvancedSearchButton {
@@ -928,10 +927,43 @@ body.DesktopUI,
 
 /* the game-list column */
 .GameListHomeAndSearch { background: transparent !important; }
+/* Collections, beside Home: a round button like the sort and filter ones under it, with the
+   2×2 squares in the theme's ink. Steam drew two grounds here (a pill behind a rounded square)
+   and grey squares, and the square sat against the corner of the list's glass. */
+.CollectionsButton .CollectionBar { background: transparent !important; }
 .CollectionsButton .Bar.CollectionButton {
+  width: 32px !important;
+  height: 32px !important;
+  border: none !important;
+  border-radius: 999px !important;
   background: var(--gd-field) !important;
-  border-radius: var(--gd-r-sm) !important;   /* 32x32 — a full circle reads as a stray dot */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s ease;
 }
+.CollectionsButton .Bar.CollectionButton:hover { background: rgba(255, 255, 255, .16) !important; }
+.CollectionsButton .Bar.CollectionButton.Selected {   /* the Collections page is open */
+  background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, transparent) !important;
+}
+.CollectionsButton .CollectionIcon {
+  width: 13px !important;
+  height: 13px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 3px !important;
+  grid-template-columns: 5px 5px !important;
+  grid-template-rows: 5px 5px !important;
+}
+.CollectionsButton .CollectionIconBox {
+  width: 5px !important;
+  height: 5px !important;
+  margin: 0 !important;
+  background: var(--gd-ink) !important;
+  border-radius: 2px !important;
+  opacity: .8;
+}
+.CollectionsButton .Bar.CollectionButton:hover .CollectionIconBox { opacity: 1; }
 .SearchInput input::placeholder,
 .HomeBox input::placeholder { color: var(--gd-ink-faint) !important; }
 .MenuHeader { background: var(--gd-soft) !important; border-radius: var(--gd-r-sm) !important; }
@@ -1039,7 +1071,10 @@ html.gd-on-web .LocalContentContainer {
   overflow: clip !important;
   pointer-events: none;
 }
-html.gd-on-web .LocalContentContainer .MainPanel { visibility: hidden !important; }
+/* content-visibility, not visibility alone: Steam shows parts of a game page with visibility:
+   visible (the play bar's Cloud Status while it syncs), and those came through over the page
+   beside the list (#18). Nothing inside a content-visibility: hidden box is drawn. */
+html.gd-on-web .LocalContentContainer .MainPanel { visibility: hidden !important; content-visibility: hidden !important; }
 /* out unhurried, back in quickly */
 html.gd-on-web .LocalContentContainer .LeftListSizableContainer {
   pointer-events: auto;
