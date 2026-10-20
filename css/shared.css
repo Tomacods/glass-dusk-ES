@@ -487,7 +487,7 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
 
 /* ═══════════════ the sign-in window: "Who's playing?" ═══════════════
    js/dusk.js marks the window while its account chooser, or the signing-in screen after it, is up:
-   html[data-gd-login=art|dusk|wall] (switch «Sign-in screen», css/options/login-*.css), and
+   html[data-gd-login=art|games|dusk|wall] (switch «Sign-in screen», css/options/login-*.css), and
    [data-gd-login-frame] on the block that holds Steam's backdrop (a wall of covers). The
    window has a size of its own, so the chooser may get a card of glass with room around it. */
 &[data-gd-login] [data-gd-login-frame] { background: none !important; background-image: none !important; }
@@ -505,6 +505,59 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
   inset: 0;
   background: rgba(12, 18, 52, .55);
   pointer-events: none;
+}
+/* Your games: the covers of your own games drift past in rows on a tilted plane, each row at its
+   own pace and every other one the other way (js/dusk.js builds #gd-login-wall). A veil, darker
+   in the middle, keeps the card readable; a cover fades in once it has loaded. */
+& #gd-login-wall { display: none; }
+&[data-gd-login=games] body { background: #0b0f18 !important; }
+&[data-gd-login=games] #gd-login-wall {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+&[data-gd-login=games] #gd-login-wall::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 65% at 50% 50%, rgba(8, 10, 22, .74), rgba(8, 10, 22, .42));
+}
+/* the signing-in screen has no card: its line of text gets a shadow to stand on */
+&[data-gd-login=games] .StatusThrobber .LoginStatus,
+&[data-gd-login=games] .StatusThrobber .UserContainer { text-shadow: 0 1px 14px rgba(0, 0, 0, .9), 0 0 3px rgba(0, 0, 0, .6); }
+& #gd-login-wall .gd-lw-plane {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 170%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform: translate(-50%, -50%) rotate(-12deg);
+}
+& #gd-login-wall .gd-lw-row {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: gd-lw-drift 40s linear infinite;
+  will-change: transform;
+}
+& #gd-login-wall .gd-lw-row.back { animation-direction: reverse; }
+& #gd-login-wall img {
+  flex: none;
+  width: 92px;
+  height: 138px;
+  object-fit: cover;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+& #gd-login-wall img.in { opacity: .92; }
+@media (prefers-reduced-motion: reduce) {
+  & #gd-login-wall .gd-lw-row { animation: none; }
 }
 /* the chooser: heading, accounts and the switch on one card */
 &[data-gd-login] .UserChooser .AvatarContainer {
@@ -556,3 +609,7 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
 &[data-gd-login] .StatusThrobber .UserContainer .Avatar img { border-radius: 8px; }
 
 }   /* :where(:root:not(.MillenniumWindow_SteamBrowser)) */
+
+/* the drift of «Sign-in screen → Your games»: one set of covers along, then round again
+   (a keyframes rule cannot sit inside the block above) */
+@keyframes gd-lw-drift { to { transform: translateX(calc(-50% - 6px)); } }

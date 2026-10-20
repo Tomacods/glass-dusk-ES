@@ -31,7 +31,7 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 | Accent colour | **Game art** · Fixed | *Fixed* keeps the Accent colour from the Colors tab everywhere. |
 | Glass | **Normal** · Denser · Sheerer | How see-through the panels are. |
 | Corners | **Normal** · Softer · Sharper | Radius of panels and cards. |
-| Sign-in screen | **Game art** · Dusk · Steam's wall · Steam | The account chooser when Steam starts (*Who's playing?*) and the signing-in screen after it: the art of the game you played last, plain dusk or Steam's wall of covers, each with the theme's glass and colour; or Steam's own look. It only shows if Steam asks which account to use. |
+| Sign-in screen | **Game art** · Your games · Dusk · Steam's wall · Steam | The account chooser when Steam starts (*Who's playing?*) and the signing-in screen after it: the art of the game you played last, the covers of your own games drifting past, plain dusk or Steam's wall of covers, each with the theme's glass and colour; or Steam's own look. It only shows if Steam asks which account to use. |
 | Library home | **Theme** · Steam | The theme's home header, or Steam's shelves only. |
 | Home number: Games, Hours played, On disk | **on** · off | Three numbers in the home header, a switch for each. |
 | Home number: Hours, 2 weeks, Unplayed, Perfect games | on · **off** | Three more, a switch for each. *Perfect games* are the ones with every achievement unlocked. |

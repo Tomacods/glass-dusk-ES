@@ -454,9 +454,9 @@
   // It carries the main window's body class, so it runs this branch too. While its account
   // chooser ("Who's playing?") or the signing-in screen after it is up, the window is marked
   // for css/shared.css:
-  // html[data-gd-login=art|dusk|wall] (switch «Sign-in screen», css/options/login-*.css; Game
-  // art by default), and the block holding Steam's backdrop gets [data-gd-login-frame].
-  // Game art falls back to dusk until the picture decodes, or when there is none yet.
+  // html[data-gd-login=art|games|dusk|wall] (switch «Sign-in screen», css/options/login-*.css;
+  // Game art by default), and the block holding Steam's backdrop gets [data-gd-login-frame].
+  // Game art and Your games fall back to dusk while there is nothing to show yet.
   let signInArt = null;   // null: not looked for yet; '': none; otherwise the picture shown
   const signInPicture = () => {
     signInArt = '';
@@ -473,6 +473,64 @@
     };
     attempt(0);
   };
+  // «Sign-in screen → Your games»: covers of the library's games drift past behind the chooser,
+  // in rows on a tilted plane (Steam's own wall, made of yours). The sign-in window has no
+  // library to ask, so the main window keeps a list for it: up to 120 games, the ones played
+  // last first, each with its cover's address on Steam's servers, since nothing local is
+  // served before sign-in. The colour stays the last game's, as with Game art.
+  let gamesKept = '', gamesAt = 0;
+  const rememberGamesForSignIn = () => {
+    if (Date.now() - gamesAt < 60000) return;
+    const o = shared();
+    if (!o || !o.appStore.allApps.length) return;
+    gamesAt = Date.now();
+    const games = libraryGames(o).filter(a => a.app_type === 1)   // no covers online for games from outside Steam
+      .sort((a, b) => (b.rt_last_time_played || 0) - (a.rt_last_time_played || 0)).slice(0, 120);
+    const list = games.map(a => [a.appid, listFrom(o, 'GetVerticalCapsuleURLForApp', a).find(u => /^https:/.test(u)) || '']);
+    const json = JSON.stringify(list);
+    if (json === gamesKept) return;
+    gamesKept = json;
+    try { localStorage.setItem('gd-signin-games', json); } catch (e) { /* not kept: the screen stays dusk */ }
+  };
+  let wall = null, wallTint = null;   // null: not built yet; false: nothing to build it from
+  const signInWall = () => {
+    wall = false;
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem('gd-signin-games') || '[]'); } catch (e) { /* none */ }
+    if (!Array.isArray(list) || !list.length) return;
+    try { wallTint = JSON.parse(localStorage.getItem('gd-signin') || 'null'); } catch (e) { /* no colour */ }
+    const games = list.slice().sort(() => Math.random() - 0.5);
+    // enough rows and covers to fill the window turned on the plane, with one set to spare per row
+    const step = 104, rows = Math.ceil((innerHeight + innerWidth * 0.25) / 150) + 1;
+    const per = Math.ceil(innerWidth * 1.45 / step) + 1;
+    const box = document.createElement('div');
+    box.id = 'gd-login-wall';
+    const plane = document.createElement('div');
+    plane.className = 'gd-lw-plane';
+    let k = 0;
+    for (let r = 0; r < rows; r++) {
+      const row = document.createElement('div');
+      row.className = 'gd-lw-row' + (r % 2 ? ' back' : '');
+      const set = [];
+      for (let i = 0; i < per; i++) set.push(games[k++ % games.length]);
+      // the set twice over: the row slides by one set and starts again where it began
+      for (const [id, url] of [...set, ...set]) {
+        const img = document.createElement('img');
+        img.alt = '';
+        img.decoding = 'async';
+        img.onload = () => img.classList.add('in');
+        chain(img, [url, `${CDN(id)}/library_600x900.jpg`].filter(Boolean), () => { img.style.display = 'none'; });
+        row.appendChild(img);
+      }
+      const time = (per * step) / (32 * (0.85 + Math.random() * 0.3));   // about 32 px a second
+      row.style.animationDuration = `${time.toFixed(1)}s`;
+      row.style.animationDelay = `-${(Math.random() * time).toFixed(1)}s`;
+      plane.appendChild(row);
+    }
+    box.appendChild(plane);
+    document.body.insertBefore(box, layer.nextSibling);
+    wall = box;
+  };
   const signIn = () => {
     const login = document.querySelector('.Login.DesktopUI');
     if (!login) return false;
@@ -487,9 +545,11 @@
     }
     if (frame) frame.setAttribute('data-gd-login-frame', '');
     if (want === 'art' && signInArt === null) signInPicture();
-    const mode = want === 'art' && !signInArt ? 'dusk' : want;
+    if (want === 'games' && wall === null) signInWall();
+    const mode = (want === 'art' && !signInArt) || (want === 'games' && !wall) ? 'dusk' : want;
     root.setAttribute('data-gd-login', mode);
-    if (mode !== 'art') paint(null, null);
+    if (mode === 'games' && wallTint) paint(null, wallTint.accent, wallTint.ink);
+    else if (mode !== 'art') paint(null, null);
     // the signing-in spinner is a picture in Steam's blue: turned round the colour wheel to the accent
     const m = /^#?([0-9a-f]{6})$/i.exec(getComputedStyle(root).getPropertyValue('--gd-accent').trim());
     if (m) {
@@ -1351,6 +1411,7 @@
     mountLayer();
     if (signIn()) return;
     try { storeList(); } catch (e) { /* the list beside the store is a bonus */ }
+    try { rememberGamesForSignIn(); } catch (e) { /* the sign-in screen falls back to dusk */ }
     const want = wantedArt();
     if (want !== KEEP) applyArt(want);
     try { buildHome(); } catch (e) { /* the home header is a bonus, never break the client over it */ }

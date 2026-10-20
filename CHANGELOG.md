@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.13 — 2026-10-20
+
+**Sign-in**
+- *Sign-in screen* has a new choice, *Your games* (asked for on Discord): the covers of your own games drift past behind the chooser and the signing-in screen, in rows on a tilted plane, each at its own pace and every other one the other way, like Steam's own wall made of your library. The games played last come first, up to 120 of them; the colour stays the last game's.
+
 ## 1.6.12 — 2026-10-20
 
 **Game list**
