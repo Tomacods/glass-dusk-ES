@@ -10,6 +10,7 @@ A [Millennium](https://steambrew.app) theme for the Steam desktop client. Smoked
 - **Game page.** The hero art runs edge to edge, the play bar is one flat card, and page links become chips.
 - **Store.** A game's page uses its art and colour. Everything else sits on a plain dusk ground.
 - **Menus, settings, notifications, friends and chat.** All wear the same colour as the main window.
+- **Sign-in.** The account chooser (*Who's playing?*) and the signing-in screen after it sit on the art of the game you played last, on the covers of your own games drifting past, or on a slideshow of your games' art, with the chooser on a card of glass. Steam shows them only when it is set to ask which account to use.
 - **Plugins.** Millennium plugins with an interface of their own take the theme's colours: HLTB for Steam, Achievement Groups, Player Count, Extendium. Size on Disk, Non-Steam Playtimes and Easy SteamGrid match as they are. Browser extensions added through Extendium (SteamDB, Augmented Steam) put their blocks on store pages in the same cards as Steam's own.
 - **Community and profiles** stay as Steam draws them. Profiles carry their owners' own backgrounds and themes, and a half-restyled community reads worse than an untouched one.
 - **Big Picture.** The focused game's art fills the home screen and lends its colour to focus rings and tabs. A chip at the top left shows its hours and when you last played.
@@ -18,6 +19,7 @@ A [Millennium](https://steambrew.app) theme for the Steam desktop client. Smoked
 ![Game page](images/game.jpg)
 ![Plugins on a game page: HLTB for Steam, Player Count, Size on Disk](images/plugins.jpg)
 ![Big Picture](images/bigpicture.jpg)
+![Sign-in screen, Slideshow: the art of your games one after another](images/signin.webp)
 
 ## Settings
 
