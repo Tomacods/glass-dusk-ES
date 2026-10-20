@@ -1218,7 +1218,7 @@
   // Marks on <html>: gd-sl-<mode>, gd-on-web while a web page is shown, gd-sl-open while the
   // list is out (On hover, Rail). --gd-list-w is the list's width, which stays Steam's setting.
   const SL_MODES = ['pinned', 'hover', 'rail'];
-  let slMode = '', slPrimed = false, slTimer = 0, slWatched = null;
+  let slMode = '', slPrimed = false, slTimer = 0, slWatched = null, slWatchedWeb = null;
   const slRailKept = () => { try { return localStorage.getItem('gd-sl-rail-open') === '1'; } catch (e) { return false; } };
   const slSetOpen = (open, delay) => {
     clearTimeout(slTimer);
@@ -1227,10 +1227,12 @@
       if (slMode === 'rail') { try { localStorage.setItem('gd-sl-rail-open', open ? '1' : '0'); } catch (e) { /* not kept */ } }
     }, delay || 0);
   };
-  // On hover: out after a moment over the list (or a menu it opened), back in when the pointer
-  // leaves for the page. The page is not part of this document, so leaving for it shows as a
-  // pointerout with nowhere to go.
-  const slInside = el => !!(el && el.closest && el.closest('.LeftListSizableContainer, .contextMenu, .DropDown'));
+  // On hover: out after a moment over the list, back in when the pointer leaves for the page.
+  // A menu keeps the list out while it is out, but no menu brings it out: the main window has
+  // menus of its own away from the list, as on Millennium's settings page (#19). The page is not
+  // part of this document, so leaving for it shows as a pointerout with nowhere to go.
+  const slInside = el => !!(el && el.closest && (el.closest('.LeftListSizableContainer') ||
+    (root.classList.contains('gd-sl-open') && el.closest('.contextMenu, .DropDown'))));
   addEventListener('pointerover', e => {
     if (slMode === 'hover' && root.classList.contains('gd-on-web') && slInside(e.target)) slSetOpen(true, 120);
   }, true);
@@ -1324,9 +1326,15 @@
       root.classList.toggle('gd-sl-open', mode === 'rail' && slRailKept());
     }
     const lc = document.querySelector('.LocalContentContainer');
-    // a web page in the main window: Steam hides the library; watch for it to come and go
-    if (lc && lc !== slWatched) { slWatched = lc; new MutationObserver(() => soon()).observe(lc, { attributes: true, attributeFilter: ['style'] }); }
-    const onWeb = !!lc && lc.style.display === 'none';
+    const web = document.querySelector('.BrowserWrapper');
+    // a web page in the main window: Steam hides the library and shows the web view; watch both
+    // come and go. Pages of the client's own with the library hidden, such as Millennium's
+    // settings, hide the web view too: they are not drawn to make room, so the list stays off
+    // them (#19).
+    const follow = el => new MutationObserver(() => soon()).observe(el, { attributes: true, attributeFilter: ['style'] });
+    if (lc && lc !== slWatched) { slWatched = lc; follow(lc); }
+    if (web && web !== slWatchedWeb) { slWatchedWeb = web; follow(web); }
+    const onWeb = !!lc && lc.style.display === 'none' && !!web && web.style.display !== 'none';
     root.classList.toggle('gd-on-web', !!mode && onWeb);
     if (!mode || !onWeb) return;
     const list = document.querySelector('.LeftListSizableContainer');

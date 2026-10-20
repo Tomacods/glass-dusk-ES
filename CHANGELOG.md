@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.12 — 2026-10-20
+
+**Game list**
+- *Store: game list* keeps to the client's web pages ([#19](https://github.com/Yareli0i/glass-dusk/issues/19), reported by @PlzCarryMe). Millennium's settings page is drawn by the client itself and does not make room for the list, so the list covered its right side, with the *Use* buttons and the menu arrows. With *On hover*, pointing at one of those menus brought the list out. The list now stays off such pages, and only the list itself brings it out.
+
 ## 1.6.11 — 2026-10-19
 
 **Game list**
