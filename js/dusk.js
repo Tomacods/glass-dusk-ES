@@ -454,9 +454,10 @@
   // It carries the main window's body class, so it runs this branch too. While its account
   // chooser ("Who's playing?") or the signing-in screen after it is up, the window is marked
   // for css/shared.css:
-  // html[data-gd-login=art|games|dusk|wall] (switch «Sign-in screen», css/options/login-*.css;
-  // Game art by default), and the block holding Steam's backdrop gets [data-gd-login-frame].
-  // Game art and Your games fall back to dusk while there is nothing to show yet.
+  // html[data-gd-login=art|games|slides|dusk|wall] (switch «Sign-in screen»,
+  // css/options/login-*.css; Game art by default), and the block holding Steam's backdrop gets
+  // [data-gd-login-frame]. Game art, Your games and Slideshow fall back to dusk while there is
+  // nothing to show yet.
   let signInArt = null;   // null: not looked for yet; '': none; otherwise the picture shown
   const signInPicture = () => {
     signInArt = '';
@@ -531,6 +532,71 @@
     document.body.insertBefore(box, layer.nextSibling);
     wall = box;
   };
+  // «Sign-in screen → Slideshow»: the art of one game after another fills the window, each
+  // fading into the next every three seconds or so, and the colour follows the picture. A game's
+  // art has its hash in the game's details, so the main window gathers them only while this
+  // is chosen (the switch reaches every window): the 24 games played last, one at a time.
+  const loginWanted = () => getComputedStyle(root).getPropertyValue('--gd-login').trim() || 'art';
+  let heroesKept = '', heroesAt = 0, heroesBusy = false;
+  const rememberHeroesForSignIn = async () => {
+    if (heroesBusy || Date.now() - heroesAt < 600000 || loginWanted() !== 'slides') return;
+    const o = shared();
+    if (!o || !o.appStore.allApps.length) return;
+    heroesBusy = true;
+    heroesAt = Date.now();
+    try {
+      const games = libraryGames(o).filter(a => a.app_type === 1 && a.rt_last_time_played)
+        .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played).slice(0, 24);
+      const list = [];
+      for (const a of games) {
+        await detailsReady(o, a).promise;
+        list.push([a.appid, steamArt(o, 'GetHeroImages', 'rgHeroImages', a).find(u => /^https:/.test(u)) || '']);
+      }
+      const json = JSON.stringify(list);
+      if (json !== heroesKept) {
+        heroesKept = json;
+        try { localStorage.setItem('gd-signin-heroes', json); } catch (e) { /* not kept: the screen stays dusk */ }
+      }
+    } finally { heroesBusy = false; }
+  };
+  let slides = null, slideTint = null;   // null: not built yet; false: nothing to build them from
+  const signInSlides = () => {
+    slides = false;
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem('gd-signin-heroes') || '[]'); } catch (e) { /* none */ }
+    if (!Array.isArray(list) || !list.length) return;
+    try { slideTint = JSON.parse(localStorage.getItem('gd-signin') || 'null'); } catch (e) { /* no colour yet */ }
+    const box = document.createElement('div');
+    box.id = 'gd-login-slides';
+    const faces = [0, 1].map(() => box.appendChild(document.createElement('div')));
+    document.body.insertBefore(box, layer.nextSibling);
+    const order = list.slice().sort(() => Math.random() - 0.5);
+    let i = 0, front = 0, misses = 0;
+    const next = () => {
+      if (!box.isConnected || misses > order.length) return;
+      const [id, url] = order[i++ % order.length];
+      const urls = [url, `${CDN(id)}/library_hero.jpg`].filter(Boolean);
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      let k = 0;
+      img.onload = () => {
+        misses = 0;
+        const face = faces[front = 1 - front];
+        face.style.backgroundImage = `url("${img.src}")`;
+        face.classList.remove('go');
+        void face.offsetWidth;   // start its slow zoom over
+        face.classList.add('on', 'go');
+        faces[1 - front].classList.remove('on');
+        slideTint = accentFrom(img) || slideTint;
+        soon();
+        setTimeout(next, 3200);
+      };
+      img.onerror = () => { if (++k < urls.length) img.src = urls[k]; else { misses++; next(); } };
+      img.src = urls[0];
+    };
+    next();
+    slides = box;
+  };
   const signIn = () => {
     const login = document.querySelector('.Login.DesktopUI');
     if (!login) return false;
@@ -546,9 +612,11 @@
     if (frame) frame.setAttribute('data-gd-login-frame', '');
     if (want === 'art' && signInArt === null) signInPicture();
     if (want === 'games' && wall === null) signInWall();
-    const mode = (want === 'art' && !signInArt) || (want === 'games' && !wall) ? 'dusk' : want;
+    if (want === 'slides' && slides === null) signInSlides();
+    const mode = (want === 'art' && !signInArt) || (want === 'games' && !wall) || (want === 'slides' && !slides) ? 'dusk' : want;
     root.setAttribute('data-gd-login', mode);
-    if (mode === 'games' && wallTint) paint(null, wallTint.accent, wallTint.ink);
+    const tint = mode === 'games' ? wallTint : mode === 'slides' ? slideTint : null;
+    if (tint) paint(null, tint.accent, tint.ink);
     else if (mode !== 'art') paint(null, null);
     // the signing-in spinner is a picture in Steam's blue: turned round the colour wheel to the accent
     const m = /^#?([0-9a-f]{6})$/i.exec(getComputedStyle(root).getPropertyValue('--gd-accent').trim());
@@ -1412,6 +1480,7 @@
     if (signIn()) return;
     try { storeList(); } catch (e) { /* the list beside the store is a bonus */ }
     try { rememberGamesForSignIn(); } catch (e) { /* the sign-in screen falls back to dusk */ }
+    rememberHeroesForSignIn().catch(() => { /* the sign-in screen falls back to dusk */ });
     const want = wantedArt();
     if (want !== KEEP) applyArt(want);
     try { buildHome(); } catch (e) { /* the home header is a bonus, never break the client over it */ }

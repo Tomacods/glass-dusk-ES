@@ -2,7 +2,7 @@
   "name": "Glass Dusk",
   "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
   "author": "Yareli",
-  "version": "1.6.13",
+  "version": "1.6.14",
   "tags": [
     "Dark",
     "Glass",
@@ -150,7 +150,7 @@
       }
     },
     "Sign-in screen": {
-      "description": "The account chooser when Steam starts (Who's playing?): the art of the game you played last, the covers of your own games drifting past, plain dusk or Steam's wall of covers, each with the theme's glass, or Steam's own look. It shows only if Steam asks which account to use.",
+      "description": "The account chooser when Steam starts (Who's playing?): the art of the game you played last, the covers of your own games drifting past, the art of your games one after another, plain dusk or Steam's wall of covers, each with the theme's glass, or Steam's own look. It shows only if Steam asks which account to use.",
       "tab": "Look",
       "default": "Game art",
       "values": {
@@ -161,6 +161,14 @@
               ".*"
             ],
             "src": "css/options/login-games.css"
+          }
+        },
+        "Slideshow": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/login-slides.css"
           }
         },
         "Dusk": {

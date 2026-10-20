@@ -526,8 +526,39 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
   background: radial-gradient(60% 65% at 50% 50%, rgba(8, 10, 22, .74), rgba(8, 10, 22, .42));
 }
 /* the signing-in screen has no card: its line of text gets a shadow to stand on */
-&[data-gd-login=games] .StatusThrobber .LoginStatus,
-&[data-gd-login=games] .StatusThrobber .UserContainer { text-shadow: 0 1px 14px rgba(0, 0, 0, .9), 0 0 3px rgba(0, 0, 0, .6); }
+&:is([data-gd-login=games], [data-gd-login=slides]) .StatusThrobber .LoginStatus,
+&:is([data-gd-login=games], [data-gd-login=slides]) .StatusThrobber .UserContainer { text-shadow: 0 1px 14px rgba(0, 0, 0, .9), 0 0 3px rgba(0, 0, 0, .6); }
+/* Slideshow: the art of one of your games after another, each fading into the next while it
+   slowly comes closer (js/dusk.js swaps the two faces of #gd-login-slides every few seconds) */
+& #gd-login-slides { display: none; }
+&[data-gd-login=slides] body { background: #0b0f18 !important; }
+&[data-gd-login=slides] #gd-login-slides {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+& #gd-login-slides > div {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  filter: blur(2px) brightness(.64) saturate(1.15);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+& #gd-login-slides > div.on { opacity: 1; }
+& #gd-login-slides > div.go { animation: gd-ls-closer 4.6s ease-out both; }
+&[data-gd-login=slides] #gd-login-slides::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 65% at 50% 50%, rgba(8, 10, 22, .5), rgba(8, 10, 22, .2));
+}
+@media (prefers-reduced-motion: reduce) {
+  & #gd-login-slides > div.go { animation: none; }
+}
 & #gd-login-wall .gd-lw-plane {
   position: absolute;
   left: 50%;
@@ -613,3 +644,5 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
 /* the drift of «Sign-in screen → Your games»: one set of covers along, then round again
    (a keyframes rule cannot sit inside the block above) */
 @keyframes gd-lw-drift { to { transform: translateX(calc(-50% - 6px)); } }
+/* the slow zoom of «Sign-in screen → Slideshow» */
+@keyframes gd-ls-closer { from { transform: scale(1.03); } to { transform: scale(1.1); } }

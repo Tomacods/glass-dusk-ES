@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.6.14 — 2026-10-20
+
+**Sign-in**
+- *Sign-in screen* has another new choice, *Slideshow*, which is what was asked for on Discord: the art of one of your games after another fills the window behind the chooser and the signing-in screen, each fading into the next every three seconds or so while it slowly comes closer, and the colour follows the picture. It takes the 24 games you played last.
+
 ## 1.6.13 — 2026-10-20
 
 **Sign-in**
