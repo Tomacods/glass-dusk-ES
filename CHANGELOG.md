@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.1 — 2026-10-24
+
+**In-game overlay**
+- A clock or timer pinned over the game sat in a dark box of glass. Pinned and left on screen once the overlay closes, Steam drops the ground of these panels (the clock and timer, notes, achievements, the timeline, a browser) so the game shows round them; *Overlay panels → Glass* put it back. It keeps out of them now ([#20](https://github.com/Yareli0i/glass-dusk/issues/20), reported by @timinside).
+
 ## 1.7.0 — 2026-10-24
 
 **Store**

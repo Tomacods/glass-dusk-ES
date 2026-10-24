@@ -23,6 +23,15 @@ body.OverlayPopupBody .OverlayPopup.PopupFullWindow:not(.OverlayTimeline) {
   box-shadow: none !important;
   overflow: hidden;
 }
+/* Pinned and left over the game once the overlay closes (the clock and timer, notes,
+   achievements, the timeline, a browser), Steam drops the panel's ground and title bar so the
+   game shows round it. The glass did not, and the clock sat in a dark box (#20). */
+body.OverlayPopupBody .OverlayPopup.PinnedView:is(.OverlayTimer, .GameNotes, .Achievements, .OverlayTimeline,
+  .OverlayBrowser_Browser, .OverlayBrowser_Discussions, .OverlayBrowser_Guides) {
+  background: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
 /* inside the frame Steam lays its own opaque slate gradient, and a teal strip over the title */
 body.OverlayPopupBody .GameOverview { background: transparent !important; }
 body.OverlayPopupBody .title-area-highlight { background: transparent !important; }
