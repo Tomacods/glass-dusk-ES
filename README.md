@@ -8,7 +8,7 @@ A [Millennium](https://steambrew.app) theme for the Steam desktop client. Smoked
 
 - **Library.** Two panes of smoked glass over the blurred art of the open game, with the game list on the right. The home page gets its own header: greeting, library stats of your choosing, *Continue* for the last game, recent games.
 - **Game page.** The hero art runs edge to edge, the play bar is one flat card, and page links become chips.
-- **Store.** A game's page uses its art and colour. Everything else sits on a plain dusk ground.
+- **Store.** All of it, on the same dark glass with the same buttons, chips and cards: the front page, a game's page in its art and colour, search, every hub (Specials, each category, tag and genre, Demos, VR…), the store menu, the wishlist, the cart, the charts, the personal calendar, the recommender, your account's pages, the Points Shop and the News Hub. The price and *Add to Cart* blocks, the landing pages and the art of sale events stay as Steam draws them.
 - **Menus, settings, notifications, friends and chat.** All wear the same colour as the main window.
 - **Sign-in.** The account chooser (*Who's playing?*) and the signing-in screen after it sit on the art of the game you played last, on the covers of your own games drifting past, or on a slideshow of your games' art, with the chooser on a card of glass. Steam shows them only when it is set to ask which account to use.
 - **Plugins.** Millennium plugins with an interface of their own take the theme's colours: HLTB for Steam, Achievement Groups, Player Count, Extendium. Size on Disk, Non-Steam Playtimes and Easy SteamGrid match as they are. Browser extensions added through Extendium (SteamDB, Augmented Steam) put their blocks on store pages in the same cards as Steam's own.
@@ -17,7 +17,9 @@ A [Millennium](https://steambrew.app) theme for the Steam desktop client. Smoked
 - **In-game overlay (Shift+Tab).** A light veil replaces Steam's near-black sheet, so the game stays visible. *Game Overview* and the toolbar become smoked glass in the running game's colour.
 
 ![Game page](images/game.jpg)
-![Plugins on a game page: HLTB for Steam, Player Count, Size on Disk](images/plugins.jpg)
+![Plugins on a game page: HLTB for Steam, Player Count](images/plugins.jpg)
+![The store's front page](images/store.jpg)
+![A game's page in the store](images/store-game.jpg)
 ![Big Picture](images/bigpicture.jpg)
 ![Sign-in screen, Slideshow: the art of your games one after another](images/signin.webp)
 

@@ -1,0 +1,201 @@
+/* Glass Dusk — your account (/account/…).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its `:has()` rules cost time on every page they are loaded in, and on the
+   long wishlist they made scrolling stutter. Like webkit.css, its rules wait for
+   html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ your account ═══════════════
+   Account details, store preferences, languages, purchase history, licences, product keys…
+   one older template: a list of sections at the left, blue header strips over dark blocks,
+   tables under a bright blue head, links drawn as flat grey buttons. */
+
+/* the sections at the left */
+/* (the list is as wide as its column, which ends where the cards begin) */
+.two_column.left a.nav_item {
+  border-radius: 10px;
+  margin-right: 12px;
+}
+.two_column.left a.nav_item:hover { background: rgba(255, 255, 255, .06) !important; }
+.two_column.left a.nav_item.active { background: color-mix(in srgb, var(--gd-accent) 30%, transparent) !important; }
+/* Steam's blue bar down its left edge */
+.two_column.left a.nav_item.active::after { display: none; }
+
+/* a block: the header strip and the body under it read as one card */
+.account_header_line {
+  background: rgba(255, 255, 255, .09) !important;
+  border-radius: var(--gd-r-md) var(--gd-r-md) 0 0;
+}
+.account_setting_block,
+.account_setting_block_short,
+.account_settings_container {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: 0 0 var(--gd-r-md) var(--gd-r-md);
+}
+/* a body with no strip over it is a card on its own */
+:is(.account_setting_block, .account_setting_block_short, .account_settings_container):not(.account_header_line + *) { border-radius: var(--gd-r-md); }
+/* the rows inside: a saved payment method, an ignored game, the "not interested" count */
+.payment_method_box,
+.ignored_app {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: 8px;
+}
+.not_interested_container,
+.preference_row { border-color: rgba(255, 255, 255, .08) !important; }
+
+/* "Add funds", "View purchase history", "Show banned words"… */
+a.account_manage_link,
+.text_filter_action_link,
+.account_settings_container .queue_customize {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+a.account_manage_link:hover,
+.text_filter_action_link:hover,
+.account_settings_container .queue_customize:hover { background: rgba(255, 255, 255, .16) !important; }
+
+/* check boxes and radio buttons (the browser's own), text fields, the frame behind a drop-down */
+.page_content input:is([type=checkbox], [type=radio]) {
+  accent-color: var(--gd-accent);
+  color-scheme: dark;
+}
+.account_settings_container .gray_bevel,
+input.registerkey_input_box_text {
+  background: var(--gd-field) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.account_settings_container .dselect_container { background: transparent !important; }
+
+/* purchase history and licences */
+.wallet_history_click_hint { color: var(--gd-link) !important; }
+.wallet_history_table th,
+.account_table th {
+  background: rgba(255, 255, 255, .09) !important;
+  color: var(--gd-ink) !important;
+}
+table.wallet_history_table,
+.wallet_history_table :is(th, td),
+.account_table_ctn { border-color: rgba(255, 255, 255, .08) !important; }
+.account_table_ctn {
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+}
+/* a discount in the history: the store's own treatment */
+.wht_discount_pct {
+  background: var(--gd-accent) !important;
+  border-radius: 6px;
+  color: var(--gd-accent-ink) !important;
+}
+.wht_discounted_price { color: var(--gd-ink) !important; }
+a:is(.license_paginator_next, .license_paginator_prev) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+
+/* a product key: the pale blue form, the wallet card beside it */
+.registerkey_form {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.accountInfoBlock {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md);
+  overflow: hidden;
+}
+.accountInfoBlock a.linkbar {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+}
+.accountInfoBlock .block_content_inner { background: none !important; }
+
+/* ── pages of this kind that are React inside the old shell ── */
+
+/* cookies: "Reject All" and "Accept All", then rows with a two-way switch */
+[data-gd-cookie-preferences] .Panel > [role=button].Focusable {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+[data-gd-cookie-preferences] .Panel > [role=button].Focusable:last-child {
+  background: var(--gd-accent) !important;
+  color: var(--gd-accent-ink) !important;
+}
+.DialogToggleField {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: 10px !important;
+}
+.DialogToggleField_Control {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+}
+.DialogToggleField_Option.Active {
+  background: var(--gd-accent) !important;
+  border-radius: 999px;
+  color: var(--gd-accent-ink) !important;
+}
+
+/* devices: a group's head with its icon, and the rows under it on Steam's blue */
+[data-gd-security-devices] .account_settings_container > div > div:has(> img) {
+  background: rgba(255, 255, 255, .09) !important;
+  border-radius: 10px 10px 0 0;
+}
+[data-gd-security-devices] .account_settings_container > div > div:has(> .Panel[role=button]) {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: 0 0 10px 10px;
+}
+[data-gd-security-devices] .Panel[role=button] { border-radius: 10px; }
+/* "Active now": the group whose heading carries a dot */
+[data-gd-security-devices] div:has(> div > svg > circle) > .Panel[role=button] { background: color-mix(in srgb, var(--gd-accent) 24%, transparent) !important; }
+[data-gd-security-devices] div:has(> div > svg > circle) > div > svg > circle { fill: var(--gd-accent); }
+/* "Sign out everywhere" stays red */
+[data-gd-security-devices] button.DialogButton { border-radius: 999px !important; }
+
+/* family: the body under the strip, a member's card */
+[data-gd-family-management] div:has(> .account_header_line) + div {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: 0 0 var(--gd-r-md) var(--gd-r-md);
+}
+[data-gd-family-management] .Panel[role=button]:has(> div) {
+  background: rgba(255, 255, 255, .06) !important;
+  border-radius: 10px !important;
+}
+
+/* ── the same pages rebuilt in the newer store (notification settings, playtests): no names
+   at all, so everything is taken from the list of sections, which links to /account/…
+   The section you are on carries a hashed class only; js/dusk.js gives it data-gd-here. ── */
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) > a.Focusable {
+  background-image: none !important;
+  border-radius: 10px;
+  margin-right: 12px;
+}
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) > a.Focusable::after { display: none !important; }
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) > a.Focusable:hover { background-color: rgba(255, 255, 255, .06) !important; }
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) > a.Focusable[data-gd-here] { background-color: color-mix(in srgb, var(--gd-accent) 30%, transparent) !important; }
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) + .Panel > div:first-child {
+  background: rgba(255, 255, 255, .09) !important;
+  border-radius: var(--gd-r-md) var(--gd-r-md) 0 0;
+}
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) + .Panel > div:first-child + div {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: 0 0 var(--gd-r-md) var(--gd-r-md);
+}
+/* a group of notifications, a playtest: rows that open */
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) + .Panel > div > .Panel[role=button] {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+&.gd-p-account #StoreTemplate .Panel:has(> a[href*="/account"]) + .Panel [role=combobox] {
+  background: var(--gd-field) !important;
+  border-radius: 8px !important;
+}
+/* the blue band behind the page's title there */
+&.gd-p-account #StoreTemplate section .Panel:has(.Panel > a[href*="/account"]) > div:first-child:has(h2) { background-image: none !important; }
+
+}   /* :where(html.gd-store) */

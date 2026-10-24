@@ -1,0 +1,72 @@
+/* Glass Dusk — the News Hub and a piece of news (pages with Steam's event-calendar block).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its rules cost time on every page they are loaded in, and on the long
+   wishlist they made scrolling stutter. Like webkit.css, its rules wait for html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the News Hub ═══════════════
+   The same kind of application under [data-gd-event-calendar]. */
+
+/* the page and its main column: Steam's navy */
+[data-gd-event-calendar] > div > .Panel {
+  background: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 0 !important;
+}
+[data-gd-event-calendar] > div > .Panel > .Panel + .Panel { background: none !important; }
+/* the panel at the left */
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child {
+  background: rgba(14, 17, 27, .82) !important;
+  border-radius: 0 var(--gd-r-md) var(--gd-r-md) 0;
+  box-shadow: none !important;
+}
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child { border-radius: 10px; }
+/* a day: its ground, and its heading, which stays under the top while the day scrolls past */
+[data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div { background: none !important; }
+[data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div > div:first-child:not(:only-child) {
+  background: rgba(11, 15, 24, .88) !important;
+  -webkit-backdrop-filter: blur(14px);
+}
+/* a piece of news */
+[data-gd-event-calendar] .Panel[style] a.Focusable[role=button] > div:only-child {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+}
+
+
+/* a piece of news opened from the News Hub: the article and its column are one card */
+[data-gd-event-calendar] > div > .Panel > div:nth-child(2) > div:first-child > div { background-color: transparent !important; }
+[data-gd-event-calendar] > div > .Panel > div:nth-child(3) > div:nth-child(2) > div:first-child {
+  background: rgba(14, 17, 27, .82) !important;
+  background-image: none !important;
+  border-radius: var(--gd-r-md) !important;
+}
+[data-gd-event-calendar] > div > .Panel > div:nth-child(4) { background: none !important; }
+/* the votes, comments and share boxes at its end */
+[data-gd-event-calendar] > div > .Panel > div:nth-child(3) > div:nth-child(2) > div:first-child > .Panel:nth-child(4) > div > div,
+[data-gd-event-calendar] > div > .Panel > div:nth-child(3) > div:nth-child(2) > div:first-child > .Panel:nth-child(4) > div:not(:first-child) {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+[data-gd-event-calendar] > div > .Panel > div:nth-child(3) > div:nth-child(2) > div:first-child > .Panel:nth-child(4) :is(.Panel[role=button], a.Focusable > div) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+}
+
+/* the News Hub: the curators it suggests (a maroon band; the one block of the feed that is not a
+   .Panel, wherever Steam puts it), "Browse More Sources", "Options and Filters" */
+[data-gd-event-calendar] > div > .Panel > .Panel:nth-child(2) > div > div > div:not(.Panel) { background: none !important; background-image: none !important; }
+[data-gd-event-calendar] > div > .Panel > .Panel:nth-child(2) > div > div > div:not(.Panel) > div:first-child {
+  background: rgba(255, 255, 255, .045) !important;
+  background-image: none !important;
+  border-radius: var(--gd-r-md) !important;
+}
+[data-gd-event-calendar] > div > .Panel > .Panel:nth-child(2) > div > div > div:not(.Panel) > div:first-child > .Panel > div:last-child,
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child > div > div:nth-child(3) > div:nth-child(6) > div:first-child {
+  background: var(--gd-field) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+
+}   /* :where(html.gd-store) */

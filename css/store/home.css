@@ -1,0 +1,76 @@
+/* Glass Dusk — the store's front page: its React blocks (pages with Steam's discounts-and-events, personal-calendar-home or discovery-queue-home blocks).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its rules cost time on every page they are loaded in, and on the long
+   wishlist they made scrolling stutter. Like webkit.css, its rules wait for html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ store home: the React blocks ═══════════════
+   Discounts & Events, Your Personal Calendar and the Discovery Queue carry hashed classes
+   only. They are picked by their mount points, and inside by what the carousel library and
+   the accessibility attributes name. */
+
+/* A deal is a picture with its price under it. The small ones come two to a column with
+   a gap left over by their fixed shape: here they share the column's height evenly and the
+   picture is cropped a little at the sides instead. */
+[data-gd-discounts-and-events] .carousel__inner-slide > div > div { gap: 18px !important; justify-content: flex-start !important; }
+[data-gd-discounts-and-events] .carousel__inner-slide > div > div > div { flex: 1 1 0 !important; min-height: 0; }
+[data-gd-discounts-and-events] .carousel__inner-slide a > div:first-child {
+  flex: 1 1 0 !important;
+  min-height: 0;
+  aspect-ratio: auto !important;
+  border-radius: var(--gd-r-md) !important;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+[data-gd-discounts-and-events] .carousel__inner-slide a > div:first-child > img { width: 100% !important; height: 100% !important; }
+[data-gd-discounts-and-events] .carousel__inner-slide a:hover > div:first-child {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 34px -18px rgba(0, 0, 0, .8);
+}
+/* "Weekend Deal", "Today's Deal": the flag in the picture's corner keeps its colour */
+[data-gd-discounts-and-events] .carousel__inner-slide img + div { border-radius: 0 0 10px 0 !important; }
+/* The lime percent on a green plate → the accent chip of every other price on the page.
+   The plate is as tall as the strip; a transparent border around it makes the chip. */
+[data-gd-discounts-and-events] [role=link][aria-label*="%"] > div:first-child,
+[data-gd-discounts-and-events] .carousel__inner-slide a > div + div > div:not([role]) {
+  box-sizing: border-box !important;
+  border: 5px solid transparent !important;
+  background: var(--gd-accent) padding-box !important;
+  border-radius: 11px !important;
+}
+[data-gd-discounts-and-events] .carousel__inner-slide a > div + div > div:not([role]) { padding: 0 7px !important; }
+[data-gd-discounts-and-events] [role=link][aria-label*="%"] > div:first-child > div,
+[data-gd-discounts-and-events] .carousel__inner-slide a > div + div > div:not([role]),
+[data-gd-discounts-and-events] .carousel__inner-slide a > div + div > div:not([role]) * {
+  color: var(--gd-accent-ink) !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  line-height: 27px !important;
+}
+[data-gd-discounts-and-events] [role=link][aria-label*="%"] > div + div > div:first-child { color: rgba(238, 241, 248, .45) !important; }
+
+/* the calendar: "NEW", the pictures, "+2 More" */
+[data-gd-personal-calendar-home] div:has(> .see_more_link) span:not(.see_more_link span) {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+}
+[data-gd-personal-calendar-home] .carousel__inner-slide img { border-radius: 8px !important; }
+[data-gd-personal-calendar-home] .carousel__inner-slide > div > a {
+  background: #262a36 !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+
+/* the Discovery Queue banner: purple into teal → the accent into dusk */
+:is([data-gd-discovery-queue-home], .DiscoveryQueueCSS) [role=button] {
+  background: #0e111b !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden !important;
+}
+:is([data-gd-discovery-queue-home], .DiscoveryQueueCSS) [role=button] > div:first-child { background: none !important; }
+:is([data-gd-discovery-queue-home], .DiscoveryQueueCSS) .WidgetHeaderCtn {
+  background-image: linear-gradient(77deg, color-mix(in srgb, var(--gd-accent) 46%, #0b0f18) 0%, rgba(14, 17, 27, .94) 50%, rgba(14, 17, 27, 0) 70%) !important;
+}
+
+}   /* :where(html.gd-store) */

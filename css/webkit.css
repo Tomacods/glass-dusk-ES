@@ -19,6 +19,7 @@
   --gd-accent-ink: #fff;
   --gd-ink: #eef1f8;
   --gd-ink-soft: rgba(238, 241, 248, .72);
+  --gd-ink-faint: rgba(238, 241, 248, .44);
   --gd-night: #0b0f18;
   --gd-field: rgba(255, 255, 255, .08);
   --gd-r-md: 12px;
@@ -123,6 +124,34 @@ header#global_header { display: none !important; }
 .btn_green_white_innerfade span,
 .btnv6_blue_hoverfade span,
 .btn_addtocart span { background: transparent !important; }
+/* The older family (…_steamui): the blue ones already are accent pills but kept a gradient in
+   their span; the green and the grey ones were untouched. Not inside a purchase box: that
+   block stays as it is. */
+.btn_green_steamui:not(.game_purchase_action *) {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+  text-shadow: none !important;
+}
+.btn_grey_steamui {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.btn_grey_steamui:hover { background: rgba(255, 255, 255, .16) !important; }
+.btn_blue_steamui > span,
+.btn_grey_steamui > span,
+.btn_green_steamui:not(.game_purchase_action *) > span {
+  background: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+.btn_green_steamui:not(.game_purchase_action *):hover,
+.btn_blue_steamui:hover { filter: brightness(1.08); }
+/* In a purchase box the accent pill is the wrapper (.btn_addtocart); the green link inside it
+   kept Steam's pale lime text on the accent. Only the ink changes: the box itself stays. */
+.btn_addtocart .btn_green_steamui,
+.btn_addtocart .btn_green_steamui > span { color: var(--gd-accent-ink) !important; }
 .btnv6_lightblue_blue,
 .btn_grey_grey,
 .btn_darkblue_white_innerfade,
@@ -209,7 +238,10 @@ header#global_header { display: none !important; }
 .sale_capsule,
 .home_marketing_message,
 .dailydeal_ctn,
-.recommendation {
+.recommendation,
+.tab_row_item,
+.tab_preview,
+.content_hub_capsule_ctn {
   border-radius: 12px !important;
   overflow: hidden;
   transition: transform .16s ease, box-shadow .16s ease;
@@ -221,8 +253,17 @@ header#global_header { display: none !important; }
   transform: translateY(-3px);
   box-shadow: 0 18px 34px -18px rgba(0, 0, 0, .8);
 }
-.tab_item { background: rgba(255, 255, 255, .04) !important; }
-.tab_item:hover { background: rgba(255, 255, 255, .09) !important; }
+.tab_item,
+.tab_row_item { background: rgba(255, 255, 255, .04) !important; }
+.tab_item:hover,
+.tab_row_item:hover,
+.tab_row_item.focus { background: rgba(255, 255, 255, .09) !important; }
+/* the preview of the row under the pointer, to the right of the list; the dark band behind both */
+.tab_preview { background: rgba(255, 255, 255, .06) !important; }
+.tab_preview_details { background: none !important; }
+.tab_preview .screenshot,
+.tab_preview video { border-radius: 8px !important; }
+.home_tab_bg_ctn { background-image: none !important; }
 
 /* section titles and the tab strip */
 .home_page_content h2,
@@ -255,7 +296,8 @@ header#global_header { display: none !important; }
 .discount_block,
 .discount_block.discount_block_large,
 .sale_price_discount { background: transparent !important; }
-.discount_pct { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; border-radius: 6px !important; }
+.discount_pct,
+.no_discount .bundle_base_discount { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; border-radius: 6px !important; }
 .discount_original_price { color: rgba(238, 241, 248, .45) !important; }
 .discount_final_price,
 .search_price { color: var(--gd-ink) !important; }
@@ -263,10 +305,26 @@ header#global_header { display: none !important; }
 /* carousel arrows and dots */
 .carousel_thumbs .arrow,
 .arrow.left,
-.arrow.right {
+.arrow.right,
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home], [data-gd-sale-display]) :is(.CarouselBtnLeft, .CarouselBtnRight) {
   background: rgba(255, 255, 255, .08) !important;
   border-radius: 999px !important;
 }
+/* Discounts & Events and the calendar are React carousels: their arrows are bare chevrons
+   in a column as tall as the block, each at its own distance. Here they take the size and
+   the place of the arrows of the carousels below them. */
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home], [data-gd-sale-display]) :is(.CarouselBtnLeft, .CarouselBtnRight) {
+  top: calc(50% - 61px) !important;
+  width: 45px !important;
+  height: 122px !important;
+  justify-content: center;
+  transform: none !important;
+}
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home], [data-gd-sale-display]) .CarouselBtnLeft { left: -50px !important; }
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home], [data-gd-sale-display]) .CarouselBtnRight { right: -50px !important; }
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home], [data-gd-sale-display]) :is(.CarouselBtnLeft, .CarouselBtnRight) svg { width: 38px !important; height: 38px !important; }
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home]) .carousel__dot rect { fill: rgba(255, 255, 255, .2) !important; }
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home]) .carousel__dot--selected rect { fill: var(--gd-accent) !important; }
 /* On a wide page the front page's main carousel shows its neighbours at both sides, and
    an arrow there is as large as the neighbour it sits on: the round backdrop became a
    pale oval over a square picture (#10). No backdrop there, and the neighbours get the
@@ -294,14 +352,18 @@ header#global_header { display: none !important; }
 }
 .btnv6_white_transparent,
 .btnv6_white_transparent.btn_small,
-.btnv6_white_transparent.btn_small_tall {
+.btnv6_white_transparent.btn_small_tall,
+[data-gd-discounts-and-events] [role=heading] + div > a {
   background: var(--gd-field) !important;
   background-image: none !important;
   border: none !important;
   border-radius: 999px !important;
   color: var(--gd-ink) !important;
 }
-.btnv6_white_transparent:hover { background: rgba(255, 255, 255, .16) !important; color: var(--gd-ink) !important; }
+.btnv6_white_transparent:hover,
+[data-gd-discounts-and-events] [role=heading] + div > a:hover { background: rgba(255, 255, 255, .16) !important; color: var(--gd-ink) !important; }
+/* on the home Steam draws these buttons light grey with black text now; the black stayed on the dark pill */
+.btnv6_white_transparent > span { color: inherit !important; border: 0 !important; background: none !important; }
 /* the white name plates on content-hub capsules */
 .content_hub_capsule_ctn .label_ctn .label,
 .label_ctn > .label {
@@ -314,19 +376,671 @@ header#global_header { display: none !important; }
    Not .reason.info: those are the rows of "Is this game relevant to you?", plain text on the block. */
 .info:not(.reason),
 .carousel_items,
+.home_discount_games_ctn,
+:is([data-gd-discounts-and-events], [data-gd-personal-calendar-home]) .carousel__slider,
 .OtherEvents_EventCtn,
 [id^=searchSuggestions] {
   background-image: linear-gradient(150deg, rgba(14, 17, 27, .92), rgba(9, 11, 18, .94)) !important;
   border-radius: var(--gd-r-md) !important;
 }
 
+/* The strip under a capsule's picture (tags, an update's text, a creator's name) is Steam's
+   blue radial gradient; here it is the capsule's own quiet half. */
+.deep_dive_key_tags,
+.recently_updated_desc,
+.creator_capsule_ctn { background: rgba(255, 255, 255, .05) !important; }
+.deep_dive_tag,
+.tab_preview .tags a {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+
+/* ═══════════════ capsules under the pointer ═══════════════ */
+
+/* the pop-up beside a capsule: Steam's grey-blue box with a pointer on its side */
+.game_hover_box,
+.hover_box {
+  background: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .9) !important;
+}
+.hover_arrow_left,
+.hover_arrow_right { display: none !important; }
+.game_hover h4.hover_title { color: var(--gd-ink) !important; }
+.game_hover #hover_desc,
+.game_hover .hover_body_block,
+.game_hover .hover_body { color: var(--gd-ink-soft) !important; }
+.hover_review_summary,
+.hover_details_block,
+.hover_details_block_full { background: rgba(255, 255, 255, .06) !important; border-radius: 8px !important; }
+
+/* A capsule's micro trailer is 16:9 in a lower frame: centred, and left to stick out above
+   and below the picture. It fills the frame and stays inside it. (A flex item that clips
+   may shrink below its content, hence flex-shrink: the big capsule of a single
+   recommendation gave half its width to the screenshots beside it.) */
+.capsule_image_ctn,
+.microtrailer_wrapper { overflow: hidden !important; flex-shrink: 0 !important; }
+video.sale_capsule_video { height: 100% !important; object-fit: cover !important; }
+
+/* ═══════════════ store home: the endless feed ═══════════════ */
+
+/* every capsule sat in a hairline frame; the heading's first words were a blue link */
+.home_content_item { box-shadow: none !important; }
+.home_content_item .capsule_image_ctn,
+.home_content.single .microtrailer_wrapper { border-radius: var(--gd-r-md) !important; }
+.home_content.single img.screenshot { border-radius: 8px !important; }
+.home_content > h2 > a { color: var(--gd-ink) !important; font-weight: 600; }
+.home_content > h2 > .header_inline { color: var(--gd-ink-soft) !important; }
+/* one game across the whole row, with its screenshots */
+.home_content.single { background: rgba(255, 255, 255, .04) !important; border-radius: var(--gd-r-md) !important; }
+
+/* ═══════════════ the Discovery Queue window ═══════════════
+   Hashed classes again: taken by the dialog, the video container Steam names, roles and labels. */
+
+dialog [role=dialog] [role=button]:has(> .AppVideoCtn) {
+  background-image: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden !important;
+}
+/* tags: the window, the hubs' main carousel */
+a.Focusable[role=listitem][href*="/tags/"] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+  padding-left: 9px !important;
+  padding-right: 9px !important;
+}
+/* the bar under the description: the store page is the action, the rest are quiet */
+dialog [role=dialog] .AppVideoCtn + div > div:last-child a[href*="/app/"] {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+  box-shadow: none !important;
+}
+dialog [role=dialog] .AppVideoCtn + div > div:last-child [role=button],
+dialog [role=dialog] .AppVideoCtn + div > div:last-child [aria-label],
+dialog [role=dialog] [role=button][aria-label=Close] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+  box-shadow: none !important;
+}
+dialog [role=dialog] .AppVideoCtn + div > div:last-child [role=button]:hover,
+dialog [role=dialog] .AppVideoCtn + div > div:last-child [aria-label]:hover,
+dialog [role=dialog] [role=button][aria-label=Close]:hover { background: rgba(255, 255, 255, .16) !important; }
+/* previous / next */
+dialog [role=dialog] [role=button][aria-label=Next],
+dialog [role=dialog] [role=button][aria-label=Previous] {
+  background: rgba(27, 31, 44, .92) !important;
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+
+/* ═══════════════ search ═══════════════ */
+
+/* the bar: the field, the Sort by list */
+.searchbar { background: rgba(255, 255, 255, .04) !important; border-radius: var(--gd-r-md) !important; }
+.searchbar_left input.text,
+.search_filter_suggest,
+#additional_search_options input[type=text],
+#additional_search_options input[type=number] {
+  background: var(--gd-field) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+.searchbar_left input.text { border-radius: 999px !important; padding-left: 14px !important; }
+.dselect_container .trigger {
+  background-color: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.dselect_container .dropcontainer ul {
+  background: #171b27 !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .9) !important;
+  padding: 4px !important;
+}
+.dselect_container .dropcontainer ul a { border-radius: 8px !important; color: var(--gd-ink-soft) !important; }
+.dselect_container .dropcontainer ul a:hover,
+.dselect_container .dropcontainer ul a.highlighted_selection {
+  background: var(--gd-accent) !important;
+  color: var(--gd-accent-ink) !important;
+}
+/* results */
+.search_result_row {
+  background: rgba(255, 255, 255, .04) !important;
+  border-color: transparent !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.search_result_row:hover,
+.search_result_row.ds_collapse_flag:hover { background: rgba(255, 255, 255, .1) !important; }
+
+/* The filters. The column carries a class the page header also has, so it took the
+   header's blurred dark band; each block is a card of its own instead. */
+#additional_search_options {
+  background: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-bottom: 0 !important;
+}
+#additional_search_options .block {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+}
+#additional_search_options .block_header { background: none !important; padding: 10px 12px 4px !important; }
+#additional_search_options .block_header > div { color: var(--gd-ink) !important; font-weight: 600; }
+#additional_search_options .block_content_inner { border: 0 !important; }
+.tab_filter_control_row { border-radius: 8px !important; }
+.tab_filter_control_row:hover { background: rgba(255, 255, 255, .06) !important; }
+.tab_filter_control_row.checked {
+  background: color-mix(in srgb, var(--gd-accent) 26%, transparent) !important;
+  background-image: none !important;
+}
+/* the check box is a blue picture; drawn here so it can take the accent */
+.tab_filter_control_checkbox {
+  position: relative;
+  box-sizing: border-box;
+  background: none !important;
+  border: 1.5px solid rgba(255, 255, 255, .34) !important;
+  border-radius: 4px !important;
+}
+.tab_filter_control_row.checked .tab_filter_control_checkbox,
+.tab_filter_control.checked .tab_filter_control_checkbox { background: var(--gd-accent) !important; border-color: var(--gd-accent) !important; }
+.tab_filter_control_row.checked .tab_filter_control_checkbox::after,
+.tab_filter_control.checked .tab_filter_control_checkbox::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--gd-accent-ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+/* sliders */
+#additional_search_options input[type=range]::-webkit-slider-runnable-track { background: color-mix(in srgb, var(--gd-accent) 70%, transparent) !important; border-radius: 999px; }
+#additional_search_options input[type=range]::-webkit-slider-thumb { background: var(--gd-ink) !important; border: 0 !important; box-shadow: 0 1px 4px rgba(0, 0, 0, .6) !important; }
+
+/* what the search is narrowed by, over the results: the term and each picked tag */
+.searchtag.tag_dynamic {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+}
+
+/* ═══════════════ shared by the whole store ═══════════════ */
+
+/* "On wishlist" / "In library" on a capsule: Steam's two blues (classic pages) and a pale or
+   light-blue tab with black text (the newer pages). One dark chip for both. */
+.ds_flag {
+  background-color: rgba(12, 15, 24, .84) !important;
+  border-radius: 0 0 8px 0 !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+.CapsuleDecorators span {
+  background: rgba(12, 15, 24, .84) !important;
+  border-radius: 0 8px 8px 0 !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+.CapsuleDecorators span svg * { fill: currentColor !important; }
+
+/* The price plate of the newer pages (hubs, charts, the calendar, the cart, the Discovery
+   Queue window). Its last child is the price; "New", "Prepurchase" and the percent come
+   before it as leaves: lime on green there, and the final price lime too. */
+.StoreSalePriceWidgetContainer { background: none !important; align-items: center; }
+.StoreSalePriceWidgetContainer > div:not(:last-child) {
+  margin-right: 4px;
+  background: var(--gd-accent) !important;
+  border-radius: 6px !important;
+  color: var(--gd-accent-ink) !important;
+}
+.StoreSalePriceWidgetContainer.Discounted > div:nth-last-child(2) {
+  align-items: center;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+}
+.StoreSalePriceWidgetContainer.Discounted > div:last-child > div:last-child { color: var(--gd-ink) !important; }
+
+/* Steam's classic dialog (the tags of a product, confirmations): a grey slab, square */
+.newmodal {
+  background: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: 0 30px 70px -20px rgba(0, 0, 0, .9) !important;
+  overflow: hidden;
+}
+.newmodal .modal_top_bar { background: linear-gradient(to right, var(--gd-accent), transparent) !important; }
+.newmodal .title_text { color: var(--gd-ink) !important; }
+.newmodal_content { color: var(--gd-ink-soft) !important; }
+.newmodal .app_tag_control { background: rgba(255, 255, 255, .04) !important; border-radius: 8px !important; }
+.newmodal .gray_bevel {
+  background: var(--gd-field) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+/* ═══════════════ hubs ═══════════════
+   Specials, every category, tag and genre, Demos, DLC For You, Great on Deck, VR, Software,
+   Soundtracks… are one React template. Its sections carry names of their own. */
+
+/* Steam's navy under the whole page */
+[data-gd-sale-display],
+[data-gd-sale-display] .SaleBackground { background-color: transparent !important; }
+
+/* the main carousel: a game's trailer with its card beside it */
+[data-gd-sale-display] .VideoRow {
+  background: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+[data-gd-sale-display] .VideoRow > div { border-radius: var(--gd-r-md); overflow: hidden; }
+/* "Explore Your Discovery Queue" (on every hub since October 2026): Steam's purple-to-blue
+   band over a strip of the queue's games. The band goes from the glass into the art. */
+[data-gd-sale-display] .DiscoveryQueueCSS [role=button] {
+  background: #10131d !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+}
+[data-gd-sale-display] .DiscoveryQueueCSS [role=button] > div:first-child { background: #10131d !important; }
+[data-gd-sale-display] .DiscoveryQueueCSS .WidgetHeaderCtn {
+  background-image: linear-gradient(77deg, rgba(14, 17, 27, .97) 0%,
+    color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, rgba(14, 17, 27, .9)) 46%, rgba(14, 17, 27, 0) 72%) !important;
+}
+[data-gd-sale-display] .DiscoveryQueueCSS [role=button]:hover .WidgetHeaderCtn > div:first-child { color: var(--gd-accent, var(--gd-house)) !important; }
+/* "On Wishlist" over a trailer, here and in the Discovery Queue window: pale blue, black text */
+.AppVideoCtn > div:first-child:not(:has(*)) {
+  background: rgba(12, 15, 24, .84) !important;
+  border-radius: 0 0 8px 0 !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+
+/* the strip of the page's own tabs that stays under the menu */
+[data-gd-sale-display] .SaleSectionTabListContainer > div:has(> .SaleSectionTabContainer) {
+  background: linear-gradient(180deg, rgba(8, 10, 17, .86), rgba(8, 10, 17, .7)) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border-radius: 0 0 var(--gd-r-md) var(--gd-r-md) !important;
+}
+
+/* shelves: the slab behind some of them, the purple one of "DLC for your games" */
+[data-gd-sale-display] .SaleSectionForCustomCSS > div:first-child:empty,
+[data-gd-sale-display] .SaleSectionCtn.dlc_for_you > div {
+  background-image: linear-gradient(150deg, rgba(14, 17, 27, .92), rgba(9, 11, 18, .94)) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+[data-gd-sale-display] .SaleSectionHeader { color: var(--gd-ink) !important; }
+[data-gd-sale-display] .SaleSectionLabelLinkButton {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+[data-gd-sale-display] .SaleSectionLabelLinkButton:hover { background: rgba(255, 255, 255, .16) !important; }
+/* a capsule is one card: the picture and the bar with its price */
+[role=button]:has(> a > .CapsuleBottomBar) { border-radius: var(--gd-r-md) !important; overflow: hidden; }
+.CapsuleBottomBar { background: rgba(255, 255, 255, .06) !important; }
+
+/* the long list at the foot of a hub: its cards, tags, filters */
+[data-gd-sale-display] .LibraryAssetExpandedDisplay {
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+[data-gd-sale-display] .LibraryAssetExpandedDisplay div:has(> div > div > .StoreSalePriceWidgetContainer) { background: rgba(0, 0, 0, .34) !important; }
+[data-gd-sale-display] .WidgetTag {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+[data-gd-sale-display] .WidgetTag:hover { background: rgba(255, 255, 255, .16) !important; color: var(--gd-ink) !important; }
+[data-gd-sale-display] input.DialogInput {
+  background: var(--gd-field) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+
+/* ═══════════════ store home: the last of Steam's colours ═══════════════ */
+
+/* The main carousel's card. Why the game is shown: green words, pale blue tags; a blue
+   glow inside the card; square screenshots. */
+.store_main_capsule .info { box-shadow: none !important; }
+.store_main_capsule .reason strong,
+.topseller_title { color: var(--gd-accent) !important; }
+.store_main_capsule .reason .tags span {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+.store_main_capsule .screenshots > div { border-radius: 6px; }
+
+/* "Send a Gift Card" beside the carousel's title: a blue gradient tab */
+.home_gift_card_link {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.home_gift_card_link:hover { background: rgba(255, 255, 255, .16) !important; }
+
+/* The Community Recommends: the picture and the review beside it are two cards */
+.community_recommendation_capsule { background: none !important; box-shadow: none !important; }
+.community_recommendation_capsule .capsule_image_ctn { border-radius: var(--gd-r-md) !important; }
+.community_recommendation_app .right_col {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+
+/* ═══════════════ the store's newer pages ═══════════════
+   The wishlist, the charts, the calendar and the recommender are one React application
+   under #StoreTemplate: hashed classes only, no mount points, and a body that paints
+   Steam's navy itself. */
+body:has(> #StoreTemplate) { background: transparent !important; }
+/* the menu strip there (the older pages get theirs from the rule further down) */
+#StoreTemplate .Panel[data-gd-strip] {
+  background-image: linear-gradient(180deg, rgba(8, 10, 17, var(--gd-nav-top, .82)), rgba(8, 10, 17, var(--gd-nav-bottom, .62))) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+}
+/* a discount there: the percent lime on green, as everywhere in the newer store */
+#StoreTemplate [role=link][aria-label*="%"] > div:first-child { background: var(--gd-accent) !important; border-radius: 8px; }
+#StoreTemplate [role=link][aria-label*="%"] > div:first-child,
+#StoreTemplate [role=link][aria-label*="%"] > div:first-child * { color: var(--gd-accent-ink) !important; }
+#StoreTemplate [role=link][aria-label*="%"] > div:last-child > div:first-child { color: rgba(238, 241, 248, .45) !important; }
+
+/* sliders, check boxes and radio buttons of these pages */
+#StoreTemplate input:is([type=range], [type=checkbox], [type=radio]) { accent-color: var(--gd-accent); }
+
+/* ═══════════════ pages with a sheet of their own ═══════════════
+   The front page's React blocks, the personal calendar, the charts, the recommender, your
+   account, a game's reviews, the Points Shop, the News Hub and parts of the hubs are in
+   css/store/*.css, loaded by js/dusk.js on those pages only. Rules cost time on every page
+   they are loaded in, whether they match or not, and the long wishlist stuttered under
+   them. Avoided here for the same reason: `:has()` with plain tags inside, a sibling
+   combinator between two plain tags (`div + div`), and `[style]` above the element styled. */
+
+/* ═══════════════ the wishlist ═══════════════ */
+
+/* a game is one card: a navy gradient with a hairline */
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] {
+  background: rgba(255, 255, 255, .04) !important;
+  border-color: transparent !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] > a[href*="/app/"] img { border-radius: 6px; }
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] > div:nth-last-child(2) > div:last-child { background: none !important; }
+/* its buttons: "Add to Cart" is the action; the "+" of categories and "remove" are quiet */
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button[type=button] { border-radius: 999px !important; }
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button[type=button] > span {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+}
+/* "In Cart" in place of the button: a state, not an action */
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] a[href*="/cart"] > span {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button.Focusable:not([type]) {
+  background: var(--gd-field) !important;
+  border-color: transparent !important;
+  border-radius: 999px !important;
+}
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button.Focusable:not([type]):hover { background: rgba(255, 255, 255, .16) !important; }
+/* the expanded view adds a row of tags (navy squares) and a green "Demo Available" */
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button:not([type]):not(.Focusable) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] button:not([type]):not(.Focusable):hover { background: rgba(255, 255, 255, .16) !important; color: var(--gd-ink) !important; }
+&.gd-p-wishlist [data-rfd-draggable-id^="WishlistItem-"] > .Panel[role=button] a[role=button][href="#"] {
+  background: color-mix(in srgb, var(--gd-accent) 30%, transparent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+/* the search field over the list and the rank box of a row */
+#StoreTemplate section input[type=text],
+#StoreTemplate section input.Focusable {
+  background: var(--gd-field) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+/* Options, Sort by, share */
+#StoreTemplate section .Panel > div > button.Focusable[role=button] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+#StoreTemplate section .Panel > div > button.Focusable[role=button]:hover,
+#StoreTemplate section .Panel > div > button.Focusable[aria-expanded=true] { background: rgba(255, 255, 255, .16) !important; }
+/* the panels they open */
+#StoreTemplate section button[aria-expanded] + .Panel {
+  background: #171b27 !important;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 12px !important;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .9) !important;
+}
+#StoreTemplate section button[aria-expanded] + .Panel h3 { color: var(--gd-accent) !important; }
+#StoreTemplate section button[aria-expanded] + .Panel input { accent-color: var(--gd-accent); }
+#StoreTemplate section button[aria-expanded] + .Panel > button.Focusable:hover { background: rgba(255, 255, 255, .08) !important; }
+#StoreTemplate section button[aria-expanded] + .Panel a.Focusable > span {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+/* Augmented Steam's buttons over the list (Empty, Export, Stats) */
+#StoreTemplate section button[type=button]:not(.Focusable) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+#StoreTemplate section button[type=button].destructive:not(.Focusable) { background: rgba(191, 90, 90, .3) !important; }
+
+/* ═══════════════ the cart ═══════════════ */
+
+/* Steam's two dialog buttons, here and wherever the newer store uses them */
+button.DialogButton.Primary {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+}
+button.DialogButton.Secondary {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+button.DialogButton.Primary:hover { filter: brightness(1.08); }
+button.DialogButton.Secondary:hover { background: rgba(255, 255, 255, .16) !important; }
+/* the rows and the total of the cart itself: css/store/cart.css */
+/* the discount on an item: lime on green */
+.StoreSaleDiscountBox {
+  background: var(--gd-accent) !important;
+  border-radius: 6px !important;
+  color: var(--gd-accent-ink) !important;
+}
+
+/* ═══════════════ the store's older list pages ═══════════════
+   New Releases, Upcoming, Popular Tags, the old Discovery Queue page, Popular Among Friends,
+   curators, a developer's or publisher's page. Classic markup with names of its own. */
+
+/* the picture behind a page's heading and the plate behind a list's tabs */
+.page_header_ctn { background-image: none !important; }
+.home_tab_bg { display: none !important; }
+
+/* the tabs over a list (New Releases, Upcoming) */
+.home_tabs_row .home_tab {
+  margin-right: 6px;
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+}
+.home_tabs_row .home_tab .tab_content { color: var(--gd-ink-soft) !important; }
+.home_tabs_row .home_tab.active { background: var(--gd-accent) !important; }
+.home_tabs_row .home_tab.active .tab_content { color: var(--gd-accent-ink) !important; }
+/* The row under the pointer: Steam makes it pale and turns its name dark. The theme keeps
+   the row dark, so the name was dark on dark. */
+.tab_item.focus .tab_item_name,
+.tab_item:hover .tab_item_name { color: var(--gd-ink) !important; }
+.tab_item .release_date { color: var(--gd-ink-soft) !important; }
+/* the preview beside the list: a pale blue column, a navy title on it */
+.home_rightcol,
+#tab_preview_container { background: none !important; }
+.tab_preview .tab_title { color: var(--gd-ink) !important; }
+.tab_review_summary { background: rgba(255, 255, 255, .06) !important; border-radius: 8px !important; }
+
+/* the two large capsules that open New Releases and Upcoming */
+.newonsteam_headercap,
+.comingsoon_headercap {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+.newonsteam_headercap .info,
+.comingsoon_headercap .info { background-image: none !important; border-radius: 0 !important; }
+/* capsules of a scrolling strip and of a curator: a grey-blue ground under the price */
+.store_horizontal_autoslider .store_capsule,
+.curator_page .store_capsule {
+  background: rgba(255, 255, 255, .05) !important;
+  box-shadow: none !important;
+}
+/* the scroll bar under such a strip */
+.slider_ctn { background: none !important; }
+.slider_ctn .slider,
+.slider_ctn .slider_left,
+.slider_ctn .slider_right { background: var(--gd-field) !important; border-radius: 999px !important; }
+.slider_ctn .slider .handle { background: rgba(255, 255, 255, .3) !important; border-radius: 999px !important; }
+
+/* the old Discovery Queue page: its stack of cards, the navy boxes around it */
+.dq_item { border-radius: var(--gd-r-md); overflow: hidden; }
+.discovery_queue_customize_ctn,
+.explore_rightcol_box {
+  background: rgba(255, 255, 255, .04) !important;
+  border: 0 !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.faq_question { color: var(--gd-ink) !important; }
+/* "Click here to begin exploring your queue": a golden arrow, which is a picture. The same
+   shape cut from the accent. */
+.discovery_queue_overlay_bg::before {
+  background: color-mix(in srgb, var(--gd-accent) 34%, #10131d) !important;
+  clip-path: polygon(0 0, calc(100% - 46px) 0, 100% 50%, calc(100% - 46px) 100%, 0 100%);
+  opacity: .94;
+}
+.discovery_queue_overlay_message { color: var(--gd-ink) !important; }
+
+/* tabs of the older kind (Popular Tags, Popular Among Friends): a blue glow with a navy label */
+.tabbar .tab { background-image: none !important; }
+.tabbar .tab > div {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink-soft) !important;
+}
+.tabbar .tab.active > div { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; }
+/* Popular Tags: the tag picked in the list */
+.tag_browse_tag { border-radius: 8px !important; }
+.tag_browse_tag.active { background: color-mix(in srgb, var(--gd-accent) 32%, transparent) !important; }
+.browse_tag_games { border-radius: var(--gd-r-md); }
+/* Popular Among Friends: the two-way switch, the pager, the rows */
+.view_active {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+}
+.view_inactive { background: var(--gd-field) !important; border-radius: 999px !important; color: var(--gd-ink-soft) !important; }
+.pagebtn {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.pagebtn.disabled { opacity: .4; }
+.friendactivity_tab_header,
+.friendactivity_tab_row,
+.recommendation_highlight,
+.recommendation_row { border-radius: var(--gd-r-md); }
+.recommendation_row { background-image: none !important; }
+
+/* curators: the black band with two pale buttons, a curator's card */
+.curator_buttons_ctn { background: none !important; }
+.curator_page_button {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.curator_page_button,
+.curator_page_button * { color: var(--gd-ink) !important; }
+.curator_page {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: var(--gd-r-md);
+  box-shadow: none !important;
+}
+.curator_page .profile { background-image: none !important; }
+
+/* a developer's or publisher's page (and a game's list of DLC): the white tab of its
+   navigation, the framed description, the header's fade into Steam's page colour */
+.navigation_bar a { border-radius: 999px !important; }
+.navigation_bar a.selected { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; }
+.creator_grid_ctn .page_desc {
+  background: rgba(255, 255, 255, .05) !important;
+  border: 0 !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.background_gradient_ctn { background-image: linear-gradient(90deg, var(--gd-night) 0%, transparent 15%, transparent 85%, var(--gd-night) 100%) !important; }
+
+/* Community Recommendations: its two bands of controls, a recommendation, the loading bars */
+.trending_reviews_controls_ctn,
+.preferencesSavedCtn { background: rgba(255, 255, 255, .05) !important; border-radius: var(--gd-r-md) !important; }
+.reviewed_app { border-radius: var(--gd-r-md) !important; box-shadow: none !important; overflow: hidden; }
+/* the review beside its capsule: Steam's slate gradient, a grey "Read Entire Review", a black rule */
+.reviewed_app .right_col { background: rgba(255, 255, 255, .04) !important; }
+.reviewed_app .view_more a {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+.reviewed_app .paging_thumbs { border-top-color: rgba(255, 255, 255, .08) !important; }
+.reviewed_app .num_reviews_desc { color: var(--gd-ink-soft) !important; }
+.LoadingThrobber .Bar { background: var(--gd-accent) !important; }
+
+/* Steam Labs: an experiment's navy card and its pale buttons */
+.capsule:has(.experiment-buttons) {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+a.experiment-button,
+[data-gd-discovery-queue-button] a {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+
 /* The strip that carries Browse / Categories / search is a blue gradient band.
-   Its Panels nest, so only the outer one is filled — otherwise the middle of the
-   strip stacks two tints and reads as a darker block. The fill has to stay: the
-   menu labels sit over whatever banner art the store is showing. */
+   Its Panels nest, so only the one that holds the menu is filled — otherwise the middle
+   of the strip stacks two tints and reads as a darker block. (It used to be "the outermost
+   Panel", which also caught the panels of every React block a page happened to have.)
+   The fill has to stay: the menu labels sit over whatever banner art the store is showing. */
 .responsive_page_content .Panel { background-image: none !important; }
-.responsive_page_content .Panel:not(.Panel .Panel):not(.review_ctn .Panel) {
-  background-image: linear-gradient(180deg, rgba(8, 10, 17, .82), rgba(8, 10, 17, .62)) !important;
+.responsive_page_content .Panel[data-gd-strip] {
+  background-image: linear-gradient(180deg, rgba(8, 10, 17, var(--gd-nav-top, .82)), rgba(8, 10, 17, var(--gd-nav-bottom, .62))) !important;
   -webkit-backdrop-filter: blur(18px) saturate(1.15);
   border-bottom: 1px solid rgba(255, 255, 255, .07);
 }
@@ -344,6 +1058,94 @@ form:has(> div > input[type=text]) input[type=text] {
   color: var(--gd-ink) !important;
 }
 form:has(> div > input[type=text]) button { background: var(--gd-accent) !important; border: none !important; }
+
+/* ═══════════════ the store menu: its flyouts and the search panel ═══════════════
+   One React component with hashed classes. On the older pages it sits in a mount point, on
+   the newer ones (wishlist, charts…) it does not, so it is taken by itself: the strip is the
+   panel whose navigation holds the search form. Inside, by roles and aria-expanded, by
+   where the links lead, and by the shape of what an element holds. */
+
+/* An open flyout shares the strip's ground, and through it the page's banner read under
+   the lists. The ground thickens while one is open. */
+.Panel[data-gd-strip]:has(> [role=navigation] button[aria-expanded=true]) { --gd-nav-top: .97; --gd-nav-bottom: .96; }
+/* the open item: Steam's blue word and line */
+.Panel[data-gd-strip] button[aria-expanded=true] > div { color: var(--gd-accent) !important; }
+.Panel[data-gd-strip] button[aria-expanded=true] > div > div { background: var(--gd-accent) !important; }
+
+/* picture tiles (Top Sellers, Discounts & Events, the top categories): a white name plate */
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:not([role=button])[data-gd-imgtile],
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:not([role=button])[data-gd-oc-link] { border-radius: var(--gd-r-md) !important; overflow: hidden; }
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable[data-gd-imgtile] > span,
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:not([role=button]) > div:last-child > div:only-child,
+.Panel[data-gd-strip] form[role=search] + div a:not(.Focusable) > div:last-child[data-gd-oc] {
+  background: rgba(12, 15, 24, .76) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  color: var(--gd-ink) !important;
+}
+.Panel[data-gd-strip] form[role=search] + div a:not(.Focusable) > div:last-child[data-gd-oc] > div { color: var(--gd-ink) !important; }
+
+/* rows of games: "Recommended for you", search results, popular searches */
+.Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile],
+.Panel[data-gd-strip] form[role=search] + div a:not(.Focusable) {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+.Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile]:hover,
+.Panel[data-gd-strip] form[role=search] + div a:not(.Focusable):hover { background: rgba(255, 255, 255, .11) !important; }
+/* "in library" on a row */
+.Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile] > div:nth-child(n+3) { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; border-radius: 0 0 6px 0; }
+/* a row's discount: lime on green */
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child { background: var(--gd-accent) !important; border-radius: 4px !important; }
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child,
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child * { color: var(--gd-accent-ink) !important; }
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:last-child > div:first-child { color: rgba(238, 241, 248, .45) !important; }
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:last-child > div:last-child { color: var(--gd-ink) !important; }
+/* the cross that clears the field took the search button's accent square */
+.Panel[data-gd-strip] form[role=search] > div > :not(input) { background: none !important; }
+/* "Advanced Search" */
+.Panel[data-gd-strip] form[role=search] + div a[href*="/search/"] { background: var(--gd-field) !important; border-radius: 999px !important; }
+
+/* the calendar card in Recommendations: a green "NEW", a bright blue button */
+.Panel[data-gd-strip] a[href*="/personalcalendar"] { border-radius: var(--gd-r-md) !important; overflow: hidden; }
+.Panel[data-gd-strip] a[href*="/personalcalendar"] > div:nth-child(2):not(:last-child) {
+  background: var(--gd-accent) !important;
+  border-radius: 999px;
+  color: var(--gd-accent-ink) !important;
+}
+.Panel[data-gd-strip] a[href*="/personalcalendar"] div[data-gd-calbtn] { background: var(--gd-accent) !important; border-radius: 999px !important; }
+.Panel[data-gd-strip] a[href*="/personalcalendar"] div[data-gd-calbtn] > span { color: var(--gd-accent-ink) !important; }
+.Panel[data-gd-strip] a[href*="/personalcalendar"] div[data-gd-calbtn] > svg * { fill: var(--gd-accent-ink) !important; }
+
+/* the big buttons of Ways to Play and Special Sections: an icon and a word on bright blue */
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:has(> span + span) {
+  background: rgba(255, 255, 255, .07) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:has(> span + span):hover { background: color-mix(in srgb, var(--gd-accent) 34%, transparent) !important; }
+
+/* the Cart button at the strip's end, shown while the cart holds something: Steam's blue */
+.Panel[data-gd-strip] a[href*="/cart/"] {
+  background: var(--gd-accent) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink) !important;
+}
+.Panel[data-gd-strip] a[href*="/cart/"] :is(div, span) { color: inherit !important; }
+.Panel[data-gd-strip] a[href*="/cart/"] svg path { fill: currentColor !important; }
+
+/* tag chips in Categories; "Expand" and "View all tags" */
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:not([role=button]):not(:has(*)) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+.Panel[data-gd-strip] [role=navigation] ~ div a.Focusable:not([role=button]):not(:has(*)):hover { background: rgba(255, 255, 255, .16) !important; color: var(--gd-ink) !important; }
+.Panel[data-gd-strip] [role=navigation] ~ div a[href*="/tag/browse"],
+.Panel[data-gd-strip] [role=navigation] ~ div button.Focusable:not([aria-expanded]) { color: var(--gd-accent) !important; }
+.Panel[data-gd-strip] [role=navigation] ~ div a[href*="/tag/browse"] svg *,
+.Panel[data-gd-strip] [role=navigation] ~ div button.Focusable:not([aria-expanded]) svg * { fill: var(--gd-accent) !important; }
 
 /* ═══════════════ a game's page: "already in your library" and the review form ═══════════════ */
 
@@ -410,25 +1212,71 @@ form:has(> div > input[type=text]) button { background: var(--gd-accent) !import
 #recommendation_submit span { background: transparent !important; color: var(--gd-accent-ink) !important; }
 #recommendation_submit:hover { filter: brightness(1.08); }
 
-/* ═══════════════ a game's page: customer reviews ═══════════════
-   Steam's newer React block. Its own classes are hashes that change with store updates, so
-   only what has a stable name is touched: the wrapper, .Panel, .DialogButton, hr.
-   The rating colours, the thumb boxes and the "PC specs" plate stay Steam's. */
+/* ═══════════════ a game's page: the pieces Steam still painted ═══════════════ */
 
-.review_ctn { border-top-color: transparent !important; }
-.review_ctn .Panel { border-bottom-color: transparent !important; }
-.review_ctn div:not(.Panel) > .Panel.Focusable { border-radius: var(--gd-r-md) !important; }      /* a review card */
-.review_ctn .DialogButton {
-  background-color: var(--gd-field) !important;
+/* the trailer player's strip of thumbnails and its scroll bar: React, no names at all */
+/* (the thumbnails are flex items: clipping them lets them shrink to slivers, so the
+   picture is rounded itself) */
+[data-gd-gamehighlight-desktopcarousel] > div > div > div:last-child > div:first-child > div,
+[data-gd-gamehighlight-desktopcarousel] > div > div > div:last-child > div:first-child > div > img { border-radius: 6px; }
+[data-gd-gamehighlight-desktopcarousel] > div > div > div:last-child > div:last-child > div { background: var(--gd-field) !important; border-radius: 999px !important; }
+[data-gd-gamehighlight-desktopcarousel] > div > div > div:last-child > div:last-child > div > div { background: rgba(255, 255, 255, .3) !important; border-radius: 999px !important; }
+
+/* system requirements: the tabs for each system */
+.sysreq_tabs { background: none !important; }
+.sysreq_tab {
+  margin-right: 4px;
+  background: var(--gd-field) !important;
   border-radius: 999px !important;
-  color: var(--gd-ink) !important;
+  color: var(--gd-ink-soft) !important;
 }
-.review_ctn .DialogButton:hover { background-color: rgba(255, 255, 255, .16) !important; }
-.review_ctn .DialogButton > div { color: var(--gd-ink-soft) !important; }
-.review_ctn button.Focusable:not(.DialogButton) { border-radius: 999px !important; }                /* the active-filter chip */
-.review_ctn hr { border-color: rgba(255, 255, 255, .08) !important; }
-/* the navy fade over a long review, just above "Read more" */
-.review_ctn .Panel.Focusable > div > div:empty:last-child:not(:only-child) { background-image: none !important; }
+.sysreq_tab.active { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; }
+/* "Read more" under a long block, and the fade above it */
+.game_page_autocollapse_readmore {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .07) 33%, rgba(255, 255, 255, .07) 66%, transparent) !important;
+  color: var(--gd-ink-soft) !important;
+}
+.game_page_autocollapse_readmore:hover { color: var(--gd-ink) !important; }
+.game_page_autocollapse_fade { background-image: linear-gradient(180deg, rgba(10, 13, 22, 0), rgba(10, 13, 22, .82)) !important; }
+/* the award cards */
+.game_page_autocollapse > a[href*=steamawards] {
+  border-color: rgba(255, 255, 255, .1) !important;
+  border-radius: var(--gd-r-md) !important;
+  overflow: hidden;
+}
+
+/* the arrow beside "Ignore" and the menu it opens */
+.queue_menu_arrow { margin-left: 3px; border-radius: 999px !important; }
+.queue_menu_flyout {
+  background: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .9) !important;
+  overflow: hidden;
+}
+.queue_menu_option:hover { background: rgba(255, 255, 255, .08) !important; }
+
+/* "More from …" and "More like this": the frame, "Follow" and "See All" */
+:is([data-gd-creatorhome-carousel], [data-gd-storeitems-carousel]) > div > .Panel { border-bottom: 0 !important; border-radius: var(--gd-r-md) !important; box-shadow: none !important; }
+:is([data-gd-creatorhome-carousel], [data-gd-storeitems-carousel]) > div > .Panel > div:first-child:empty { border-radius: var(--gd-r-md) !important; }
+.FollowButton,
+:is([data-gd-creatorhome-carousel], [data-gd-storeitems-carousel]) a.btn_medium {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+.FollowButton:hover,
+:is([data-gd-creatorhome-carousel], [data-gd-storeitems-carousel]) a.btn_medium:hover { background: rgba(255, 255, 255, .16) !important; }
+.FollowButton .FollowBtnText,
+:is([data-gd-creatorhome-carousel], [data-gd-storeitems-carousel]) a.btn_medium > span { color: var(--gd-ink) !important; }
+
+/* Augmented Steam's "select DLC" chips over the list of DLC */
+.es_dlc_option {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink-soft) !important;
+}
+.es_dlc_option:hover { color: var(--gd-ink) !important; }
 
 /* ═══════════════ a game's page: the right column ═══════════════
    Steam stacks square near-black blocks here. They become the same soft rounded cards as the
@@ -531,6 +1379,86 @@ a.btn_black.steamdb_link {
   background: var(--gd-field) !important;
   border-color: transparent !important;
   border-radius: 999px !important;
+}
+
+/* ═══════════════ links and Steam's blue text ═══════════════
+   They follow the accent, like everything else that used to be Steam blue. The newer pages
+   read their blues from two scales of variables ("accent" and plain "blue"), so both are
+   rebuilt from the accent; the older pages spell the colour out, and the links that carry
+   it are listed. */
+&,
+[data-accent-color] {
+  --gd-link: color-mix(in srgb, var(--gd-accent) 72%, #fff);
+  --color-accent-4: color-mix(in srgb, var(--gd-accent) 22%, #0b0f18) !important;
+  --color-accent-5: color-mix(in srgb, var(--gd-accent) 30%, #0b0f18) !important;
+  --color-accent-6: color-mix(in srgb, var(--gd-accent) 40%, #0b0f18) !important;
+  --color-accent-7: color-mix(in srgb, var(--gd-accent) 58%, #0b0f18) !important;
+  --color-accent-8: var(--gd-accent) !important;
+  --color-accent-9: var(--gd-accent) !important;
+  --color-accent-10: color-mix(in srgb, var(--gd-accent) 86%, #fff) !important;
+  --color-accent-11: var(--gd-link) !important;
+  --color-accent-12: color-mix(in srgb, var(--gd-accent) 32%, #fff) !important;
+  --color-blue-4: color-mix(in srgb, var(--gd-accent) 22%, #0b0f18) !important;
+  --color-blue-5: color-mix(in srgb, var(--gd-accent) 30%, #0b0f18) !important;
+  --color-blue-6: color-mix(in srgb, var(--gd-accent) 40%, #0b0f18) !important;
+  --color-blue-7: color-mix(in srgb, var(--gd-accent) 58%, #0b0f18) !important;
+  --color-blue-8: var(--gd-accent) !important;
+  --color-blue-9: var(--gd-accent) !important;
+  --color-blue-10: color-mix(in srgb, var(--gd-accent) 86%, #fff) !important;
+  --color-blue-11: var(--gd-link) !important;
+  --color-blue-12: color-mix(in srgb, var(--gd-accent) 32%, #fff) !important;
+  --gpColor-Blue: var(--gd-accent) !important;
+  --gpColor-BlueHi: var(--gd-link) !important;
+  --SaleTabActiveColor: var(--gd-link) !important;
+}
+a.linkbar,
+.linkbar .social_account,
+.game_area_details_specs_ctn .label,
+.dev_row a,
+.summary.column a,
+.details_block a,
+.glance_ctn_responsive_left a,
+.blockbg a,
+.accountLabel,
+.accountData a,
+.searchtag .label,
+.LoadingText { color: var(--gd-link) !important; }
+/* the same blue spelled out inside the newer blocks of a game's page */
+[data-featuretarget^=store-sidebar] :is(a, summary) span,
+[data-featuretarget^=store-sidebar] a > div > div,
+[data-gd-appreviews] [role=img] > div:not(.Focusable),
+[data-gd-appreviews] h1,
+p.reason a,
+a.all_languages,
+.block_header .right a { color: var(--gd-link) !important; }
+
+/* ═══════════════ new since the first pass (October 2026) ═══════════════
+   What Steam added or redrew after the store was first done, and is not tied to one kind of
+   page: the home's Top New Releases and a bundle's savings. (A piece of news, the monthly
+   top releases and the event pages are in css/store/.) */
+
+/* home: Top New Releases (a teal frame around the carousel, a teal pill with the month) */
+.top_new_releases_carousel_bg { background: none !important; background-image: none !important; }
+.top_new_releases_date {
+  background: color-mix(in srgb, var(--gd-accent) 30%, transparent) !important;
+  background-image: none !important;
+  border-radius: 8px !important;
+}
+
+/* a bundle: the discount, the cost and the savings strip in Steam's lime and blue */
+.package_totals_area .bundle_discount,
+.package_totals_row.highlight,
+.package_totals_area .bundle_savings,
+.package_totals_area .message { color: var(--gd-accent) !important; }
+.package_totals_area > div:has(> .bundle_savings) {
+  background: rgba(0, 0, 0, .34) !important;
+  border-radius: 8px !important;
+}
+/* a bundle's price in a sale page: its discount was a lime chip */
+.StoreSalePriceWidgetContainer.Discounted > span:nth-last-child(2) {
+  background: var(--gd-accent) !important;
+  border-radius: 6px !important;
+  color: var(--gd-accent-ink) !important;
 }
 
 }   /* :where(html.gd-store) */

@@ -1,0 +1,54 @@
+/* Glass Dusk — the cart (/cart/).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else. Like webkit.css, its rules wait for html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the cart ═══════════════
+   Rebuilt in October 2026 on Steam's newer components: no mounts and no named classes,
+   buttons are links that carry their width in --width and their kind in data-accent-color
+   ("dull" for the quiet one, none for the main one). The rows, the total and the note on
+   licences sat on Steam's black and blue. */
+
+/* the buttons: the way to payment in the accent, the quiet ones in the field colour */
+&.gd-p-cart a[href*="checkout.steampowered.com/checkout"] {
+  background: var(--gd-accent, var(--gd-house)) !important;
+  border-radius: 999px !important;
+  color: var(--gd-accent-ink, #fff) !important;
+}
+&.gd-p-cart a[href*="checkout.steampowered.com/checkout"][aria-disabled=true] {
+  background: var(--gd-field) !important;
+  color: var(--gd-ink-faint) !important;
+}
+&.gd-p-cart a[data-accent-color=dull] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+&.gd-p-cart a[href*="checkout.steampowered.com/checkout"]:not([aria-disabled=true]):hover { filter: brightness(1.08); }
+&.gd-p-cart a[data-accent-color=dull]:hover { background: rgba(255, 255, 255, .16) !important; }
+
+/* a row of the list (and "Your cart is empty."), and the total beside it */
+&.gd-p-cart .Panel[role=button] {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+&.gd-p-cart div:has(> div > a[href*="checkout.steampowered.com/checkout"]) {
+  background: rgba(255, 255, 255, .05) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+
+/* a game's picture in its row, and "For my account / as a gift" */
+&.gd-p-cart .Panel[role=button] a[href] > img { border-radius: 8px; }
+&.gd-p-cart [role=combobox] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+/* the note on licences under the total: Steam's blue glow behind its picture, in the accent */
+&.gd-p-cart .Panel:has(> img + div) {
+  background: radial-gradient(45% 45% at 50% 28%, color-mix(in srgb, var(--gd-accent, var(--gd-house)) 26%, transparent) 0%, transparent 100%) !important;
+}
+
+}   /* :where(html.gd-store) */

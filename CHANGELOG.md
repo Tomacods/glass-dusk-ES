@@ -2,27 +2,39 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.0 — 2026-10-24
+
+**Store**
+- The whole store is in the theme now, not only the front page, a game's page and search. Hubs (every category, tag and genre page, Specials, Demos and the rest), the store menu with its flyouts and the search panel, the wishlist, the cart, the charts, the personal calendar, the recommender, the older list pages (New Releases, Upcoming, curators, Popular Tags, developer and publisher pages, the Discovery Queue page, Community Recommendations, Labs), the Points Shop and the News Hub sit on the same dark glass, with the same buttons, chips and cards.
+- Your account's pages on the store are restyled too: account details, store preferences, languages, ignored products, purchase history, licences, product activation, devices, cookies, family, notification settings and playtests.
+- Links and the rest of Steam's blue text follow the accent colour.
+- A game's page: the media strip, system requirements, *Read more*, awards, the new reviews section and the right column lost the last of Steam's blue and grey.
+- In the lists under the front page's tabs, the name of the row under the pointer turned dark on dark. It stays readable now.
+- What Steam added or redrew lately is in too: the front page's *Top New Releases* (it sat in a teal frame), a piece of news opened on its own (a grey page in the middle of the News Hub), the curators the News Hub suggests, the month's top releases on the charts (the *Silver* group was a pale slab), event pages with light art of their own such as *Cooking Fest* (the trailers, the list of games and its filters had no ground, so the text could not be read), *Show more* under a shelf, and a bundle's discount, cost and savings, which stayed in Steam's lime and blue. Since then Steam rebuilt the cart on its newer components, which left its buttons in Steam's blue again, and put an *Explore Your Discovery Queue* band in purple and blue on every hub: both are in the theme now.
+- Left as Steam draws them, on purpose: the price and *Add to Cart* blocks, the landing pages (About Steam, Steam Deck and hardware) and the art of sale events, which come with art of their own.
+
+**Speed**
+- The wishlist no longer stutters. Under the theme its scrolling ran at less than half the frame rate it has without it, and the pointer lagged by up to a third of a second. Rules that only one kind of page needs (the front page's blocks, the calendar, the charts, the recommender, your account, the cart, a game's reviews, the Points Shop, the News Hub, parts of the hubs) now load on that page alone, and the rest keep away from the selectors that made every page pay for them. It now scrolls nearly as smoothly as without the theme; what stutter is left is Steam's own.
+- The store's front page, search and a game's page lost their stutter too. While a page scrolls, Steam has the browser restyle the whole page now and then, and every rule loaded counted, including the client's own two style sheets (menus, chat, plugins), which Millennium loads into web pages as well and which do nothing there: they are switched off on web pages now. The front page went from 24 long frames in five seconds of scrolling to 2, as without the theme, and search from 9 to none.
+- On a game's page the reviews are styled by marks the theme puts on them, not by their shape: scrolling Cyberpunk 2077's page, with its thousands of reviews, went from 25-28 long frames in five seconds to 4-7, and a smaller game's page scrolls as it does without the theme.
+
 ## 1.6.14 — 2026-10-20
 
 **Sign-in**
 - *Sign-in screen* has another new choice, *Slideshow*, which is what was asked for on Discord: the art of one of your games after another fills the window behind the chooser and the signing-in screen, each fading into the next every three seconds or so while it slowly comes closer, and the colour follows the picture. It takes the 24 games you played last.
-
 ## 1.6.13 — 2026-10-20
 
 **Sign-in**
 - *Sign-in screen* has a new choice, *Your games* (asked for on Discord): the covers of your own games drift past behind the chooser and the signing-in screen, in rows on a tilted plane, each at its own pace and every other one the other way, like Steam's own wall made of your library. The games played last come first, up to 120 of them; the colour stays the last game's.
-
 ## 1.6.12 — 2026-10-20
 
 **Game list**
 - *Store: game list* keeps to the client's web pages ([#19](https://github.com/Yareli0i/glass-dusk/issues/19), reported by @PlzCarryMe). Millennium's settings page is drawn by the client itself and does not make room for the list, so the list covered its right side, with the *Use* buttons and the menu arrows. With *On hover*, pointing at one of those menus brought the list out. The list now stays off such pages, and only the list itself brings it out.
-
 ## 1.6.11 — 2026-10-19
 
 **Game list**
 - With *Store: game list* on, bits of the last game page opened in the library came through over the store and the other web pages while one was loading: the play bar's *Cloud Status* in a dark box, while Steam synced a game's saves ([#18](https://github.com/Yareli0i/glass-dusk/issues/18), reported by @kofbd). Nothing of the library behind the list is drawn now.
 - The *Collections* button beside *Home* is a round button like the sort and filter ones under it, with its four squares in the theme's ink, and it takes the accent while the Collections page is open (asked about on Discord). Steam drew it as grey squares on two grounds at once, pressed into the corner of the list's glass.
-
 ## 1.6.10 — 2026-10-18
 
 **Sign-in**
@@ -31,7 +43,6 @@ Versions follow [semantic versioning](https://semver.org). The repository starts
 **Game list**
 - Your game list can stay beside the store and the other web pages of the client ([#17](https://github.com/Yareli0i/glass-dusk/issues/17), asked for by @kofbd). New switch *Store: game list*: *Pinned* keeps Steam's own list there, with its collections, search and filters; *On hover* leaves a strip at the window's edge and the list comes out when you point at it; *Rail* shows your last games' covers, and a button opens the full list (the theme remembers which). The page narrows beside the list. Off by default.
 - When Steam starts on the store, the library is shown for a moment so the list is there, and the store page loads once more after it, as it does whenever you switch from the library to the store.
-
 ## 1.6.9 — 2026-10-18
 
 **Library home**

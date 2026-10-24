@@ -101,6 +101,27 @@
 
   /* ── web pages: the store gets its app's art; community and profiles are left alone ── */
 
+  // css/shared.css and css/plugins.css reach web pages too (shared.css by its patch for every
+  // window, plugins.css by its switch), and there, by design, none of their rules apply. They
+  // still cost: while a store page scrolls Steam rewrites two custom properties on the block
+  // around the whole page every frame, the browser matches every rule loaded against every
+  // element under it again, and a game page dropped from about 100 frames a second to 70-85
+  // with long frames all the way. So on web pages the two sheets are switched off.
+  if (/^https?:$/.test(location.protocol) && !/steamloopback/.test(location.host)) {
+    const CLIENT_ONLY = /\/css\/(shared|plugins)\.css(\?|$)/;
+    const dropClientSheets = () => {
+      for (const s of document.styleSheets) if (!s.disabled && CLIENT_ONLY.test(s.href || '')) s.disabled = true;
+    };
+    dropClientSheets();
+    document.addEventListener('DOMContentLoaded', dropClientSheets);
+    addEventListener('load', dropClientSheets);
+    new MutationObserver(list => {
+      dropClientSheets();
+      // a <link> joins document.styleSheets only once it has loaded
+      for (const m of list) for (const n of m.addedNodes) if (n.tagName === 'LINK') n.addEventListener('load', dropClientSheets, { once: true });
+    }).observe(document.head || root, { childList: true });
+  }
+
   // Profiles carry their owners' own backgrounds and themes, and the community's old
   // markup read worse half-restyled than untouched — so nothing here runs on them.
   if (/(^|\.)steamcommunity\.com$/.test(location.hostname)) return;
@@ -109,7 +130,152 @@
     // css/webkit.css reaches every web page (Steam-WebKit); its rules wait for this class.
     // A URL patch was tried and missed pages that redirect (/wishlist/ → /wishlist/id/…,
     // /replay/ → /replay/<id>/…). Checkout, help and login pages stay Steam's own.
-    if (location.hostname === 'store.steampowered.com') root.classList.add('gd-store');
+    if (location.hostname === 'store.steampowered.com') {
+      root.classList.add('gd-store');
+      // Marks for css/webkit.css, so its rules need no `:has()` to find their place. The long
+      // wishlist adds rows and moves them as it scrolls, and every rule loaded in a page costs on
+      // each of those changes whether it matches or not: `:has()` with plain tags inside, `div +
+      // div`, `[style]` over the element styled. Scrolling went from 24 frames a second to 10.
+      // So the store's rules keep to marks like these, and what one kind of page needs is loaded
+      // on that page alone.
+      //   html.gd-p-<page>        the kind of page (the store changes pages without a reload)
+      //   [data-gd-strip]         the store's menu strip, and inside its menus [data-gd-imgtile]
+      //                           (a link with a picture), [data-gd-oc] / [data-gd-oc-link] (a link
+      //                           whose last block holds one thing), [data-gd-calbtn] (the calendar's
+      //                           button). The strip is watched on its own and marked before it paints.
+      //   [data-gd-<mount>]       where Steam puts a part of the page ([data-featuretarget=<mount>])
+      // What only one kind of page needs is in css/store/<part>.css, loaded on that page alone.
+      const PAGES = [['wishlist', /^\/wishlist/], ['calendar', /^\/personalcalendar/], ['recommender', /^\/recommender/],
+        ['charts', /^\/charts/], ['account', /^\/account/], ['points', /^\/points/], ['cart', /^\/cart/]];
+      const PARTS = [
+        ['calendar', () => page === 'calendar'],
+        ['charts', () => page === 'charts'],
+        ['recommender', () => page === 'recommender'],
+        ['account', () => page === 'account'],
+        ['points', () => page === 'points'],
+        ['cart', () => page === 'cart'],
+        ['home', () => !!document.querySelector('[data-featuretarget=discounts-and-events], [data-featuretarget=personal-calendar-home], [data-featuretarget=discovery-queue-home]')],
+        ['reviews', () => !!document.querySelector('[data-featuretarget=appreviews]')],
+        ['hubs', () => !!document.querySelector('[data-featuretarget=sale-display]')],
+        ['newshub', () => !!document.querySelector('[data-featuretarget=event-calendar]')],
+      ];
+      const STRIP_MARKS = [
+        ['a.Focusable:has(> div img)', 'data-gd-imgtile'],
+        ['a > div:last-child:has(> div:only-child)', 'data-gd-oc'],
+        ['a[href*="/personalcalendar"] div:has(> span + svg)', 'data-gd-calbtn'],
+      ];
+      const markStrip = strip => {
+        for (const [sel, attr] of STRIP_MARKS) {
+          for (const e of strip.querySelectorAll(sel + ':not([' + attr + '])')) {
+            e.setAttribute(attr, '');
+            if (attr === 'data-gd-oc') e.parentElement.setAttribute('data-gd-oc-link', '');
+          }
+        }
+      };
+      // Marks for css/store/reviews.css: a game's customer reviews, Steam's React block with
+      // hashed classes. Its pieces are picked out by their shape, as the rules did before; the
+      // rules now end in these names instead. While a store page scrolls Steam has it restyled
+      // whole now and then, and a rule that ends in .Panel, .Focusable, a bare div or [role]
+      // is then tried on nearly every element: the reviews alone made that a fifth slower.
+      // [where, shape, mark]: 'ctn' is .review_ctn, 'rv' the appreviews block inside it.
+      const RV_MARKS = [
+        ['rv', '[role=listitem]', 'data-gd-rv-filter'],                       // a filter (Review Type, Language…)
+        ['rv', '[role=listitem] > button + .Panel', 'data-gd-rv-pop'],        // its open panel
+        ['ctn', 'div:not(.Panel) > .Panel.Focusable', 'data-gd-rv-card'],     // a review
+        ['ctn', '.Panel.Focusable > div > div:empty:last-child:not(:only-child)', 'data-gd-rv-fade'],   // the fade over a long one
+        ['ctn', 'button.Focusable:not(.DialogButton)', 'data-gd-rv-chip'],    // the active-filter chip
+        ['rv', 'div:has(> div > [role=img])', 'data-gd-rv-graph'],            // the graph
+        ['rv', '[data-gd-rv-graph] > div + div', 'data-gd-rv-recent'],        // its recent months
+        ['rv', '[data-gd-rv-graph] > svg', 'data-gd-rv-wedge'],               // the wedge between the two
+        ['rv', 'div:has(> div:only-child > div + div.Focusable + span)', 'data-gd-rv-score'],   // the score boxes
+        ['rv', 'div:has(> span + div.Focusable > span)', 'data-gd-rv-score'],
+        ['rv', '[role=list] [role=button] > .Panel > div > .Panel', 'data-gd-rv-inner'],         // a card's inside
+        ['rv', '[data-gd-rv-inner] a > .Focusable', 'data-gd-rv-thumbwrap'],  // its head: thumb and verdict
+        ['rv', '[data-gd-rv-thumbwrap] > div:first-child:not([class*=" "])', 'data-gd-rv-thumb'],
+        ['rv', '[data-gd-rv-inner] .Panel.Focusable > div:not(.Panel):not(.Focusable):has(> div + div)', 'data-gd-rv-specs'],   // the reviewer's PC
+      ];
+      const markReviews = ctn => {
+        const rv = ctn.querySelector('[data-featuretarget=appreviews]');
+        for (const [where, shape, attr] of RV_MARKS) {
+          const from = where === 'ctn' ? ctn : rv;
+          if (from) for (const e of from.querySelectorAll(shape + ':not([' + attr + '])')) e.setAttribute(attr, '');
+        }
+      };
+      // the folder webkit.css came from (its name follows the install: GlassDusk, glass-dusk…)
+      let base = '';
+      const findBase = () => {
+        for (const sheet of document.styleSheets) {
+          const m = /^(.*\/)webkit\.css(\?.*)?$/.exec(sheet.href || '');
+          if (m) return m[1];
+        }
+        return '';
+      };
+      const parts = {};
+      let page = '', last = 0, queued = 0;
+      const mark = () => {
+        queued = 0; last = performance.now();
+        const kind = (PAGES.find(([, re]) => re.test(location.pathname)) || [''])[0];
+        if (kind !== page) {
+          if (page) root.classList.remove('gd-p-' + page);
+          if (kind) root.classList.add('gd-p-' + kind);
+          page = kind;
+        }
+        for (const m of document.querySelectorAll('[data-featuretarget]:not([data-gd-mount])')) {
+          const name = m.getAttribute('data-featuretarget');
+          m.setAttribute('data-gd-mount', name);
+          if (/^[a-z][a-z0-9-]*$/.test(name)) m.setAttribute('data-gd-' + name, '');
+        }
+        for (const strip of document.querySelectorAll('.Panel:has(> [role=navigation] form[role=search]):not([data-gd-strip])')) {
+          strip.setAttribute('data-gd-strip', '');
+          markStrip(strip);
+          new MutationObserver(() => markStrip(strip)).observe(strip, { childList: true, subtree: true });
+        }
+        // the reviews, watched on their own like the strip: what loads in (more reviews, an open
+        // filter) is marked before it is painted
+        for (const ctn of document.querySelectorAll('.review_ctn:not([data-gd-rv-watched])')) {
+          ctn.setAttribute('data-gd-rv-watched', '');
+          markReviews(ctn);
+          new MutationObserver(() => markReviews(ctn)).observe(ctn, { childList: true, subtree: true });
+        }
+        if (!base) base = findBase();
+        if (base) {
+          for (const [name, wanted] of PARTS) {
+            const want = wanted();
+            if (want && !parts[name]) {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = base + 'store/' + name + '.css';
+              link.setAttribute('data-gd-part', name);
+              (document.head || root).appendChild(link);
+              parts[name] = link;
+            } else if (!want && parts[name]) {
+              parts[name].remove();
+              delete parts[name];
+            }
+          }
+        }
+      };
+      // at most four times a second while the page keeps changing, and once more after it settles
+      const soon = () => {
+        if (queued) return;
+        queued = setTimeout(mark, Math.max(0, 250 - (performance.now() - last)));
+      };
+      mark();
+      new MutationObserver(soon).observe(root, { childList: true, subtree: true });
+      addEventListener('popstate', soon);
+      addEventListener('load', soon);   // webkit.css may be listed only now, and with it the folder
+    }
+    // The account pages rebuilt in the newer store (notification settings, playtests) mark
+    // the section you are on with a hashed class only; css/webkit.css needs a name for it.
+    // The list is redrawn when the page changes inside the application, hence the timer.
+    if (location.hostname === 'store.steampowered.com' && location.pathname.startsWith('/account')) {
+      const bare = p => p.replace(/\/+$/, '');
+      setInterval(() => {
+        for (const a of document.querySelectorAll('#StoreTemplate .Panel > a.Focusable[href*="/account"]')) {
+          a.toggleAttribute('data-gd-here', bare(a.pathname) === bare(location.pathname));
+        }
+      }, 800);
+    }
     const appid = (location.pathname.match(/\/app\/(\d+)/) || [])[1];
     if (appid) {
       const url = `https://shared.steamstatic.com/store_item_assets/steam/apps/${appid}/library_hero.jpg`;

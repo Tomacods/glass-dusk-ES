@@ -1,0 +1,32 @@
+/* Glass Dusk — the personal calendar (/personalcalendar).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its `:has()` rules cost time on every page they are loaded in, and on the
+   long wishlist they made scrolling stutter. Like webkit.css, its rules wait for
+   html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the personal calendar ═══════════════
+   Panels inside panels, none with a name: taken by their depth under the page's panel
+   (the outermost one; the application wraps its parts in boxes that draw nothing, so a
+   child combinator from #StoreTemplate or its section never matches). */
+
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) { background: none !important; }
+/* its blocks: "Released in the last month", "Upcoming"… */
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel:has(.ImpressionTrackedElement) {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+/* the grey holder of a capsule; a day of the week view with its date on a black fade */
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel > .Panel > .Panel:has(> .Panel:only-child) { background: none !important; }
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel > .Panel > .Panel:has(> .Panel + .Panel) { background: rgba(255, 255, 255, .03) !important; border-radius: 10px; }
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel > .Panel > .Panel:has(> .Panel + .Panel) > .Panel:first-child { background: rgba(255, 255, 255, .05) !important; border-radius: 10px 10px 0 0; }
+/* the controls over the list: the tag field's plate, the two segmented switches */
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel > .Panel > div:not(.Panel) {
+  background: var(--gd-field) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+&.gd-p-calendar #StoreTemplate section .Panel:not(.Panel .Panel) > .Panel > .Panel > .Panel > div:not(.Panel) > div > div > div > div:only-child:empty { background: var(--gd-accent) !important; border-radius: 8px !important; }
+
+}   /* :where(html.gd-store) */

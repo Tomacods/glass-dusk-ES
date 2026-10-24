@@ -8,6 +8,7 @@ css/root.css         the Colors tab: one :root block, @name/@description per col
 css/steam.css        main window: ground, the two panes of glass, game list, game page, downloads
 css/shared.css       every client window: menus, settings, dialogs, notifications, friends and chat
 css/webkit.css       the store inside the client (store.steampowered.com only)
+css/store/*.css      parts of webkit.css that one kind of store page needs (js/dusk.js loads each there)
 css/overlay.css      in-game overlay window ("SP Overlay: …")
 css/bigpicture.css   Big Picture "Cover" (switch Big Picture)
 css/plugins.css      Millennium plugins with their own interface (switch Plugins)
@@ -32,6 +33,14 @@ assets/              number font (+ its OFL licence) and the meadow background
 - Millennium loads the `Steam-WebKit` stylesheet and every `.*` patch into each web page the client shows: store, community, profiles. Those pages carry `html.MillenniumWindow_SteamBrowser`.
 - `css/shared.css` is for the client's own windows, and its class names (`.friend`, `.gameName`, `.avatarHolder`, the scrollbars) also exist in community markup. The whole file is nested in `:where(:root:not(.MillenniumWindow_SteamBrowser))`. `:where()` adds no specificity, so the cascade inside the client is unchanged.
 - `css/webkit.css` is nested in `:where(html.gd-store)`. `js/dusk.js` sets that class on store.steampowered.com. Matching by URL in `skin.json` is not reliable: `/wishlist/` and `/replay/` redirect, and the patch is decided before the redirect.
+- On every web page `js/dusk.js` switches `css/shared.css` and `css/plugins.css` off. Nothing in them applies there, but they cost: while a store page scrolls, Steam rewrites custom properties on the block around the whole page and toggles a class on `body`, the browser restyles everything under it, and every rule loaded is tried on every element.
+- For the same reason the store's rules keep to cheap selectors. None ends in a common shape (`.Panel`, `.Focusable`, a bare `div` or `span`, `[role]`): such a rule is tried on nearly every element of the page. No `div + div` between bare tags, no `[style]` above the element styled, no `:has()` with bare tags inside. Where only a shape tells an element apart, `js/dusk.js` marks it and the rule ends in the mark:
+  - `html.gd-p-<page>` for the kind of page (wishlist, calendar, recommender, charts, account, points, cart);
+  - `[data-gd-<mount>]` on each of Steam's React blocks (`[data-featuretarget=<mount>]`);
+  - `[data-gd-strip]` on the store menu and, inside its menus, `[data-gd-imgtile]`, `[data-gd-oc]`, `[data-gd-calbtn]`;
+  - `[data-gd-rv-*]` on the pieces of a game's reviews (filters, cards, the graph, the score boxes, the reviewer's PC).
+  The strip and the reviews are watched by their own observers, so what loads in is marked before it is painted.
+- What only one kind of page needs is in `css/store/<part>.css`, loaded by `js/dusk.js` on that page alone: by path (calendar, charts, recommender, account, points, cart) or by the React block present (home, reviews, hubs, newshub).
 - Community and profile pages get nothing from the theme. Check with a screenshot diff against the same page with the theme's stylesheets disabled: it should be zero.
 
 ## Library home numbers

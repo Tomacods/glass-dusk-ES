@@ -1,0 +1,52 @@
+/* Glass Dusk — the filters beside the long list at the foot of a hub (pages with Steam's sale-display block).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its `:has()` rules cost time on every page they are loaded in, and on the
+   long wishlist they made scrolling stutter. Like webkit.css, its rules wait for
+   html.gd-store. */
+
+:where(html.gd-store) {
+
+[data-gd-sale-display] .SaleSectionCtn.library div:has(+ div > .LibraryAssetExpandedDisplay) {
+  background: linear-gradient(160deg, #1b1f2c, #10131d) !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+[data-gd-sale-display] .SaleSectionCtn.library div:has(+ div > .LibraryAssetExpandedDisplay) a:has(> span) {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+[data-gd-sale-display] .SaleSectionCtn.library button.Focusable[role=button] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+[data-gd-sale-display] .SaleSectionCtn.library button.Focusable[role=button]:hover { background: rgba(255, 255, 255, .16) !important; }
+
+/* event pages (Cooking Fest…): the trailers and the list of games have no slab of their own,
+   so on the event's light art the theme's light text and pale plates could not be read */
+[data-gd-sale-display] .SaleSectionCtn:is(.trailercarousel, .sale_item_browser) > .Panel {
+  background-image: linear-gradient(150deg, rgba(14, 17, 27, .92), rgba(9, 11, 18, .94)) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+/* "Show more" under a shelf: a pale plate with black text */
+[data-gd-sale-display] .SaleSectionCtn > .Panel > div > button.Focusable:only-child {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+[data-gd-sale-display] .SaleSectionCtn > .Panel > div > button.Focusable:only-child:hover { background: rgba(255, 255, 255, .16) !important; }
+
+/* the filters at the left of that list wear the event's colours (teal on Cooking Fest) */
+[data-gd-sale-display] .SaleSectionCtn.sale_item_browser > .Panel > div:nth-child(2) > div:nth-child(2) > div:first-child > div:first-child {
+  background: linear-gradient(150deg, rgba(14, 17, 27, .92), rgba(9, 11, 18, .94)) !important;
+  border-radius: var(--gd-r-md) !important;
+  color: var(--gd-ink) !important;
+}
+[data-gd-sale-display] .SaleSectionCtn.sale_item_browser > .Panel > div:nth-child(2) > div:nth-child(2) > div:first-child > div:first-child > div:nth-child(2) > a {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+
+}   /* :where(html.gd-store) */

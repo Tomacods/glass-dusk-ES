@@ -1,0 +1,46 @@
+/* Glass Dusk — the charts (/charts/…).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its `:has()` rules cost time on every page they are loaded in, and on the
+   long wishlist they made scrolling stutter. Like webkit.css, its rules wait for
+   html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the charts ═══════════════
+   Mostly neutral greys already. What was blue: the side list's ground, a line, a banner,
+   the "New" chips and the "in library" mark of the tables. */
+
+&.gd-p-charts .Panel:has(> .SteamChartsShell) > div:not(.SteamChartsShell) > div > .Panel { background-image: linear-gradient(rgba(14, 17, 27, .9) 50%, rgba(14, 17, 27, 0)) !important; }
+&.gd-p-charts .SteamChartsShell .Panel:has(> a[href*="/charts/"]) { border-radius: var(--gd-r-md) !important; }
+&.gd-p-charts .SteamChartsShell .Panel:has(> a[href*="/charts/"]) > div { border-bottom-color: var(--gd-accent) !important; }
+&.gd-p-charts .SteamChartsShell .Panel:has(> a[href*="/charts/"]) > a[href*="/charts/"]:not(.Focusable) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+&.gd-p-charts .SteamChartsShell .Panel:has(> a[href*="/charts/"]) > a[href*="/charts/"]:not(.Focusable):hover { background: rgba(255, 255, 255, .16) !important; }
+&.gd-p-charts .SteamChartsShell a[href*="/charts/bestofyear"] {
+  background-image: linear-gradient(90deg, #1b1f2c 5%, #2b3350 60%, #1b1f2c) !important;
+  border-radius: var(--gd-r-md);
+  overflow: hidden;
+}
+&.gd-p-charts .SteamChartsShell td > div.Focusable > span {
+  background: var(--gd-accent) !important;
+  border-radius: 6px;
+  color: var(--gd-accent-ink) !important;
+}
+&.gd-p-charts .SteamChartsShell td a > div > span { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; }
+&.gd-p-charts .SteamChartsShell td a > div > span svg * { fill: var(--gd-ink) !important; }
+&.gd-p-charts .SteamChartsShell [role=combobox] {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+/* the month's top releases: Gold, Silver, Bronze — the silver one was a pale slab */
+[data-gd-react-root] .SaleCustomCSS .SaleSectionCtn.items > .Panel.Focusable {
+  background-color: rgba(14, 17, 27, .82) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+
+}   /* :where(html.gd-store) */

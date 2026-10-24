@@ -1,0 +1,28 @@
+/* Glass Dusk — the interactive recommender (/recommender).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its `:has()` rules cost time on every page they are loaded in, and on the
+   long wishlist they made scrolling stutter. Like webkit.css, its rules wait for
+   html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the recommender ═══════════════ */
+
+/* A game is one card: navy with a glow at its corner. The card under the pointer grows over
+   its neighbours, so the ground is solid, not the usual veil. */
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) {
+  background: #161a26 !important;
+  border-radius: var(--gd-r-md) !important;
+  box-shadow: none !important;
+}
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div):hover { background: #1d2231 !important; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .9) !important; }
+/* the price beside "Add to Cart": two grey-blue plates; the button itself is the action */
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) div:has(> div + button[type=button]),
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) div:has(> div + button[type=button]) div { background: none !important; }
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) div:has(> div + button[type=button]) > button[type=button]:not(.Focusable) { background: var(--gd-accent) !important; color: var(--gd-accent-ink) !important; }
+/* "On Wishlist" over the picture: black on pale blue */
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) span:has(> img + div) { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; }
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) span:has(> img + div) > div { color: var(--gd-ink) !important; }
+&.gd-p-recommender #StoreTemplate section section a[href*="/app/"]:has(> div) span:has(> img + div) > img { filter: invert(1); }
+
+}   /* :where(html.gd-store) */

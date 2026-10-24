@@ -1,0 +1,42 @@
+/* Glass Dusk — the Points Shop (/points/…).
+   Part of css/webkit.css that only this kind of page needs. js/dusk.js loads it there and
+   nowhere else: its rules cost time on every page they are loaded in, and on the long
+   wishlist they made scrolling stutter. Like webkit.css, its rules wait for html.gd-store. */
+
+:where(html.gd-store) {
+
+/* ═══════════════ the Points Shop ═══════════════
+   A React application with hashed classes only: taken by its mount and by depth. */
+
+/* the page's panel (the menu-strip rule veiled it), Steam's blue glow under everything, the pattern over it */
+#points_shop_root > div > .Panel {
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 0 !important;
+}
+#points_shop_root > div > .Panel > .Panel > .Panel > div { background-image: none !important; }
+#points_shop_root > div > .Panel > .Panel > .Panel > div > div[style*="background-image"] { opacity: .16; filter: grayscale(1); }
+/* the list of sections at the left */
+#points_shop_root .padding-bottom-xlarge[style*="justify-content"] > .Panel:first-child {
+  background: rgba(255, 255, 255, .04) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+/* an item: a blue-tinted card (items of an event keep the colour the event gives them) */
+#points_shop_root .Panel[role=button]:not([style*="background"]) {
+  background: rgba(255, 255, 255, .06) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+#points_shop_root .Panel[role=button]:not([style*="background"]) > div:nth-child(2):not([style]) {
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02)) !important;
+}
+#points_shop_root .Panel[role=button][style*="background"] { border-radius: 12px !important; overflow: hidden; }
+/* "See All", "How Points Work" */
+#points_shop_root a > button.Focusable {
+  background: var(--gd-field) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+
+}   /* :where(html.gd-store) */
