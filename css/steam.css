@@ -772,6 +772,9 @@ body.DesktopUI,
 
 /* ═══════════════ collections ═══════════════ */
 
+/* "Your Collections" lays Steam's slate radial gradient over the glass (#21). A game's page has
+   the same frame with nothing in it, so this touches no other page. */
+.AppDetailsMain > .Container > .Body.ScrollContainer { background: none !important; }
 .MainPanel .Collection.Focusable,
 .MainPanel .Collection.NewCollection {
   border-radius: var(--gd-r-lg) !important;

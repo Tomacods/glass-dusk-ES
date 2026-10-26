@@ -2,6 +2,14 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.2 — 2026-10-26
+
+**Library**
+- *Your Collections* sat on Steam's slate gradient instead of the theme's glass ([#21](https://github.com/Yareli0i/glass-dusk/issues/21), reported by @timinside).
+
+**Address bar**
+- Once you had copied a page's address from the address bar, its *Copied!* tip stayed on screen and turned up again over whatever you did next ([#22](https://github.com/Yareli0i/glass-dusk/issues/22), reported by @timinside). The cause is Millennium's reclass, which the theme needs: it gives every name in Steam's style maps a readable second name, and Steam takes the tip down only when its animation ends under the name it expects, which no longer matched. The theme puts that one name back.
+
 ## 1.7.1 — 2026-10-24
 
 **In-game overlay**

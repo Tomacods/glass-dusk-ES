@@ -1641,8 +1641,36 @@
     if (mode === 'rail' && o) slRail(o);
   };
 
+  /* ═════════════ a fix for Millennium's reclass ═════════════ */
+
+  // Reclass gives Steam's hashed classes the readable names this theme is written against, and
+  // it does so to every name in Steam's CSS-module maps: an entry reads "hash Readable". Steam
+  // compares one of those entries to the name of an animation that has just ended. That is how
+  // the "Copied!" tip after a click on a page's address is taken down, and since the comparison
+  // can no longer succeed, the tip stayed on screen for good (#22). That entry gets its hash
+  // alone back; nothing in the theme styles it by the readable name. One look, in the main
+  // window: the map lives in the shared context every window draws from.
+  let reclassLooks = 0;
+  const fixReclassAnimation = () => {
+    if (!isMain || reclassLooks >= 30) return;
+    reclassLooks++;
+    try {
+      const W = window.opener && window.opener.webpackChunksteamui ? window.opener : window;
+      if (!W.webpackChunksteamui) return;
+      let req = null;
+      W.webpackChunksteamui.push([[Symbol('gd-reclass')], {}, r => { req = r; }]);
+      if (!req || !req.m) return;
+      const id = Object.keys(req.m).find(k => String(req.m[k]).includes('FloatingConfirmationAnimation:'));
+      if (!id) return;
+      reclassLooks = 30;   // found: done, whatever it holds
+      const map = req(id), name = map && map.FloatingConfirmationAnimation;
+      if (typeof name === 'string' && name.includes(' ')) map.FloatingConfirmationAnimation = name.split(' ')[0];
+    } catch (e) { reclassLooks = 30; /* Steam's code changed: nothing to fix this way */ }
+  };
+
   const tick = () => {
     mountLayer();
+    fixReclassAnimation();
     if (signIn()) return;
     try { storeList(); } catch (e) { /* the list beside the store is a bonus */ }
     try { rememberGamesForSignIn(); } catch (e) { /* the sign-in screen falls back to dusk */ }
