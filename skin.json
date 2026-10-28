@@ -1,6 +1,6 @@
 {
-  "name": "Glass Dusk",
-  "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
+  "name": "Glass Dusk ES",
+  "description": "Cristal ahumado sobre la ilustración del juego abierto, que define el color de acento del cliente. Personaliza la biblioteca, la tienda, los menús, Big Picture y la superposición del juego. Traducción al español de Glass Dusk.",
   "author": "Yareli",
   "version": "1.7.2",
   "tags": [
@@ -10,8 +10,8 @@
     "Big Picture"
   ],
   "github": {
-    "owner": "Yareli0i",
-    "repo_name": "glass-dusk"
+    "owner": "Tomacods",
+    "repo_name": "glass-dusk-ES"
   },
   "funding": {
     "kofi": "yareli0i"
@@ -21,11 +21,19 @@
   "Steam-WebKit": "css/webkit.css",
   "RootColors": "css/root.css",
   "Conditions": {
-    "Theme language": {
-      "description": "Text the theme draws itself: home header, Big Picture chip, dates.",
-      "tab": "Look",
-      "default": "English",
+    "Idioma del tema": {
+      "description": "Textos propios del tema: encabezado del inicio, información de juego en Big Picture y fechas.",
+      "tab": "Apariencia",
+      "default": "Español",
       "values": {
+        "Español": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/lang-es.css"
+          }
+        },
         "English": {},
         "Українська": {
           "TargetCss": {
@@ -37,13 +45,13 @@
         }
       }
     },
-    "Background": {
-      "description": "What sits behind the glass.",
-      "tab": "Look",
-      "default": "Game art",
+    "Fondo": {
+      "description": "Lo que se muestra detrás del cristal.",
+      "tab": "Apariencia",
+      "default": "Ilustración del juego",
       "values": {
-        "Game art": {},
-        "Meadow": {
+        "Ilustración del juego": {},
+        "Pradera": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -51,7 +59,7 @@
             "src": "css/options/bg-meadow.css"
           }
         },
-        "Plain dusk": {
+        "Atardecer liso": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -61,13 +69,13 @@
         }
       }
     },
-    "Background art": {
-      "description": "How strongly the game art shows through.",
-      "tab": "Look",
+    "Ilustración de fondo": {
+      "description": "Intensidad con la que se ve la ilustración del juego.",
+      "tab": "Apariencia",
       "default": "Normal",
       "values": {
         "Normal": {},
-        "Subtle": {
+        "Suave": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -75,7 +83,7 @@
             "src": "css/options/art-subtle.css"
           }
         },
-        "Vivid": {
+        "Intensa": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -85,13 +93,13 @@
         }
       }
     },
-    "Accent colour": {
-      "description": "Colour of buttons and highlights. Fixed uses Accent from the Colors tab.",
-      "tab": "Look",
-      "default": "Game art",
+    "Color de acento": {
+      "description": "Color de los botones y elementos destacados. Fijo utiliza el color de acento de la pestaña Colores.",
+      "tab": "Apariencia",
+      "default": "Ilustración del juego",
       "values": {
-        "Game art": {},
-        "Fixed": {
+        "Ilustración del juego": {},
+        "Fijo": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -101,13 +109,13 @@
         }
       }
     },
-    "Glass": {
-      "description": "How see-through the panels are.",
-      "tab": "Look",
+    "Cristal": {
+      "description": "Transparencia de los paneles.",
+      "tab": "Apariencia",
       "default": "Normal",
       "values": {
         "Normal": {},
-        "Denser": {
+        "Más opaco": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -115,7 +123,7 @@
             "src": "css/options/glass-dense.css"
           }
         },
-        "Sheerer": {
+        "Más transparente": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -125,13 +133,13 @@
         }
       }
     },
-    "Corners": {
-      "description": "Radius of panels and cards.",
-      "tab": "Look",
+    "Esquinas": {
+      "description": "Redondez de las esquinas de paneles y tarjetas.",
+      "tab": "Apariencia",
       "default": "Normal",
       "values": {
         "Normal": {},
-        "Softer": {
+        "Más redondeadas": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -139,7 +147,7 @@
             "src": "css/options/radius-soft.css"
           }
         },
-        "Sharper": {
+        "Más rectas": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -149,13 +157,13 @@
         }
       }
     },
-    "Sign-in screen": {
-      "description": "The account chooser when Steam starts (Who's playing?): the art of the game you played last, the covers of your own games drifting past, the art of your games one after another, plain dusk or Steam's wall of covers, each with the theme's glass, or Steam's own look. It shows only if Steam asks which account to use.",
-      "tab": "Look",
-      "default": "Game art",
+    "Inicio de sesión": {
+      "description": "Selector de cuenta al abrir Steam (¿Quién está jugando?): ilustración del último juego, portadas de tus juegos en movimiento, presentación de ilustraciones, atardecer liso o muro de portadas de Steam, con el cristal del tema; también puedes usar el aspecto original de Steam. Solo aparece si Steam pregunta qué cuenta usar.",
+      "tab": "Apariencia",
+      "default": "Ilustración del juego",
       "values": {
-        "Game art": {},
-        "Your games": {
+        "Ilustración del juego": {},
+        "Tus juegos": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -163,7 +171,7 @@
             "src": "css/options/login-games.css"
           }
         },
-        "Slideshow": {
+        "Presentación": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -171,7 +179,7 @@
             "src": "css/options/login-slides.css"
           }
         },
-        "Dusk": {
+        "Atardecer": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -179,7 +187,7 @@
             "src": "css/options/login-dusk.css"
           }
         },
-        "Steam's wall": {
+        "Muro de Steam": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -197,12 +205,12 @@
         }
       }
     },
-    "Library home": {
-      "description": "The theme's header (greeting, stats, Continue) or Steam's shelves only.",
-      "tab": "Library",
-      "default": "Theme",
+    "Inicio de la biblioteca": {
+      "description": "Encabezado del tema (saludo, estadísticas y tarjeta Continuar) o solo las secciones de Steam.",
+      "tab": "Biblioteca",
+      "default": "Tema",
       "values": {
-        "Theme": {},
+        "Tema": {},
         "Steam": {
           "TargetCss": {
             "affects": [
@@ -213,9 +221,9 @@
         }
       }
     },
-    "Home number: Games": {
-      "description": "Every game in the library, installed or not.",
-      "tab": "Library",
+    "Estadística: Juegos": {
+      "description": "Todos los juegos de la biblioteca, estén instalados o no.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -229,9 +237,9 @@
         }
       }
     },
-    "Home number: Hours played": {
-      "description": "Hours across the whole library.",
-      "tab": "Library",
+    "Estadística: Horas jugadas": {
+      "description": "Horas jugadas en toda la biblioteca.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -245,9 +253,9 @@
         }
       }
     },
-    "Home number: Hours, 2 weeks": {
-      "description": "Hours played in the last two weeks.",
-      "tab": "Library",
+    "Estadística: Horas en 2 semanas": {
+      "description": "Horas jugadas durante las últimas dos semanas.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -261,9 +269,9 @@
         }
       }
     },
-    "Home number: Unplayed": {
-      "description": "Games you have never started.",
-      "tab": "Library",
+    "Estadística: Sin jugar": {
+      "description": "Juegos que nunca has iniciado.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -277,9 +285,9 @@
         }
       }
     },
-    "Home number: Perfect games": {
-      "description": "Games with every achievement unlocked.",
-      "tab": "Library",
+    "Estadística: Juegos perfectos": {
+      "description": "Juegos con todos los logros desbloqueados.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -293,9 +301,9 @@
         }
       }
     },
-    "Home number: On disk": {
-      "description": "Space taken in Steam's library folders, in GB.",
-      "tab": "Library",
+    "Estadística: Espacio en disco": {
+      "description": "Espacio ocupado en las carpetas de la biblioteca de Steam, en GB.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -309,9 +317,9 @@
         }
       }
     },
-    "Home numbers: second line": {
-      "description": "A small line under each number: installed, in how many games, average completion, drives.",
-      "tab": "Library",
+    "Estadísticas: segunda línea": {
+      "description": "Línea de detalle bajo cada cifra: juegos instalados, juegos con actividad, porcentaje medio de logros y unidades de disco.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -325,9 +333,9 @@
         }
       }
     },
-    "Recently played shelf": {
-      "description": "The row of recently played games under the Continue card.",
-      "tab": "Library",
+    "Sección de juegos recientes": {
+      "description": "Fila de juegos recientes debajo de la tarjeta Continuar.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -341,9 +349,9 @@
         }
       }
     },
-    "Recently played: preview": {
-      "description": "Point at a cover in the recently played row: a card with the game's screenshots, its name and hours. The store's screenshots are fetched from Steam at that moment.",
-      "tab": "Library",
+    "Juegos recientes: vista previa": {
+      "description": "Al pasar el cursor sobre una portada de los juegos recientes, se muestra una tarjeta con capturas, nombre y horas jugadas. Las capturas de la tienda se descargan de Steam en ese momento.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -357,13 +365,13 @@
         }
       }
     },
-    "Home games": {
-      "description": "Where the Continue card and the recently played row take their games: only what is installed on this machine, or everything in the library.",
-      "tab": "Library",
-      "default": "Installed",
+    "Juegos del inicio": {
+      "description": "Juegos de la tarjeta Continuar y de la fila de juegos recientes: solo los instalados en este equipo o todos los de la biblioteca.",
+      "tab": "Biblioteca",
+      "default": "Instalados",
       "values": {
-        "Installed": {},
-        "Whole library": {
+        "Instalados": {},
+        "Toda la biblioteca": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -373,9 +381,9 @@
         }
       }
     },
-    "Continue card: achievements": {
-      "description": "Achievement progress of the game on the Continue card.",
-      "tab": "Library",
+    "Tarjeta Continuar: logros": {
+      "description": "Progreso de los logros del juego que aparece en la tarjeta Continuar.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -389,9 +397,9 @@
         }
       }
     },
-    "What's New shelf": {
-      "description": "Steam's What's New shelf on the library home.",
-      "tab": "Library",
+    "Sección de novedades": {
+      "description": "Sección de novedades de Steam en el inicio de la biblioteca.",
+      "tab": "Biblioteca",
       "default": "no",
       "values": {
         "no": {},
@@ -405,9 +413,9 @@
         }
       }
     },
-    "Add shelf button": {
-      "description": "Steam's row for adding a shelf to the library home.",
-      "tab": "Library",
+    "Botón Añadir sección": {
+      "description": "Fila de Steam para añadir una sección al inicio de la biblioteca.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -421,13 +429,13 @@
         }
       }
     },
-    "Game list side": {
-      "description": "Where the game list sits.",
-      "tab": "Library",
-      "default": "Right",
+    "Posición de la lista de juegos": {
+      "description": "Lado en el que se muestra la lista de juegos.",
+      "tab": "Biblioteca",
+      "default": "Derecha",
       "values": {
-        "Right": {},
-        "Left": {
+        "Derecha": {},
+        "Izquierda": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -437,9 +445,9 @@
         }
       }
     },
-    "Game page: collection tags": {
-      "description": "The collections a game is in, shown at the top right of its art on the game page, as Steam does. A click opens the collection.",
-      "tab": "Library",
+    "Página del juego: etiquetas de colecciones": {
+      "description": "Colecciones a las que pertenece el juego, en la esquina superior derecha de su ilustración, como las muestra Steam. Haz clic para abrir una colección.",
+      "tab": "Biblioteca",
       "default": "yes",
       "values": {
         "yes": {},
@@ -453,13 +461,13 @@
         }
       }
     },
-    "Store: game list": {
-      "description": "Your game list beside the store and other web pages of the main window: off, pinned there, coming out when you point at the window's edge, or a rail of your last games' covers that opens into the list.",
-      "tab": "Library",
-      "default": "Off",
+    "Tienda: lista de juegos": {
+      "description": "Lista de juegos junto a la tienda y otras páginas web de la ventana principal: desactivada, fija, desplegable al pasar el cursor por el borde o como barra de portadas de los últimos juegos que permite abrir la lista.",
+      "tab": "Biblioteca",
+      "default": "Desactivada",
       "values": {
-        "Off": {},
-        "Pinned": {
+        "Desactivada": {},
+        "Fija": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -467,7 +475,7 @@
             "src": "css/options/storelist-pinned.css"
           }
         },
-        "On hover": {
+        "Al pasar el cursor": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -475,7 +483,7 @@
             "src": "css/options/storelist-hover.css"
           }
         },
-        "Rail": {
+        "Barra de portadas": {
           "TargetCss": {
             "affects": [
               "^Steam$"
@@ -486,11 +494,11 @@
       }
     },
     "Big Picture": {
-      "description": "Cover: the focused game's art fills the screen and lends its colour.",
-      "tab": "Big Picture & overlay",
-      "default": "Cover",
+      "description": "Ilustración: la imagen del juego seleccionado llena la pantalla y define el color de acento.",
+      "tab": "Big Picture y superposición",
+      "default": "Ilustración",
       "values": {
-        "Cover": {
+        "Ilustración": {
           "TargetCss": {
             "affects": [
               "GamepadUIPopupWindowBody"
@@ -501,9 +509,9 @@
         "Steam": {}
       }
     },
-    "Big Picture hours chip": {
-      "description": "Top-left chip: logo, hours played, last played.",
-      "tab": "Big Picture & overlay",
+    "Información de juego en Big Picture": {
+      "description": "Información en la esquina superior izquierda: logotipo, horas jugadas y última partida.",
+      "tab": "Big Picture y superposición",
       "default": "yes",
       "values": {
         "yes": {},
@@ -517,12 +525,12 @@
         }
       }
     },
-    "Overlay background": {
-      "description": "Behind the Shift+Tab panels: a light veil or Steam's dark sheet.",
-      "tab": "Big Picture & overlay",
-      "default": "Transparent",
+    "Fondo de la superposición": {
+      "description": "Fondo de los paneles de Mayús+Tab: un velo ligero o el fondo oscuro de Steam.",
+      "tab": "Big Picture y superposición",
+      "default": "Transparente",
       "values": {
-        "Transparent": {},
+        "Transparente": {},
         "Steam": {
           "TargetCss": {
             "affects": [
@@ -533,12 +541,12 @@
         }
       }
     },
-    "Overlay panels": {
-      "description": "Game Overview, browser and toolbar: smoked glass or Steam's own.",
-      "tab": "Big Picture & overlay",
-      "default": "Glass",
+    "Paneles de la superposición": {
+      "description": "Resumen del juego, navegador y barra de herramientas: cristal ahumado o aspecto original de Steam.",
+      "tab": "Big Picture y superposición",
+      "default": "Cristal",
       "values": {
-        "Glass": {
+        "Cristal": {
           "TargetCss": {
             "affects": [
               ".*"
@@ -549,18 +557,18 @@
         "Steam": {}
       }
     },
-    "Plugins": {
-      "description": "Millennium plugins that draw their own interface (HLTB for Steam, Achievement Groups, Player Count, Extendium): in the theme's colours, or as the plugin ships them.",
-      "tab": "Plugins",
-      "default": "Theme",
+    "Complementos": {
+      "description": "Complementos de Millennium con interfaz propia (HLTB for Steam, Achievement Groups, Player Count y Extendium): colores del tema o aspecto original del complemento.",
+      "tab": "Complementos",
+      "default": "Tema",
       "values": {
-        "Theme": {
+        "Tema": {
           "TargetCss": {
             "affects": [".*"],
             "src": "css/plugins.css"
           }
         },
-        "Plugin's own": {}
+        "Propios del complemento": {}
       }
     }
   },

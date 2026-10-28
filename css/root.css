@@ -1,32 +1,32 @@
 :root {
   /*
-   * @name Accent
-   * @description Buttons and highlights when no game art is on screen, and everywhere if "Accent colour" is set to Fixed.
+   * @name Color de acento
+   * @description Botones y elementos destacados cuando no hay una ilustración de juego en pantalla, y en todo el cliente si "Color de acento" está en Fijo.
    */
   --gd-accent: #5E90E4;
   /*
-   * @name Text
-   * @description Main text on the glass.
+   * @name Texto
+   * @description Texto principal sobre el cristal.
    */
   --gd-ink: #EEF1F8;
   /*
-   * @name Secondary text
-   * @description Captions, menu items, dates.
+   * @name Texto secundario
+   * @description Etiquetas, opciones de menú y fechas.
    */
   --gd-ink-soft: #A7AEC0;
   /*
-   * @name Glass tint
-   * @description Colour of the smoked glass panels; "Glass" sets how see-through they are.
+   * @name Tinte del cristal
+   * @description Color de los paneles de cristal ahumado; "Cristal" ajusta su transparencia.
    */
   --gd-glass: #0C0D13;
   /*
-   * @name Play bar
-   * @description The flat card under the game art with the Play button.
+   * @name Barra de juego
+   * @description Tarjeta bajo la ilustración del juego que contiene el botón Jugar.
    */
   --gd-card: #08090E;
   /*
-   * @name Store background
-   * @description Behind store and community pages that have no game art of their own.
+   * @name Fondo de la tienda
+   * @description Fondo de las páginas de la tienda y la comunidad que no tienen una ilustración de juego propia.
    */
   --gd-night: #0C1234;
 }

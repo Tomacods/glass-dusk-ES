@@ -1,72 +1,82 @@
-# Glass Dusk
+# Glass Dusk ES
 
-A [Millennium](https://steambrew.app) theme for the Steam desktop client. Smoked glass panels sit over the art of the game you have open, and the client takes its accent colour from that art. Open another game and the whole client changes colour with it.
+Traducción al español de [Glass Dusk](https://github.com/Yareli0i/glass-dusk), el tema de Yareli para el cliente de escritorio de Steam con [Millennium](https://steambrew.app). Los paneles de cristal ahumado se superponen a la ilustración del juego abierto, y sus colores se usan en los botones y elementos destacados. Al abrir otro juego, cambia el color de todo el cliente.
 
-![Library home](images/library.jpg)
+Esta versión incluye los textos del tema y sus ajustes en español. El español está seleccionado de forma predeterminada; también se conservan el inglés y el ucraniano para los textos del tema. Los textos propios de Steam siguen el idioma configurado en Steam.
 
-## What it styles
+![Inicio de la biblioteca](images/library.jpg)
 
-- **Library.** Two panes of smoked glass over the blurred art of the open game, with the game list on the right. The home page gets its own header: greeting, library stats of your choosing, *Continue* for the last game, recent games.
-- **Game page.** The hero art runs edge to edge, the play bar is one flat card, and page links become chips.
-- **Store.** All of it, on the same dark glass with the same buttons, chips and cards: the front page, a game's page in its art and colour, search, every hub (Specials, each category, tag and genre, Demos, VR…), the store menu, the wishlist, the cart, the charts, the personal calendar, the recommender, your account's pages, the Points Shop and the News Hub. The price and *Add to Cart* blocks, the landing pages and the art of sale events stay as Steam draws them.
-- **Menus, settings, notifications, friends and chat.** All wear the same colour as the main window.
-- **Sign-in.** The account chooser (*Who's playing?*) and the signing-in screen after it sit on the art of the game you played last, on the covers of your own games drifting past, or on a slideshow of your games' art, with the chooser on a card of glass. Steam shows them only when it is set to ask which account to use.
-- **Plugins.** Millennium plugins with an interface of their own take the theme's colours: HLTB for Steam, Achievement Groups, Player Count, Extendium. Size on Disk, Non-Steam Playtimes and Easy SteamGrid match as they are. Browser extensions added through Extendium (SteamDB, Augmented Steam) put their blocks on store pages in the same cards as Steam's own.
-- **Community and profiles** stay as Steam draws them. Profiles carry their owners' own backgrounds and themes, and a half-restyled community reads worse than an untouched one.
-- **Big Picture.** The focused game's art fills the home screen and lends its colour to focus rings and tabs. A chip at the top left shows its hours and when you last played.
-- **In-game overlay (Shift+Tab).** A light veil replaces Steam's near-black sheet, so the game stays visible. *Game Overview* and the toolbar become smoked glass in the running game's colour.
+Las capturas corresponden al tema original y muestran el cliente en inglés.
 
-![Game page](images/game.jpg)
-![Plugins on a game page: HLTB for Steam, Player Count](images/plugins.jpg)
-![The store's front page](images/store.jpg)
-![A game's page in the store](images/store-game.jpg)
+## Instalación
+
+1. Instala Millennium si todavía no lo tienes.
+2. Descarga y descomprime [este repositorio](https://github.com/Tomacods/glass-dusk-ES).
+3. Coloca la carpeta del tema en `Steam/millennium/themes/glass-dusk-ES/`. El archivo debe quedar directamente en `Steam/millennium/themes/glass-dusk-ES/skin.json`, sin otra carpeta intermedia.
+4. Abre Millennium → Themes, selecciona **Glass Dusk ES** y reinicia Steam para aplicar el tema.
+
+Los nombres de los menús de Millennium pueden variar según su idioma. Para configurar el tema, abre Millennium → Themes → Glass Dusk ES → ⋯ → Settings.
+
+El tema original indica pruebas en Windows 11 con el cliente de Steam 1788652215 y Millennium 3.5.0, y en Ubuntu 24.04 con la solución descrita más abajo. La traducción de este repositorio todavía requiere una comprobación visual dentro de Steam.
+
+## Qué modifica
+
+- **Biblioteca.** Dos paneles de cristal ahumado sobre la ilustración desenfocada del juego abierto, con la lista de juegos a la derecha. El inicio tiene su propio encabezado: saludo, estadísticas que puedes elegir, una tarjeta para continuar el último juego y juegos recientes.
+- **Página del juego.** La ilustración ocupa todo el ancho, la barra de juego se presenta como una tarjeta y los enlaces de la página tienen forma de botones compactos.
+- **Tienda.** Aplica el mismo cristal oscuro a la portada, las páginas de juegos, la búsqueda, las categorías, etiquetas y géneros, ofertas, demos, realidad virtual, menús, lista de deseados, carrito, estadísticas, calendario personal, recomendaciones, páginas de la cuenta, tienda de puntos y centro de noticias. Los precios, los bloques de *Añadir al carro*, las páginas de presentación y las ilustraciones de los eventos de ofertas conservan el aspecto de Steam.
+- **Menús, ajustes, notificaciones, amigos y chat.** Comparten el color de la ventana principal.
+- **Inicio de sesión.** El selector de cuenta y la pantalla de acceso pueden mostrar la ilustración del último juego, las portadas de tus juegos en movimiento o una presentación de sus ilustraciones. El selector aparece sobre una tarjeta de cristal. Steam solo muestra estas pantallas cuando está configurado para preguntar qué cuenta usar.
+- **Complementos.** HLTB for Steam, Achievement Groups, Player Count y Extendium adoptan los colores del tema. Size on Disk, Non-Steam Playtimes y Easy SteamGrid ya usan componentes compatibles. Las extensiones instaladas mediante Extendium, como SteamDB y Augmented Steam, presentan sus bloques de la tienda con tarjetas del mismo estilo.
+- **Comunidad y perfiles.** Conservan el aspecto de Steam y los fondos y temas elegidos por cada usuario.
+- **Big Picture.** La ilustración del juego seleccionado llena la pantalla de inicio y aporta el color de las pestañas y los indicadores de selección. Una etiqueta arriba a la izquierda muestra las horas jugadas y la última partida.
+- **Interfaz superpuesta del juego (Mayús+Tab).** Un velo ligero sustituye el fondo casi negro de Steam para mantener visible el juego. La vista general y la barra de herramientas usan cristal ahumado con los colores del juego en ejecución.
+
+![Página del juego](images/game.jpg)
+![Complementos HLTB for Steam y Player Count en la página de un juego](images/plugins.jpg)
+![Portada de la tienda](images/store.jpg)
+![Página de un juego en la tienda](images/store-game.jpg)
 ![Big Picture](images/bigpicture.jpg)
-![Sign-in screen, Slideshow: the art of your games one after another](images/signin.webp)
+![Inicio de sesión con una presentación de ilustraciones](images/signin.webp)
 
-## Settings
+## Ajustes
 
-Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after Steam restarts.
+Los cambios se aplican después de reiniciar Steam. Los valores en **negrita** son los predeterminados. En la tabla, activado y desactivado describen la posición de los interruptores.
 
-| Setting | Values | What it does |
+| Ajuste | Valores | Función |
 |---|---|---|
-| Theme language | **English** · Українська | Text the theme draws itself: home header, Big Picture chip, dates. Steam's own text follows Steam. |
-| Background | **Game art** · Meadow · Plain dusk | What sits behind the glass. |
-| Background art | **Normal** · Subtle · Vivid | How strongly the game art shows through. |
-| Accent colour | **Game art** · Fixed | *Fixed* keeps the Accent colour from the Colors tab everywhere. |
-| Glass | **Normal** · Denser · Sheerer | How see-through the panels are. |
-| Corners | **Normal** · Softer · Sharper | Radius of panels and cards. |
-| Sign-in screen | **Game art** · Your games · Slideshow · Dusk · Steam's wall · Steam | The account chooser when Steam starts (*Who's playing?*) and the signing-in screen after it: the art of the game you played last, the covers of your own games drifting past, the art of your games one after another, plain dusk or Steam's wall of covers, each with the theme's glass and colour; or Steam's own look. It only shows if Steam asks which account to use. |
-| Library home | **Theme** · Steam | The theme's home header, or Steam's shelves only. |
-| Home number: Games, Hours played, On disk | **on** · off | Three numbers in the home header, a switch for each. |
-| Home number: Hours, 2 weeks, Unplayed, Perfect games | on · **off** | Three more, a switch for each. *Perfect games* are the ones with every achievement unlocked. |
-| Home numbers: second line | on · **off** | A small line under each number: games installed, games played, share of the library, average completion, drives. |
-| Recently played shelf | **on** · off | The row of recently played games under the *Continue* card. |
-| Recently played: preview | **on** · off | Point at a cover in that row: a card with the game's screenshots, its name and hours. The store's screenshots are fetched from Steam at that moment. |
-| Home games | **Installed** · Whole library | Where *Continue* and the recently played row take their games: what is installed here, or the whole library. A game that is not installed gets *Install* instead of *Play*. |
-| Continue card: achievements | on · **off** | Achievement progress of the game on the *Continue* card. |
-| What's New shelf | on · **off** | Steam's What's New shelf on the home page. |
-| Add shelf button | **on** · off | Steam's *Add shelf* row on the home page. |
-| Game list side | **Right** · Left | Where the game list sits. |
-| Store: game list | **Off** · Pinned · On hover · Rail | Your game list beside the store and other web pages of the client: pinned there, coming out when you point at the window's edge, or a rail of your last games' covers with a button that opens the list. It is Steam's own list, with its collections, search and filters. |
-| Game page: collection tags | **on** · off | The collections a game is in, at the top right of its art, as Steam shows them. A click opens the collection. |
-| Big Picture | **Cover** · Steam | Whole-screen art of the focused game, or Big Picture untouched. |
-| Big Picture hours chip | **on** · off | Logo, hours played and last played at the top left. |
-| Overlay background | **Transparent** · Steam | Behind the Shift+Tab panels. |
-| Overlay panels | **Glass** · Steam | *Game Overview*, the browser and the toolbar. |
-| Plugins | **Theme** · Plugin's own | Plugins with their own interface: in the theme's colours, or as they ship. |
+| Idioma del tema | **Español** · English · Українська | Idioma del encabezado de inicio, la etiqueta de Big Picture y las fechas. El idioma propio de Steam se configura por separado. |
+| Fondo | **Ilustración del juego** · Pradera · Atardecer liso | Imagen o color que aparece detrás del cristal. |
+| Ilustración de fondo | **Normal** · Suave · Intensa | Intensidad con la que se ve la ilustración del juego. |
+| Color de acento | **Ilustración del juego** · Fijo | *Fijo* mantiene en todo el cliente el color de acento elegido en la pestaña de colores. |
+| Cristal | **Normal** · Más opaco · Más transparente | Transparencia de los paneles. |
+| Esquinas | **Normal** · Más redondeadas · Más rectas | Curvatura de paneles y tarjetas. |
+| Inicio de sesión | **Ilustración del juego** · Tus juegos · Presentación · Atardecer · Muro de Steam · Steam | Fondo y aspecto del selector de cuenta y la pantalla de acceso. Solo aparecen cuando Steam pregunta qué cuenta usar. |
+| Inicio de la biblioteca | **Tema** · Steam | Encabezado del tema con saludo, estadísticas y tarjeta *Continuar*, o solo las secciones de Steam. |
+| Estadística: Juegos; Horas jugadas; Espacio en disco | **Activada** · Desactivada | Tres cifras del encabezado, cada una con su propio interruptor. |
+| Estadística: Horas en 2 semanas; Sin jugar; Juegos perfectos | Activada · **Desactivada** | Otras tres cifras. Los juegos perfectos tienen todos sus logros desbloqueados. |
+| Estadísticas: segunda línea | Activada · **Desactivada** | Información bajo cada cifra: juegos instalados o jugados, porcentaje de la biblioteca, progreso medio y unidades de almacenamiento. |
+| Sección de juegos recientes | **Activada** · Desactivada | Fila de juegos recientes debajo de la tarjeta *Continuar*. |
+| Juegos recientes: vista previa | **Activada** · Desactivada | Al pasar el cursor sobre una portada, muestra capturas, el nombre del juego y las horas jugadas. Las capturas se descargan de Steam en ese momento. |
+| Juegos del inicio | **Instalados** · Toda la biblioteca | De dónde salen los juegos de la tarjeta *Continuar* y de la sección de recientes. Los juegos sin instalar muestran *Instalar* en lugar de *Jugar*. |
+| Tarjeta Continuar: logros | Activados · **Desactivados** | Progreso de logros del juego de la tarjeta *Continuar*. |
+| Sección de novedades | Activada · **Desactivada** | Sección de novedades de Steam en el inicio de la biblioteca. |
+| Botón Añadir sección | **Activado** · Desactivado | Fila de Steam para añadir una sección al inicio. |
+| Posición de la lista de juegos | **Derecha** · Izquierda | Ubicación de la lista de juegos. |
+| Tienda: lista de juegos | **Desactivada** · Fija · Al pasar el cursor · Barra de portadas | Lista de juegos junto a la tienda y otras páginas web del cliente. Puede quedar fija, abrirse al señalar el borde o mostrarse como una barra de portadas recientes con un botón para abrir la lista completa. Conserva las colecciones, la búsqueda y los filtros de Steam. |
+| Página del juego: etiquetas de colecciones | **Activadas** · Desactivadas | Colecciones a las que pertenece el juego, arriba a la derecha de la ilustración. Al pulsarlas se abre la colección. |
+| Big Picture | **Ilustración** · Steam | Ilustración del juego seleccionado a pantalla completa o aspecto habitual de Big Picture. |
+| Información de juego en Big Picture | **Activada** · Desactivada | Logotipo, horas jugadas y última partida arriba a la izquierda. |
+| Fondo de la superposición | **Transparente** · Steam | Fondo detrás de los paneles de Mayús+Tab. |
+| Paneles de la superposición | **Cristal** · Steam | Aspecto de la vista general, el navegador y la barra de herramientas. |
+| Complementos | **Tema** · Propios del complemento | Colores del tema o aspecto original de los complementos que tienen su propia interfaz. |
 
-The **Colors** tab has six colours: accent, text, secondary text, glass tint, play bar, store background.
-
-## Install
-
-- **From steambrew.app:** open [Glass Dusk in the theme catalogue](https://steambrew.app/theme/0hs3xMU5Eb85uvIALzkq), press *Copy Theme ID* and paste it into Millennium → Themes → Install.
-- **By hand:** download this repository and put the folder into `Steam/millennium/themes/`, then pick it in Millennium → Themes.
-
-Tested on Windows 11 with Steam client 1788652215 and Millennium 3.5.0, and on Ubuntu 24.04 with the fix below.
+La pestaña **Colors** de Millennium permite configurar seis colores: acento, texto, texto secundario, tinte del cristal, barra de juego y fondo de la tienda.
 
 ### Linux
 
-If the game list has moved to the right but the top bar, the library and game pages still look like stock Steam, Millennium's web helper hook did not load. The theme is written against Steam's readable class names. Millennium (3.4.0 and newer) is what puts them back, and on Linux its installer links the hook from `/usr/lib/millennium`, which Steam's web helper cannot see from inside its container. Until that is fixed in Millennium, close Steam and replace the two links with copies:
+El tema original documenta un problema por el que la lista de juegos se mueve a la derecha, pero la barra superior, la biblioteca y las páginas de juegos mantienen el aspecto habitual de Steam. Esto indica que no se ha cargado el enlace de Millennium con el proceso web de Steam. El tema usa nombres de clases legibles que Millennium restaura a partir de la versión 3.4.0. Según esa documentación, en Linux el instalador crea enlaces desde `/usr/lib/millennium` que el proceso web de Steam no puede ver dentro de su contenedor.
+
+La solución documentada por el autor consiste en cerrar Steam y sustituir esos dos enlaces por copias:
 
 ```bash
 cd ~/.steam/steam/ubuntu12_64
@@ -75,34 +85,25 @@ cp /usr/lib/millennium/libmillennium_bootstrap_hhx64.so libXtst.so.6
 cp /usr/lib/millennium/libmillennium_hhx64.so libmillennium_hhx64.so
 ```
 
-Start Steam again, and repeat this after every Millennium update. It is for a regular Steam install with Millennium from its install script or the AUR (`ubuntu12_64` is Steam's own folder name on every distribution). NixOS keeps these files elsewhere, and Millennium does not support Steam from Flatpak or Snap.
+Después, inicia Steam de nuevo. El autor indica repetir el procedimiento tras cada actualización de Millennium. Se aplica a una instalación normal de Steam con Millennium instalado mediante su script o AUR; `ubuntu12_64` es el nombre de la carpeta de Steam en todas las distribuciones. NixOS guarda estos archivos en otro lugar. La documentación original no contempla Steam instalado mediante Flatpak o Snap.
 
-## Good to know
+## Detalles y limitaciones
 
-- The overlay cannot blur the game behind its panels. Steam composites the game outside the page, so the glass there is a denser tint instead.
-- Very large custom artwork slows Big Picture down, with or without this theme. Animated PNG covers from SteamGridDB can run to tens of megabytes. If Big Picture stutters when a cover scrolls into view, a lighter version of that cover helps.
-- The Big Picture chip is information only: a controller can't select it.
-- *Perfect games* counts games with every achievement unlocked. Steam has no idea whether you finished a game's story, so this is the closest it gets to "completed". While that number is on, the theme keeps Steam's achievement data fresh: Steam is asked about a game you played since it last looked, and about every played game once a day.
+- La interfaz superpuesta no puede desenfocar el juego que queda detrás de sus paneles: Steam compone el juego fuera de la página. Por eso utiliza un tinte de cristal más opaco.
+- Las ilustraciones personalizadas muy grandes pueden ralentizar Big Picture, también sin este tema. Las portadas PNG animadas de SteamGridDB pueden ocupar decenas de megabytes; si aparecen tirones al mostrarlas, prueba una versión más ligera.
+- La etiqueta de Big Picture es informativa y no se puede seleccionar con el mando.
+- *Juegos perfectos* cuenta los juegos con todos los logros desbloqueados. Steam no registra si has terminado la historia. Cuando esta estadística está activada, el tema solicita actualizar los datos de logros de los juegos utilizados desde la última consulta y de cada juego jugado una vez al día.
+- Los ajustes del tema se muestran en español en este fork. El selector de idioma cambia los textos generados por el tema, no las etiquetas de sus ajustes ni los textos de Steam o de otros complementos.
 
-## Support
+## Soporte y créditos
 
-The theme is free and stays free. If you like it, you can leave a tip on [Ko-fi](https://ko-fi.com/yareli0i). Bugs and ideas go to [Issues](https://github.com/Yareli0i/glass-dusk/issues).
+El tema original es gratuito. Puedes apoyar a su autor, Yareli, en [Ko-fi](https://ko-fi.com/yareli0i).
 
-## Credits
+- Traducción y adaptación al español: [Tomacods/glass-dusk-ES](https://github.com/Tomacods/glass-dusk-ES). Los problemas de traducción se pueden informar en los [Issues de este repositorio](https://github.com/Tomacods/glass-dusk-ES/issues).
+- Tema original y diseño: [Yareli0i/glass-dusk](https://github.com/Yareli0i/glass-dusk). Sus [Issues](https://github.com/Yareli0i/glass-dusk/issues) recogen problemas y propuestas del tema original.
+- Código: [licencia MIT](LICENSE).
+- Fuente de las cifras: JetBrains Mono ExtraBold, [SIL OFL 1.1](assets/OFL-JetBrainsMono.txt).
+- Fondo de pradera: creado por el autor original.
+- Las ilustraciones de los juegos proceden de tu biblioteca de Steam y pertenecen a sus titulares.
 
-- Code: [MIT](LICENSE).
-- Number font: JetBrains Mono ExtraBold, [SIL OFL 1.1](assets/OFL-JetBrainsMono.txt).
-- Meadow background: by the author.
-- Game art is shown straight from your Steam library and belongs to its owners.
-
-Changes: [CHANGELOG.md](CHANGELOG.md). How the theme is put together: [DEVELOPMENT.md](DEVELOPMENT.md).
-
----
-
-## Українською
-
-Тема для Steam на Millennium: димчасте скло поверх арту відкритої гри, а колір кнопок і виділень береться з цього арту. Стилізує бібліотеку, сторінку гри, крамницю, меню, Big Picture й оверлей у грі. Спільноту й профілі лишає такими, як їх малює Steam.
-
-Текст, який малює сама тема, за замовчуванням англійський. Українську вмикає налаштування **Theme language → Українська**. Решту налаштувань описано в таблиці вище, змінюються вони в Millennium → Themes → Glass Dusk → Settings і діють після перезапуску Steam.
-
-На Linux тема може застосуватися лише частково: список ігор переїхав праворуч, а шапка, бібліотека й сторінка гри лишилися як у звичайному Steam. Це означає, що не завантажився хук Millennium. Як це виправити, описано вище в розділі [Linux](#linux).
+Cambios de esta traducción e historial original: [CHANGELOG.md](CHANGELOG.md). Documentación técnica del tema original, en inglés: [DEVELOPMENT.md](DEVELOPMENT.md).

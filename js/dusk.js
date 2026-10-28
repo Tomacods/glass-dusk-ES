@@ -795,15 +795,34 @@
 
   /* ═════════════ the home header ═════════════ */
 
-  // switch «Theme language» (css/options/lang-uk.css sets --gd-lang: uk); English by default
-  const isUk = () => getComputedStyle(root).getPropertyValue('--gd-lang').trim() === 'uk';
-  const locale = () => (isUk() ? 'uk' : 'en');
+  // The language option sets --gd-lang; English needs no override.
+  const locale = () => {
+    const lang = getComputedStyle(root).getPropertyValue('--gd-lang').trim();
+    return lang === 'es' || lang === 'uk' ? lang : 'en';
+  };
   // `sub` is the small second line under each number (switch «Home numbers: second line»)
   const WORDS = {
+    es: { cont: 'Continuar', recent: 'Jugados recientemente', play: 'Jugar', stop: 'Detener', cancel: 'Cancelar', install: 'Instalar', games: 'Juegos', hours: 'Horas jugadas',
+        disk: 'En disco, GB', twoWeeks: 'Horas en 2 semanas', unplayed: 'Sin jugar', perfect: 'Juegos perfectos',
+        today: 'Hoy', yday: 'Ayer', inGame: 'de juego', inTwoWeeks: 'en las últimas dos semanas',
+        slOpen: 'Mostrar la lista de juegos', slClose: 'Ocultar la lista de juegos',
+        minute: 'min', hour: 'h', neverPlayed: 'sin jugar',
+        ago: (n, unit) => new Intl.RelativeTimeFormat('es', { numeric: 'always' }).format(-n, unit),
+        ach: (n, of) => `${n} de ${of} ${plural(of, { one: 'logro', other: 'logros' })}`,
+        sub: {
+          games: n => `${n} ${plural(n, { one: 'instalado', other: 'instalados' })}`,
+          inGames: n => `en ${n} ${plural(n, { one: 'juego', other: 'juegos' })}`,
+          share: n => `${n}% de la biblioteca`,
+          average: n => `${n}% de promedio`,
+          drives: n => `en ${n} ${plural(n, { one: 'unidad', other: 'unidades' })}`,
+        },
+        hello: h => (h < 5 ? 'Buenas noches,' : h < 12 ? 'Buenos días,' : h < 20 ? 'Buenas tardes,' : 'Buenas noches,') },
     uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', install: 'Встановити', games: 'Ігор', hours: 'Награно, год',
         disk: 'На дисках, ГБ', twoWeeks: 'За 2 тижні, год', unplayed: 'Не запущено', perfect: 'Ідеальні ігри',
         today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні',
         slOpen: 'Показати список ігор', slClose: 'Сховати список ігор',
+        minute: 'хв', hour: 'год', neverPlayed: 'ще не запускав',
+        ago: (n, unit) => `${n} ${{ minute: 'хв', hour: 'год', day: 'дн.', month: 'міс.', year: 'р.' }[unit]} тому`,
         ach: (n, of) => `${n} з ${of} досягнень`,
         sub: {
           games: n => `${n} встановлено`,
@@ -817,6 +836,8 @@
         disk: 'On disk, GB', twoWeeks: 'Hours, 2 weeks', unplayed: 'Unplayed', perfect: 'Perfect games',
         today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks',
         slOpen: 'Show the game list', slClose: 'Hide the game list',
+        minute: 'min', hour: 'h', neverPlayed: 'never played',
+        ago: (n, unit) => `${n} ${unit === 'minute' ? 'min' : unit === 'hour' ? 'h' : n === 1 ? unit : unit + 's'} ago`,
         ach: (n, of) => `${n} of ${of} achievements`,
         sub: {
           games: n => `${n} installed`,
@@ -828,7 +849,7 @@
         hello: h => (h < 5 ? 'Good night,' : h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : h < 23 ? 'Good evening,' : 'Good night,') },
   };
   const W = () => WORDS[locale()];
-  // "one" or everything else is all the header's phrases need, in either language
+  // "one" or everything else is all the header's phrases need.
   const plural = (n, forms) => (new Intl.PluralRules(locale()).select(n) === 'one' ? forms.one : forms.other);
   // A day of this year needs no year. An older one does, or "12 Oct" could be any October; with
   // «Home games → Whole library» the home shows games last played years ago.
@@ -845,8 +866,21 @@
     return dayShort.format(d);
   };
   const hoursOf = min => (min < 60
-    ? `${min} ${isUk() ? 'хв' : 'min'}`
-    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${isUk() ? 'год' : 'h'}`);
+    ? `${min} ${W().minute}`
+    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${W().hour}`);
+
+  const ago = ts => {
+    if (!ts) return W().neverPlayed;
+    const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
+    if (m < 60) return W().ago(m, 'minute');
+    if (m < 1440) return W().ago(Math.round(m / 60), 'hour');
+    const d = Math.round(m / 1440);
+    if (d === 1) return W().yday.toLowerCase();
+    if (d < 45) return W().ago(d, 'day');
+    // Past a month and a half, months; past a year, years.
+    if (d < 365) return W().ago(Math.round(d / 30.44), 'month');
+    return W().ago(Math.floor(d / 365.25), 'year');
+  };
 
   /* ═════════════ Big Picture: the focused game paints the screen ═════════════ */
 
@@ -879,29 +913,16 @@
       return m ? Number(m[1]) : null;
     };
 
-    const ago = ts => {
-      if (!ts) return isUk() ? 'ще не запускав' : 'never played';
-      const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
-      if (m < 60) return isUk() ? `${m} хв тому` : `${m} min ago`;
-      if (m < 1440) return isUk() ? `${Math.round(m / 60)} год тому` : `${Math.round(m / 60)} h ago`;
-      const d = Math.round(m / 1440);
-      if (d === 1) return W().yday.toLowerCase();
-      if (d < 45) return isUk() ? `${d} дн. тому` : `${d} days ago`;
-      // past a month and a half, months; past a year, years ("843 days ago" says little)
-      if (d < 365) { const mo = Math.round(d / 30.44); return isUk() ? `${mo} міс. тому` : `${mo} ${mo === 1 ? 'month' : 'months'} ago`; }
-      const y = Math.floor(d / 365.25);
-      return isUk() ? `${y} р. тому` : `${y} ${y === 1 ? 'year' : 'years'} ago`;
-    };
-    const hours = min => (min < 60 ? `${min} ${isUk() ? 'хв' : 'min'}`
-      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${isUk() ? 'год' : 'h'}`);
+    const hours = min => (min < 60 ? `${min} ${W().minute}`
+      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${W().hour}`);
 
     /* the art layer */
-    const W = 192, H = 108, PAD = 12;
+    const WIDTH = 192, HEIGHT = 108, PAD = 12;
     const layer = document.createElement('div');
     layer.id = 'gd-bpm-bg';
     const planes = [0, 1].map(() => {
       const c = document.createElement('canvas');
-      c.width = W; c.height = H;
+      c.width = WIDTH; c.height = HEIGHT;
       layer.appendChild(c);
       return c;
     });
@@ -909,13 +930,13 @@
     const paintArt = img => {
       const next = front === 0 ? 1 : 0;
       const ctx = planes[next].getContext('2d');
-      ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
       ctx.filter = 'blur(4px) brightness(.72) saturate(1.5)';
       // cover the screen with a margin past every edge, so the blur does not fade at the border
       const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
-      const r = Math.max((W + PAD * 2) / iw, (H + PAD * 2) / ih);
+      const r = Math.max((WIDTH + PAD * 2) / iw, (HEIGHT + PAD * 2) / ih);
       const w = iw * r, h = ih * r;
-      ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+      ctx.drawImage(img, (WIDTH - w) / 2, (HEIGHT - h) / 2, w, h);
       planes[next].classList.add('on');
       if (front >= 0 && front !== next) planes[front].classList.remove('on');
       front = next;

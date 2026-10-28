@@ -1,5 +1,12 @@
 # Changelog
 
+## Traducción al español — 2026-10-28
+
+- Versión **Glass Dusk ES**, basada en Glass Dusk 1.7.2 de Yareli.
+- Español como idioma predeterminado para los textos del tema, con las opciones de inglés y ucraniano conservadas.
+- Traducción de los ajustes, los nombres y las descripciones de colores, los textos de la biblioteca y Big Picture, y las instrucciones de instalación.
+- Se conservan a continuación las notas originales del autor, en inglés.
+
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
 ## 1.7.2 — 2026-10-26

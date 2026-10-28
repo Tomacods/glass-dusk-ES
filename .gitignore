@@ -1,0 +1,42 @@
+# Configuración y contexto local de asistentes
+/.agents/
+/.codex/
+/.claude/
+/.cursor/
+/.impeccable/
+/AGENTS.md
+/AGENTS.override.md
+/CLAUDE.md
+/CLAUDE.local.md
+
+# Preferencias locales de editores y del sistema
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# Variables de entorno privadas; las plantillas sí se pueden versionar
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Dependencias, paquetes generados y resultados de pruebas
+node_modules/
+/dist/
+/build/
+/coverage/
+/playwright-report/
+/test-results/
+/glass-dusk-ES*.zip
+
+# Archivos temporales y registros locales
+/tmp/
+/temp/
+*.log
+*.tmp
+*.bak
