@@ -191,7 +191,9 @@
         ['rv', 'div:has(> span + div.Focusable > span)', 'data-gd-rv-score'],
         ['rv', '[role=list] [role=button] > .Panel > div > .Panel', 'data-gd-rv-inner'],         // a card's inside
         ['rv', '[data-gd-rv-inner] a > .Focusable', 'data-gd-rv-thumbwrap'],  // its head: thumb and verdict
-        ['rv', '[data-gd-rv-thumbwrap] > div:first-child:not([class*=" "])', 'data-gd-rv-thumb'],
+        // the thumb, known by the svg in it: while the head is hovered Steam slips a screen-wide
+        // tooltip layer, a plain div as well, in front of it, and that one stays unpainted (#23)
+        ['rv', '[data-gd-rv-thumbwrap] > div:not([class*=" "]):has(> svg)', 'data-gd-rv-thumb'],
         ['rv', '[data-gd-rv-inner] .Panel.Focusable > div:not(.Panel):not(.Focusable):has(> div + div)', 'data-gd-rv-specs'],   // the reviewer's PC
       ];
       const markReviews = ctn => {

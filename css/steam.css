@@ -892,6 +892,18 @@ body.DesktopUI,
   background-color: transparent !important;
   border-radius: var(--gd-r-md) !important;
 }
+/* A game with every achievement: Steam leaves 46 px on the left of the summary for its
+   72 px ribbon, but its own `.Highlight { padding: 10px }` comes later in the same sheet
+   and wins, so the ribbon covered "You've unlocked all achievements" and the bar (#25).
+   The room comes back, and the ribbon fits inside the slab. */
+.AppDetailsMain .Highlight.AllAchieved { padding-left: 64px !important; }
+.AppDetailsMain .Highlight.AllAchieved .Ribbon {
+  left: 4px !important;
+  top: 50% !important;
+  width: 54px !important;
+  height: 54px !important;
+  transform: translateY(-50%);
+}
 /* achievement tiles in the details column */
 .AppDetailsMain .AdditionalItem.Panel,
 .AppDetailsMain .RightAchievementSection.Panel {

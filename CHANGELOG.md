@@ -2,6 +2,14 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.3 — 2026-10-28
+
+**Library**
+- On the page of a game with every achievement unlocked, the ribbon covered *You've unlocked all achievements* and the bar under it ([#25](https://github.com/Yareli0i/glass-dusk/issues/25), reported by @aalhelou). The slip is Steam's own, and it shows without the theme too: Steam leaves room on the left for the ribbon, then a later rule of its own takes that room away. The theme gives it back and fits the ribbon inside the slab.
+
+**Store**
+- On a game's page, pointing at the head of a review (its thumb and hours, most often in the narrow *Recently Posted* column) turned the whole window one colour, the one of the accent, until the pointer moved on ([#23](https://github.com/Yareli0i/glass-dusk/issues/23), reported by @Kvtg-dotcom). Steam shows its *Read full review* tip there on a layer that covers the window, and the theme took that layer for the thumb and painted it. It tells them apart now.
+
 ## 1.7.2 — 2026-10-26
 
 **Library**
