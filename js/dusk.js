@@ -83,13 +83,7 @@
   // recolouring anything and --gd-accent stays whatever the Colors tab says
   const accentLocked = () => getComputedStyle(root).getPropertyValue('--gd-accent-lock').trim() === '1';
 
-  const paint = (src, accent, ink) => {
-    if (src) {
-      layer.style.backgroundImage = `url("${src}")`;
-      layer.classList.add('on');
-    } else {
-      layer.classList.remove('on');
-    }
+  const tint = (accent, ink) => {
     if (accent && !accentLocked()) {
       root.style.setProperty('--gd-accent', accent);
       root.style.setProperty('--gd-accent-ink', ink || '#fff');
@@ -97,6 +91,15 @@
       root.style.removeProperty('--gd-accent');
       root.style.removeProperty('--gd-accent-ink');
     }
+  };
+  const paint = (src, accent, ink) => {
+    if (src) {
+      layer.style.backgroundImage = `url("${src}")`;
+      layer.classList.add('on');
+    } else {
+      layer.classList.remove('on');
+    }
+    tint(accent, ink);
   };
 
   /* ── web pages: the store gets its app's art; community and profiles are left alone ── */
@@ -461,33 +464,61 @@
     catch (e) { /* no storage: the sign-in window falls back to dusk */ }
   };
 
+  // every picture's colour once worked out, so a game seen before turns over at once
+  const picks = new Map();
+  // and each game's colour from the last time its page was open, kept between sessions for the
+  // 400 most recent: the Play button takes it with the page, before the picture is in (#27)
+  let artForApp = '';
+  const appAccents = (() => {
+    try { return new Map(JSON.parse(localStorage.getItem('gd-app-accents') || '[]')); } catch (e) { return new Map(); }
+  })();
+  const keepAppAccent = (id, picked) => {
+    const v = picked ? [picked.accent, picked.ink] : null;
+    if (JSON.stringify(appAccents.get(id)) === JSON.stringify(v)) return;
+    appAccents.delete(id);
+    appAccents.set(id, v);
+    try { localStorage.setItem('gd-app-accents', JSON.stringify([...appAccents].slice(-400))); } catch (e) { /* this session only */ }
+  };
+
   const applyArt = list => {
     const urls = (Array.isArray(list) ? list : [list]).filter(Boolean);
     const key = urls.join('|');
     if (key === state.art) return;
+    // the page's own hero arriving after the game's candidates: the picture already up
+    if (urls.length === 1 && state.src && new URL(urls[0], location.href).href === state.src) { state.art = key; return; }
     state.art = key;
     const homeId = artFromHome;
+    const appId = artForApp;
 
     const clear = () => {
       paint(null, null);
       state.accent = HOUSE;
+      state.src = null;
       publish(null, null);
     };
     if (!urls.length) { clear(); return; }
 
+    // art with no colour in it (black and white) leaves the Colors tab's Accent on, not Steam's blue
+    const show = (src, picked) => {
+      state.accent = picked ? picked.accent : HOUSE;
+      state.src = src;
+      paint(src, picked && picked.accent, picked && picked.ink);
+      publish(src, picked && picked.accent, picked && picked.ink);
+      if (homeId) rememberForSignIn(src, homeId, picked || {});
+      if (appId) keepAppAccent(appId, picked);
+    };
     const attempt = i => {
       if (state.art !== key) return;
       if (i >= urls.length) { clear(); return; }
       const src = new URL(urls[i], location.href).href;
+      if (picks.has(src)) { show(src, picks.get(src)); return; }
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
         if (state.art !== key) return;
-        const picked = accentFrom(img) || { accent: HOUSE, ink: '#fff' };
-        state.accent = picked.accent;
-        paint(src, picked.accent, picked.ink);
-        publish(src, picked.accent, picked.ink);
-        if (homeId) rememberForSignIn(src, homeId, picked);
+        const picked = accentFrom(img);
+        picks.set(src, picked);
+        show(src, picked);
       };
       img.onerror = () => attempt(i + 1);
       img.src = src;
@@ -595,20 +626,70 @@
       .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played)[0] || null;
   };
 
+  // A web page in the main window (the store, the community): Steam hides the library and
+  // shows the web view. Pages of the client's own with the library hidden, such as Millennium's
+  // settings, hide the web view too.
+  const onWebPage = () => {
+    const lc = document.querySelector('.LocalContentContainer');
+    const web = document.querySelector('.BrowserWrapper');
+    return !!lc && lc.style.display === 'none' && !!web && web.style.display !== 'none';
+  };
+  // The game whose page the main window is on, from its route. Between two games the old page
+  // is gone a moment before the new one's hero is in, and the home's art filled that gap: the
+  // Play button went from the last game's colour through the home's to the new one's (#27).
+  const gamePage = o => {
+    let m = null;
+    try { m = /^\/library\/app\/(\d+)/.exec(o.SteamUIStore.WindowStore.MainWindowInstance.m_history.location.pathname); } catch (e) { return null; }
+    if (!m) return null;
+    try { return { id: m[1], app: o.appStore.GetAppOverviewByAppID(Number(m[1])) }; } catch (e) { return { id: m[1], app: null }; }
+  };
+  const artOf = (src, id) => new RegExp(`(^|[/_])${id}[/_]`).test(new URL(src, location.href).pathname);
+  // Steam's copy of the picture, read on the spot where it is ours to read (its cache, custom
+  // art): loading it a second time put the colour a few frames behind the picture
+  const readHero = hero => {
+    if (hero.gdRead !== hero.src) {
+      hero.gdRead = hero.src;
+      const p = picks.has(hero.src) ? null : accentFrom(hero);
+      if (p) picks.set(hero.src, p);
+    }
+    return [hero.src];
+  };
+
   const wantedArt = () => {
     artFromHome = 0;
+    artForApp = '';
+    // On the store, community or downloads there is no game in view, so the client stays
+    // neutral — that way the window chrome never disagrees with the page inside it. Steam keeps
+    // the library in the page, hidden, once it has been shown, so what the page holds says
+    // nothing here: the store went on wearing the last game's colour, and the Colors tab's
+    // Accent never came back.
+    if (onWebPage()) return null;
+    const o = shared();
     const hero = heroElement();
-    if (hero) return hero.complete && hero.naturalWidth > 0 ? [hero.src] : KEEP;   // a game page is open
+    const page = o && gamePage(o);
+    if (page) {
+      artForApp = page.id;
+      // Steam's own pick once it is in; until then the game's candidates, so the colour
+      // turns over with the page instead of after its picture
+      const own = hero && artOf(hero.src, page.id);
+      if (own && hero.complete && hero.naturalWidth > 0) return readHero(hero);
+      if (appAccents.has(page.id) && !(state.src && artOf(state.src, page.id))) tint(...(appAccents.get(page.id) || []));
+      // a picture coming in changes nothing the page watches, so its arrival is a cue of its own
+      if (own && !hero.gdCue) { hero.gdCue = true; hero.addEventListener('load', () => soon(), { once: true }); }
+      if (!page.app) return KEEP;
+      const ready = detailsReady(o, page.app);
+      if (ready.done) return artFor(o, page.app).hero;
+      if (!ready.woken) { ready.woken = true; ready.promise.then(() => soon()); }
+      return KEEP;
+    }
+    if (hero) return hero.complete && hero.naturalWidth > 0 ? readHero(hero) : KEEP;   // a game page is open
 
     const mode = getComputedStyle(root).getPropertyValue('--gd-bg-mode').trim();
     if (mode === 'meadow' || mode === 'plain') return null;   // the options take over
 
-    // Only the library home borrows the last game's art. On the store, community
-    // or downloads there is no game in view, so the client stays neutral — that
-    // way the window chrome never disagrees with the page inside it.
+    // Only the library home borrows the last game's art.
     if (!document.querySelector('.LeftListSizableContainer')) return null;
 
-    const o = shared();
     const last = o ? lastPlayed(o) : null;
     if (!last) return null;
     const ready = detailsReady(o, last);
@@ -1632,7 +1713,7 @@
     const follow = el => new MutationObserver(() => soon()).observe(el, { attributes: true, attributeFilter: ['style'] });
     if (lc && lc !== slWatched) { slWatched = lc; follow(lc); }
     if (web && web !== slWatchedWeb) { slWatchedWeb = web; follow(web); }
-    const onWeb = !!lc && lc.style.display === 'none' && !!web && web.style.display !== 'none';
+    const onWeb = onWebPage();
     root.classList.toggle('gd-on-web', !!mode && onWeb);
     if (!mode || !onWeb) return;
     const list = document.querySelector('.LeftListSizableContainer');

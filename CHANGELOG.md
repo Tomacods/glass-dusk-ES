@@ -2,6 +2,13 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.5 — 2026-10-29
+
+**Accent**
+- Opening another game, the *Play* button changed colour twice: it kept the last game's colour, went to the colour of the game on the library home, and only then to its own ([#27](https://github.com/Yareli0i/glass-dusk/issues/27), reported by @Takeshi06). Between two pages the old one is gone a moment before the new one's art is in, and the theme filled that gap with the home's art. It now goes by the game the page is for, and remembers each game's colour, so a game you have opened before comes up in its colour straight away, and a new one turns over once, as its art comes in.
+- The *Accent* from the Colors tab stopped coming back once the library had been open: the store and the other web pages went on wearing the last game's colour until Steam was restarted (from Discord). Steam now keeps the library in the window, hidden, while a web page is shown, and the theme took it for the page on screen.
+- Game art with no colour in it, black and white, gave Steam's blue. It leaves the Colors tab's *Accent* on instead.
+
 ## 1.7.4 — 2026-10-29
 
 **Game list**
