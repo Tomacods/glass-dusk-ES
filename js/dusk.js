@@ -878,14 +878,17 @@
 
   /* ═════════════ the home header ═════════════ */
 
-  // switch «Theme language» (css/options/lang-uk.css sets --gd-lang: uk); English by default
-  const isUk = () => getComputedStyle(root).getPropertyValue('--gd-lang').trim() === 'uk';
-  const locale = () => (isUk() ? 'uk' : 'en');
-  // `sub` is the small second line under each number (switch «Home numbers: second line»)
+  // switch «Theme language» (css/options/lang-uk.css, lang-fr.css set --gd-lang); English by default
+  const locale = () => {
+    const lang = getComputedStyle(root).getPropertyValue('--gd-lang').trim();
+    return WORDS[lang] ? lang : 'en';
+  };
+  // `sub` is the small second line under each number (switch «Home numbers: second line»);
+  // `ago` is how long since a game was played, after the hours on the Big Picture chip
   const WORDS = {
     uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', install: 'Встановити', games: 'Ігор', hours: 'Награно, год',
         disk: 'На дисках, ГБ', twoWeeks: 'За 2 тижні, год', unplayed: 'Не запущено', perfect: 'Ідеальні ігри',
-        today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні',
+        today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні', min: 'хв', h: 'год',
         slOpen: 'Показати список ігор', slClose: 'Сховати список ігор',
         ach: (n, of) => `${n} з ${of} досягнень`,
         sub: {
@@ -895,10 +898,12 @@
           average: n => `${n}% у середньому`,
           drives: n => `на ${n} ${plural(n, { one: 'диску', other: 'дисках' })}`,
         },
+        ago: { never: 'ще не запускав', min: n => `${n} хв тому`, h: n => `${n} год тому`, days: n => `${n} дн. тому`,
+          months: n => `${n} міс. тому`, years: n => `${n} р. тому` },
         hello: h => (h < 5 ? 'Доброї ночі,' : h < 12 ? 'Доброго ранку,' : h < 18 ? 'Доброго дня,' : h < 23 ? 'Доброго вечора,' : 'Доброї ночі,') },
     en: { cont: 'Continue', recent: 'Recently played', play: 'Play', stop: 'Stop', cancel: 'Cancel', install: 'Install', games: 'Games', hours: 'Hours played',
         disk: 'On disk, GB', twoWeeks: 'Hours, 2 weeks', unplayed: 'Unplayed', perfect: 'Perfect games',
-        today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks',
+        today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks', min: 'min', h: 'h',
         slOpen: 'Show the game list', slClose: 'Hide the game list',
         ach: (n, of) => `${n} of ${of} achievements`,
         sub: {
@@ -908,10 +913,28 @@
           average: n => `${n}% average`,
           drives: n => `on ${n} ${plural(n, { one: 'drive', other: 'drives' })}`,
         },
+        ago: { never: 'never played', min: n => `${n} min ago`, h: n => `${n} h ago`, days: n => `${n} days ago`,
+          months: n => `${n} ${n === 1 ? 'month' : 'months'} ago`, years: n => `${n} ${n === 1 ? 'year' : 'years'} ago` },
         hello: h => (h < 5 ? 'Good night,' : h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : h < 23 ? 'Good evening,' : 'Good night,') },
+    // French by Warzox. The chip's phrases follow "54 h ·" in mid-line, hence the small letters.
+    fr: { cont: 'Continuer', recent: 'Récemment joués', play: 'Jouer', stop: 'Arrêter', cancel: 'Annuler', install: 'Installer', games: 'Jeux', hours: 'Heures jouées',
+        disk: 'Espace disque (Go)', twoWeeks: 'Heures (14 jours)', unplayed: 'Non lancés', perfect: 'Jeux terminés à 100%',
+        today: 'Aujourd’hui', yday: 'Hier', inGame: 'jouées', inTwoWeeks: 'ces deux dernières semaines', min: 'min', h: 'h',
+        slOpen: 'Afficher la liste des jeux', slClose: 'Masquer la liste des jeux',
+        ach: (n, of) => `${n} sur ${of} succès`,
+        sub: {
+          games: n => `${n} ${plural(n, { one: 'installé', other: 'installés' })}`,
+          inGames: n => `sur ${n} ${plural(n, { one: 'jeu', other: 'jeux' })}`,
+          share: n => `${n} % de la bibliothèque`,
+          average: n => `${n} % en moyenne`,
+          drives: n => `sur ${n} ${plural(n, { one: 'disque', other: 'disques' })}`,
+        },
+        ago: { never: 'jamais joué', min: n => `il y a ${n} min`, h: n => `il y a ${n} h`, days: n => `il y a ${n} jours`,
+          months: n => `il y a ${n} mois`, years: n => `il y a ${n} ${n === 1 ? 'an' : 'ans'}` },
+        hello: h => (h < 5 ? 'Bonne nuit,' : h < 12 ? 'Bonjour,' : h < 18 ? 'Bon après-midi,' : h < 23 ? 'Bonsoir,' : 'Bonne nuit,') },
   };
   const W = () => WORDS[locale()];
-  // "one" or everything else is all the header's phrases need, in either language
+  // "one" or everything else is all the header's phrases need, in any of the languages
   const plural = (n, forms) => (new Intl.PluralRules(locale()).select(n) === 'one' ? forms.one : forms.other);
   // A day of this year needs no year. An older one does, or "12 Oct" could be any October; with
   // «Home games → Whole library» the home shows games last played years ago.
@@ -928,8 +951,8 @@
     return dayShort.format(d);
   };
   const hoursOf = min => (min < 60
-    ? `${min} ${isUk() ? 'хв' : 'min'}`
-    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${isUk() ? 'год' : 'h'}`);
+    ? `${min} ${W().min}`
+    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${W().h}`);
 
   /* ═════════════ Big Picture: the focused game paints the screen ═════════════ */
 
@@ -963,20 +986,20 @@
     };
 
     const ago = ts => {
-      if (!ts) return isUk() ? 'ще не запускав' : 'never played';
+      const say = W().ago;
+      if (!ts) return say.never;
       const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
-      if (m < 60) return isUk() ? `${m} хв тому` : `${m} min ago`;
-      if (m < 1440) return isUk() ? `${Math.round(m / 60)} год тому` : `${Math.round(m / 60)} h ago`;
+      if (m < 60) return say.min(m);
+      if (m < 1440) return say.h(Math.round(m / 60));
       const d = Math.round(m / 1440);
       if (d === 1) return W().yday.toLowerCase();
-      if (d < 45) return isUk() ? `${d} дн. тому` : `${d} days ago`;
+      if (d < 45) return say.days(d);
       // past a month and a half, months; past a year, years ("843 days ago" says little)
-      if (d < 365) { const mo = Math.round(d / 30.44); return isUk() ? `${mo} міс. тому` : `${mo} ${mo === 1 ? 'month' : 'months'} ago`; }
-      const y = Math.floor(d / 365.25);
-      return isUk() ? `${y} р. тому` : `${y} ${y === 1 ? 'year' : 'years'} ago`;
+      if (d < 365) return say.months(Math.round(d / 30.44));
+      return say.years(Math.floor(d / 365.25));
     };
-    const hours = min => (min < 60 ? `${min} ${isUk() ? 'хв' : 'min'}`
-      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${isUk() ? 'год' : 'h'}`);
+    const hours = min => (min < 60 ? `${min} ${W().min}`
+      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${W().h}`);
 
     /* the art layer */
     const W = 192, H = 108, PAD = 12;
@@ -1753,6 +1776,53 @@
     } catch (e) { reclassLooks = 30; /* Steam's code changed: nothing to fix this way */ }
   };
 
+  /* ═════════════ the Recent Games shelf: its big card like the home's Continue ═════════════ */
+
+  // Steam shows the last game on its header capsule, logo baked in low down, right where the
+  // time played goes. The card gets the hero and the logo the home's Continue card uses, laid
+  // over Steam's picture inside its own frame; Steam's picture stays under them until the hero
+  // has decoded, and stays alone for a game with no hero. css/steam.css draws the rest.
+  const appOfCard = card => {
+    const key = Object.keys(card).find(k => k.startsWith('__reactFiber'));
+    for (let f = key && card[key], i = 0; f && i < 10; f = f.return, i++) {
+      const p = f.memoizedProps;
+      if (p && p.app && typeof p.app.appid === 'number') return p.app;
+    }
+    return null;
+  };
+  const dressFeatured = () => {
+    if (!isMain) return;
+    const o = shared();
+    const card = o && document.querySelector('.RecentGames .FeaturedCapsule');
+    const frame = card && card.querySelector('.LandscapeImage');
+    if (!frame) return;
+    const app = appOfCard(card);
+    if (!app) return;
+    let art = frame.querySelector(':scope > .gd-feat');
+    if (art && art.dataset.app === String(app.appid)) return;
+    if (art) art.remove();
+    card.removeAttribute('data-gd-feat');
+    art = document.createElement('div');
+    art.className = 'gd-feat';
+    art.dataset.app = String(app.appid);
+    art.innerHTML = '<img class="gd-feat-art" alt=""><img class="gd-feat-logo" alt="">';
+    frame.append(art);
+    const hero = art.querySelector('.gd-feat-art');
+    const logo = art.querySelector('.gd-feat-logo');
+    // only a hero with a logo replaces Steam's picture: the hero has no name on it. A game
+    // missing either keeps the element, empty, so it is not asked for again every second.
+    const both = () => {
+      if (hero.complete && hero.naturalWidth && logo.complete && logo.naturalWidth && art.isConnected) card.setAttribute('data-gd-feat', '');
+    };
+    hero.addEventListener('load', both);
+    logo.addEventListener('load', both);
+    detailsReady(o, app).promise.then(() => {
+      const urls = artFor(o, app);
+      chain(hero, urls.hero, () => { art.hidden = true; });
+      chain(logo, urls.logo, () => { art.hidden = true; });
+    });
+  };
+
   const tick = () => {
     mountLayer();
     fixReclassAnimation();
@@ -1763,6 +1833,7 @@
     const want = wantedArt();
     if (want !== KEEP) applyArt(want);
     try { buildHome(); } catch (e) { /* the home header is a bonus, never break the client over it */ }
+    try { dressFeatured(); } catch (e) { /* Steam's own card stays */ }
     syncPlay();
   };
 

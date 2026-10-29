@@ -450,13 +450,103 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
    rounded like the theme's own row. The box already clips its picture, the shine and the
    hover tilt, and its shadow follows the corners. */
 .LibraryItemBox { border-radius: var(--gd-r-md) !important; }
+/* The button on a capsule (the big one on the Recent Games shelf, the small one that comes up
+   on hover) is Steam's green square, and on the shelf it covered the start of "TIME PLAYED",
+   which Steam sets 42 px further left than the lines under it (#24). The theme's Play: a
+   round button in the accent, and the heading in line with its lines. */
+.LibraryItemActionButton,
+.UninstalledIcon { border-radius: 50% !important; }
+.LibraryItemActionButton.Play:not(.Disabled),
+.HoversEnabled .LibraryItemActionButton.Play:not(.Disabled):hover { background: var(--gd-accent, var(--gd-house)) !important; }
+.LibraryItemActionButton.Play:not(.Disabled) .SVGIcon_Play,
+.HoversEnabled .LibraryItemActionButton:hover:not(.Disabled) .SVGIcon_Play { fill: var(--gd-accent-ink) !important; }
+.HoversEnabled .LibraryItemActionButton.Play:not(.Disabled):hover { filter: brightness(1.08); }
+.RecentGameFooter .PlaytimeDetails.Header { padding-inline-start: 42px !important; }
+
+/* The rest of the Recent Games shelf, after the theme's own row: the dates over each group take
+   the theme's small heading, the big card's footer is dark glass tinted by its art instead of
+   the art blurred over Steam's grey, and "New to library" is a dark tab with the accent instead
+   of Steam's blue slab. */
+.RecentGame .AddedDate {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gd-ink-faint) !important;
+}
+/* The footer's blur is the bottom of the art, so with a wash that starts light it carries the
+   picture down into the glass instead of meeting it at a line. */
+.RecentGameFooter { background-color: rgb(10, 12, 20) !important; }
+.RecentGameFooter .FooterBlurImage { opacity: .9 !important; }
+.RecentGameFooter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(10, 12, 20, .2), rgba(10, 12, 20, .78) 55%, rgba(10, 12, 20, .9));
+}
+.RecentGameFooter .PlaytimeDetails.Header {
+  color: var(--gd-ink-faint) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+}
+.RecentGameFooter .PlaytimeDetails.PlayedRecent,
+.RecentGameFooter .PlaytimeDetails.PlayedTotal { color: var(--gd-ink-soft) !important; }
+/* The big card dressed like the home's Continue card (js/dusk.js dressFeatured): once its hero
+   and logo have decoded, the picture takes the whole card, the logo the top left, and the time
+   played sits on the dark at the foot with no band of its own. Until then, and for a game
+   with no hero or logo, it is Steam's picture over the footer above. */
+.gd-feat { display: none; }
+.FeaturedCapsule[data-gd-feat] .LandscapeImage { height: 100% !important; }
+.FeaturedCapsule[data-gd-feat] .LandscapeImage > img { opacity: 0 !important; }
+.FeaturedCapsule[data-gd-feat] .gd-feat { display: block; position: absolute; inset: 0; }
+.gd-feat-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; }
+.gd-feat::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 8, 14, .7), rgba(6, 8, 14, .15) 62%, transparent),
+    linear-gradient(180deg, transparent 40%, rgba(6, 8, 14, .55) 62%, rgba(6, 8, 14, .92));
+}
+.gd-feat-logo {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 1;
+  max-width: 58%;
+  max-height: 76px;
+  object-fit: contain;
+  object-position: left top;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .6)) !important;
+  transform: none !important;   /* Steam zooms every picture in the card on hover; the logo stays */
+}
+.FeaturedCapsule[data-gd-feat] .RecentGameFooter { background: none !important; }
+.FeaturedCapsule[data-gd-feat] .RecentGameFooter::after,
+.FeaturedCapsule[data-gd-feat] .FooterBlurImage { display: none !important; }
+.AppPortraitBanner {
+  background: rgba(12, 15, 24, .84) !important;
+  color: var(--gd-accent, var(--gd-house)) !important;
+  border-radius: 0 0 8px 8px !important;
+  box-shadow: none !important;
+  letter-spacing: .1em !important;
+}
+/* the "+2" after the friends who play it, under a capsule: Steam's square grey tile (#24) */
+.FriendsBar .IconsRestCount {
+  background: rgba(12, 15, 24, .84) !important;
+  border-radius: var(--gd-r-sm) !important;
+}
 /* trading-card tiles and the news cards in the activity feed */
 .CardContainer { background: var(--gd-soft) !important; border-radius: var(--gd-r-sm) !important; }
 /* A substring match also caught `_Title`, `_Summary` and `_TextColumn`: the gradient
-   landed under every text block and the text looked highlighted. The card only. */
+   landed under every text block and the text looked highlighted. The card only.
+   Steam frames the card with a border-image, and a border-image ignores the corners: a
+   square hairline stood around the rounded card (#24). */
 .PartnerEventMediumImage,
 .PartnerEvent {
   background-image: linear-gradient(100deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)) !important;
+  border-image: none !important;
   border-radius: var(--gd-r-md) !important;
 }
 /* the "would you recommend this game" prompt */

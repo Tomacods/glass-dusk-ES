@@ -2,7 +2,7 @@
   "name": "Glass Dusk",
   "description": "Smoked glass over the art of the game you have open: the client takes its accent colour from that art. Styles the library, store, menus, Big Picture and the in-game overlay.",
   "author": "Yareli",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "tags": [
     "Dark",
     "Glass",
@@ -33,6 +33,14 @@
               ".*"
             ],
             "src": "css/options/lang-uk.css"
+          }
+        },
+        "Français": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/lang-fr.css"
           }
         }
       }

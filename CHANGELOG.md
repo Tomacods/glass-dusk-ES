@@ -2,6 +2,27 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.6 — 2026-10-30
+
+**Theme language**
+- Français, translated by Warzox: Look → Theme language → Français puts the library home's header, the Big Picture chip and the dates in French.
+
+**Library**
+- The *Recent Games* shelf: the big card's *Play* button covered the start of *TIME PLAYED*, which Steam sets further left than the lines under it ([#24](https://github.com/Yareli0i/glass-dusk/issues/24), reported by @Scrapper1824). The heading lines up with them now, and the button on a capsule is the theme's own *Play*, round and in the accent, instead of Steam's green square.
+- The rest of that shelf is in the theme too. Its big card is laid out like the home's *Continue* card: the game's hero across the whole card, its logo at the top left, the time played on the dark at its foot. A game with no hero or logo keeps Steam's picture over a dark glass footer. The dates over each group take the theme's small heading, and *New to library* is a dark tab with the accent instead of Steam's blue slab.
+- A game's activity: the news cards had a square hairline around their rounded corners, Steam's own frame showing past them (#24).
+- The *+2* after the friends who play a game, under its capsule, was a square grey tile (#24).
+- Notifications: every row but the pinned ones sat on a square grey slab, lighter while unread (#24).
+
+**Store**
+- In the search box's suggestions, *On Wishlist* and *In Library* were black on the theme's dark chip, both the icon and the words that open on hover ([#29](https://github.com/Yareli0i/glass-dusk/issues/29), reported by @FenrirM70).
+- The reviews line in the preview beside *New & Trending* touched the edges of its plate (#24).
+- One game's news (*Steam News* and the like): the band with the game across the top was Steam's grey, and so was a piece of news opened in its window (#24).
+
+**Big Picture**
+- The top bar: an item under the pointer sat on a grey square, and the one the controller is on on a white square with black icons. Both are rounded now, the controller's in the accent (#24).
+- The status beside your round avatar was a square bar down its side; it is a dot at its foot.
+
 ## 1.7.5 — 2026-10-29
 
 **Accent**

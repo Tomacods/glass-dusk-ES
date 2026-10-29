@@ -29,7 +29,7 @@ Millennium → Themes → Glass Dusk → ⋯ → Settings. Changes apply after S
 
 | Setting | Values | What it does |
 |---|---|---|
-| Theme language | **English** · Українська | Text the theme draws itself: home header, Big Picture chip, dates. Steam's own text follows Steam. |
+| Theme language | **English** · Українська · Français | Text the theme draws itself: home header, Big Picture chip, dates. Steam's own text follows Steam. |
 | Background | **Game art** · Meadow · Plain dusk | What sits behind the glass. |
 | Background art | **Normal** · Subtle · Vivid | How strongly the game art shows through. |
 | Accent colour | **Game art** · Fixed | *Fixed* keeps the Accent colour from the Colors tab everywhere. |

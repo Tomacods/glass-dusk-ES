@@ -42,6 +42,13 @@
   border-radius: var(--gd-r-md) !important;
   overflow: hidden;
 }
+/* one game's news (/news/app/…): its band over the feed, the column's one other child, was
+   Steam's grey (#24) */
+[data-gd-event-calendar] > div > .Panel > .Panel:nth-child(2) > div:first-child:not(:only-child) {
+  background: rgba(14, 17, 27, .82) !important;
+  background-image: none !important;
+  border-radius: 0 0 var(--gd-r-md) var(--gd-r-md);
+}
 
 
 /* a piece of news opened from the News Hub: the article and its column are one card */

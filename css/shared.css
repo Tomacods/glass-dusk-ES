@@ -157,6 +157,11 @@ body.DesktopUI .ContextMenuSeparator + .contextMenuItem {
 .AllNotificationsTitle { color: var(--gd-ink) !important; }
 /* the pinned "N friend requests" row sat on Steam's grey slab */
 .PinnedTemplateDesktop { background: var(--gd-soft) !important; border-radius: 10px !important; }
+/* and every other row on a square one of its own, a lighter grey while unread (#24); the
+   row's hover is its wrapper's, above */
+.StandardTemplateDesktop { background: transparent !important; border-radius: 10px !important; }
+.StandardTemplateDesktop.Unread { background: var(--gd-soft) !important; }
+.StandardTemplateDesktop:hover { background: transparent !important; }
 .AllNotificationsButton {
   background: var(--gd-field) !important;
   border: 0 !important;
