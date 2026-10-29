@@ -47,6 +47,14 @@
 .GamepadMode .Header.GamepadMode .HeaderItem.Clock { font-weight: 650; }
 .GamepadMode .Header.GamepadMode .Avatar img,
 .GamepadMode .Header.GamepadMode .avatarHolder { border-radius: 50%; }
+/* once the home is scrolled, Steam lays a 100 px blur with a black wash under the top bar and
+   the tabs: over the art it read as a grey band (#24), and it blurred the whole width on every
+   frame. Smoked glass instead, with nothing to recompute. */
+.GamepadMode .TabHeaderRowWrapper.ScrolledDown::before {
+  background: rgba(10, 12, 20, .8) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 
 /* ── the carousel: rounded art, accent ring on focus ── */
 .GamepadMode .LibraryItemBox { border-radius: 14px !important; overflow: hidden; }

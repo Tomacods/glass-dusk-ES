@@ -2,6 +2,31 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.4 — 2026-10-29
+
+**Game list**
+- The edge of the list you could drag to change its width was not the edge you could see: Steam's grip sat in the gap beside the list's glass. It now reaches over the glass edge, with the list on either side ([#26](https://github.com/Yareli0i/glass-dusk/issues/26), reported by @PlzCarryMe).
+- *Library Filters* opened over the list itself, the very games it filters. It opens beside the list now, level with the search row, so the list stays in view while you pick ([#24](https://github.com/Yareli0i/glass-dusk/issues/24), reported by @Scrapper1824). Its headings and the chips of picked tags and friends lost Steam's blue, and the button no longer grows a grey tab while the panel is open.
+
+**Library**
+- On a game's page, the tab under the pointer (*Discussions*, *Guides*…) showed a square grey box inside its pill.
+- Properties: the bar beside the chosen beta branch, the radio buttons, and the size and drive under *Installed Files* were Steam's blue.
+- The dialog that asks how to launch a game with several ways to start is in the theme: rows on glass, the accent on *Play* (#24).
+
+**Millennium**
+- Millennium's own settings (Steam → Millennium) sat in Steam's grey with a blue title. They are on the theme's glass now, like the library, with the page you are on in the accent (#24).
+
+**Store**
+- On the front page, the preview beside *New & Trending*, *Top Sellers* and the rest went away whenever the game list came out beside the store (#26): the store drops it once the page is 910 px wide or less, and with the list out the page often is. It now stays down to 760 px.
+- News Hub: the section you are on was marked in Steam's blue (#24).
+
+**Big Picture**
+- Once the home was scrolled, a grey band lay under the top bar and the tabs: Steam's own wide blur over the art. It is smoked glass now, and Big Picture no longer blurs the whole width on every frame there (#24).
+- The hours chip of the focused game could land beside a section heading halfway down the home, since Steam now calls those headings *Header* too. It keeps to the top bar (#24).
+
+**Sign-in**
+- With four accounts or more, *Who's playing?* looked cramped: Steam shrank the accounts to fit while the *Add Account* tile stayed full size. The card now takes the window's width and the tiles close up, so four accounts keep full-size tiles, and *Add Account* always matches them (from Discord).
+
 ## 1.7.3 — 2026-10-28
 
 **Library**

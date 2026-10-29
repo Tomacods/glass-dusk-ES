@@ -928,7 +928,9 @@
     chip.id = 'gd-bpm-chip';
     let chipToken = 0;
     const renderChip = (o, app) => {
-      const header = document.querySelector('.BasicHome .Header');
+      // the top bar only: Steam's newer home calls each section's heading an h2.Header too,
+      // and the chip ended up beside "What's New" halfway down the screen (#24)
+      const header = document.querySelector('.BasicHome .Header:not(h1, h2, h3)');
       const mine = ++chipToken;
       if (!header || !app) { chip.remove(); return; }
       const min = app.minutes_playtime_forever || 0;

@@ -230,6 +230,19 @@ body.DesktopUI,
 }
 [class*=LibraryDisplaySize] { flex-direction: row-reverse !important; }   /* game list on the right */
 .LibraryWindowDivider { background: transparent !important; }
+/* Steam's grip for the list's width is that 2 px divider beside the list's box, but the
+   glass sits 10 px further in, so the edge you see was not the edge you could drag (#26).
+   A clear strip from the divider to just past the glass edge carries the grip. */
+.LibraryWindowDivider.Sizable { position: relative; z-index: 3; }
+.LibraryWindowDivider.Sizable::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 18px;
+  cursor: ew-resize;
+}
 
 /* ═══════════════ game list ═══════════════ */
 
@@ -638,6 +651,8 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
   transition: background .15s ease, color .15s ease;
 }
 .LinksSection .LinkInner:hover { background: var(--gd-hover) !important; color: var(--gd-ink) !important; }
+/* inside each pill Steam still lit a square box of its own on hover and focus (#24) */
+.LinksSection .LinkInner :is(.Anchor, .Link) { background: none !important; box-shadow: none !important; }
 .LinksSection a,
 .LinksSection .AppDetailsButton,
 .LinksSection .DialogButton {
@@ -999,6 +1014,25 @@ body.DesktopUI,
   border-radius: var(--gd-r-md) !important;
   box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .75);
 }
+/* In the library the panel stood over the list itself, the very games it filters (#24): it
+   opens beside the list's glass now, level with the search row, which it takes its place
+   from (the row sits 7 px inside the glass). Beside the store it keeps to the button, since
+   the page there covers everything past the list. */
+:root:not(.gd-on-web) .LeftListSizableContainer .AdvancedSearchContainer { position: static !important; }
+:root:not(.gd-on-web) .AdvancedSearchPane { top: 0 !important; right: calc(100% + 19px) !important; }
+/* while it is open Steam joins the button to it with a grey tab; the panel stands apart now,
+   so the button shows it is on the way the collection button does */
+.AdvancedSearchContainer.Extended { background: transparent !important; }
+.AdvancedSearchContainer.Extended .AdvancedSearchButton {
+  background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, transparent) !important;
+}
+/* its headings and the chips of the tags and friends picked were Steam's blue */
+.AdvancedSearchPane :is(.FilterBucketLabel, .SearchBucketLabel) { color: var(--gd-ink-soft) !important; }
+.AdvancedSearchPane .FilterStoreTag {
+  background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, transparent) !important;
+  color: var(--gd-ink) !important;
+  border-radius: 999px !important;
+}
 
 /* Steam sets the game description on a dark slab of its own, and its edge reads as a border */
 .AppDetailsMain .AppGameInfoContainer .Container { background: transparent !important; }
@@ -1224,3 +1258,33 @@ html.gd-on-web.gd-sl-rail.gd-sl-open #gd-rail-close {
   animation: gd-rail-close-in .26s ease both;
 }
 @keyframes gd-rail-close-in { from { opacity: 0; transform: translateX(12px); } }
+
+/* ═══════════════ Millennium's settings ═══════════════
+   Millennium shows its settings in the main window (/millennium/settings) and builds them from
+   the pieces of Steam's own settings window, which the theme dresses only in that window: here
+   they stayed Steam's grey, with its blue title (#24). The two columns sit on the theme's glass
+   as the library's do, the rows are soft slabs, the page you are on wears the accent. */
+.MillenniumSettings.PagedSettingsDialog,
+.MillenniumSettings .PagedSettingsDialog_PageContent,
+.MillenniumSettings .DialogContent { background: transparent !important; background-image: none !important; }
+.MillenniumSettings .PagedSettingsDialog_PageListColumn,
+.MillenniumSettings .PagedSettingDialog_ContentColumn {
+  background: var(--gd-glass-fill) !important;
+  -webkit-backdrop-filter: blur(var(--gd-blur)) saturate(1.25) !important;
+  backdrop-filter: blur(var(--gd-blur)) saturate(1.25) !important;
+  border: var(--gd-glass-edge);
+  border-radius: var(--gd-r-xl);
+  box-shadow: var(--gd-glass-shadow) !important;
+  margin: 4px 0 16px 10px;
+  overflow: hidden;
+}
+.MillenniumSettings .PagedSettingDialog_ContentColumn { margin-right: 10px; }
+.MillenniumSettings .PagedSettingsDialog_Title { color: var(--gd-ink) !important; }
+.MillenniumSettings .PageListSeparator { background: var(--gd-line) !important; }
+.MillenniumSettings .PagedSettingsDialog_PageListItem { border-radius: 10px !important; margin: 0 8px; transition: background .12s ease; }
+.MillenniumSettings .PagedSettingsDialog_PageListItem:hover { background: var(--gd-hover) !important; }
+.MillenniumSettings .PagedSettingsDialog_PageListItem.Active {
+  background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, transparent) !important;
+  color: var(--gd-ink) !important;
+}
+.MillenniumSettings .Field { background: var(--gd-soft) !important; border-radius: var(--gd-r-md, 12px) !important; }

@@ -22,6 +22,14 @@
   box-shadow: none !important;
 }
 [data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child { border-radius: 10px; }
+/* the section you are on, the one link there with a second class: Steam's blue wash, edge and
+   lettering (#24) */
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child[class*=" "] {
+  background-image: none !important;
+  background-color: color-mix(in srgb, var(--gd-accent) 26%, transparent) !important;
+  border-right-color: var(--gd-accent) !important;
+}
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child[class*=" "] * { color: var(--gd-ink) !important; }
 /* a day: its ground, and its heading, which stays under the top while the day scrolls past */
 [data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div { background: none !important; }
 [data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div > div:first-child:not(:only-child) {
