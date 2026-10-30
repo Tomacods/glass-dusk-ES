@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.8 — 2026-10-30
+
+**Store**
+- Wishlist: with an extension that adds to the rows, such as Allkeyshop's prices, the footer lay over the last games, see-through, its text on theirs (from Discord). Steam works out the list's height from a fixed row height. The footer now moves down past the last game whenever the rows run longer than that.
+
 ## 1.7.7 — 2026-10-30
 
 **Library**

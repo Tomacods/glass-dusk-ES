@@ -217,6 +217,23 @@
       };
       const parts = {};
       let page = '', last = 0, queued = 0;
+      // The wishlist is a virtual list: its height is worked out from a fixed row height. An
+      // extension that adds to a row (Allkeyshop's prices) makes the rows taller than that, they
+      // run past the end of the list, and the footer, which follows the list, lies over the last
+      // games. It only matters with the footer on screen, so only then is it measured.
+      const fitFooter = () => {
+        const foot = document.getElementById('footer');
+        if (!foot) return;
+        if (page !== 'wishlist') { if (foot.style.marginTop) foot.style.marginTop = ''; return; }
+        const set = parseFloat(foot.style.marginTop) || 0;
+        const top = foot.getBoundingClientRect().top - set;
+        if (top > innerHeight) return;
+        const rows = document.querySelectorAll('[data-rfd-draggable-id^="WishlistItem-"]');
+        if (!rows.length) return;
+        const over = rows[rows.length - 1].getBoundingClientRect().bottom - top;
+        const want = over > 1 ? Math.ceil(over) : 0;
+        if (want !== set) foot.style.marginTop = want ? want + 'px' : '';
+      };
       const mark = () => {
         queued = 0; last = performance.now();
         const kind = (PAGES.find(([, re]) => re.test(location.pathname)) || [''])[0];
@@ -259,6 +276,7 @@
             }
           }
         }
+        fitFooter();
       };
       // at most four times a second while the page keeps changing, and once more after it settles
       const soon = () => {
