@@ -2,6 +2,18 @@
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
 
+## 1.7.7 — 2026-10-30
+
+**Library**
+- In a narrow window *Achievements* dropped off the play bar as soon as a game started, and came back a good while after it closed ([#31](https://github.com/Yareli0i/glass-dusk/issues/31), reported by @Samet-Yilmazz). The bar shows one row of stats and hides what does not fit, and the controller button that comes with a running game took the last of the room. The stats now close up when room is short, and *Cloud Status* is the first to go.
+- Opening *Library Filters* left a grey bar on the search field ([#32](https://github.com/Yareli0i/glass-dusk/issues/32), reported by @Scrapper1824). It came in with 1.7.4.
+- A shelf's heading: the text had no room inside its drop-down, the sort one kept a grey square inside the pill, the grip sat off the middle of its bar, and the arrows filled their buttons (#32).
+- The lists drop-downs open, such as the one that picks a shelf, were in Steam's grey (#32).
+
+**Store**
+- A piece of news in its window: the votes, comments and share buttons at its foot were Steam's, and so were the close and previous / next buttons beside it (#32).
+- One game's news: the panel at the left, the band at the top and the first day's heading read as one piece, round on the outside and square where they meet (#32).
+
 ## 1.7.6 — 2026-10-30
 
 **Theme language**

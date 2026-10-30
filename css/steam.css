@@ -463,6 +463,16 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
 .HoversEnabled .LibraryItemActionButton.Play:not(.Disabled):hover { filter: brightness(1.08); }
 .RecentGameFooter .PlaytimeDetails.Header { padding-inline-start: 42px !important; }
 
+/* A shelf's heading (#32). Its drop-downs had no room inside, and the sort one kept a square of
+   Steam's grey within the pill. The grip sits at the middle of the whole heading, which is not
+   the middle of the bar it comes up on: anchored to that bar it is, 2 px for the picture's own
+   margin. The page arrows filled their round buttons. */
+.ShowcaseHeader .DialogDropDown { padding: 1px 6px 1px 10px !important; border-radius: 999px !important; }
+.ShowcaseHeader .DialogDropDown_CurrentDisplay { background: none !important; padding: 0 4px 0 0 !important; }
+.ShowcaseHeader .Rule { anchor-name: --gd-shelf-rule; border-radius: 999px; }
+.ShowcaseHeader .DragHandle { left: anchor(--gd-shelf-rule center) !important; transform: translateX(calc(-50% + 2px)); }
+.ShowcaseHeader .PageButtons svg { box-sizing: border-box; padding: 5px; width: 24px; height: 24px; }
+
 /* The rest of the Recent Games shelf, after the theme's own row: the dates over each group take
    the theme's small heading, the big card's footer is dark glass tinted by its art instead of
    the art blurred over Steam's grey, and "New to library" is a dark tab with the accent instead
@@ -712,6 +722,16 @@ svg#arrowBase { background: var(--gd-field) !important; border-radius: 999px !im
    that puts its button in there gets it stacked above the gear, and the bar that
    sticks to the top grows to two rows (#7). Side by side instead. */
 .AppButtonsContainer .MenuButtonContainer { display: flex !important; flex-flow: row nowrap; }
+/* The stats in the bar wrap, and the bar shows one row of them, so whatever does not fit is gone
+   without a word, last one first: Achievements. In a narrow window it went as soon as a game
+   started, because the controller button that comes with it took the last of the room (#31).
+   Steam's sides are wider than our glass leaves, so here the stats close up a little, and Cloud
+   Status, the one nobody reads, goes to the end to be the first to drop. */
+.StatusAndStats { container-type: inline-size; }
+@container (max-width: 760px) {
+  .GameStatsSection > :first-child { order: 1; }
+  .GameStatsSection .GameStat { margin-inline: 2px !important; }
+}
 
 /* The bar that sticks to the top while scrolling. It is `.PlayBar.Container`,
    not `.StickyHeader`. It is fully opaque: at 90–97% the feed's text still read
@@ -1113,6 +1133,9 @@ body.DesktopUI,
 /* while it is open Steam joins the button to it with a grey tab; the panel stands apart now,
    so the button shows it is on the way the collection button does */
 .AdvancedSearchContainer.Extended { background: transparent !important; }
+/* the same tab's other half; it hangs from the container, which is static above, so it landed on
+   the search field as a grey bar (#32) */
+.AdvancedSearchPaneContainer::before { display: none !important; }
 .AdvancedSearchContainer.Extended .AdvancedSearchButton {
   background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 30%, transparent) !important;
 }

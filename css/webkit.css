@@ -604,6 +604,22 @@ dialog [role=dialog] [role=button][aria-label=Previous] {
   border-radius: var(--gd-r-md) !important;
 }
 .AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > img:first-child { border-radius: var(--gd-r-md) var(--gd-r-md) 0 0; }
+/* Its foot: votes, comments and share, on the same plates and pills as on the news page itself,
+   and the close and previous / next buttons beside it (#32) */
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child { background: none !important; background-image: none !important; }
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:first-child > div,
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:not(:first-child) {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child :is(.Panel[role=button], a.Focusable > div) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:first-child > div > div:first-child { color: var(--gd-accent, var(--gd-house)) !important; }
+.AppPartnerEventsBanner + .Panel > div:first-child div:has(> svg) { background: rgba(12, 15, 24, .84) !important; border-radius: 999px !important; }
+.AppPartnerEventsBanner + .Panel > div:first-child div:has(> svg):hover { background: rgba(255, 255, 255, .16) !important; }
 
 /* The price plate of the newer pages (hubs, charts, the calendar, the cart, the Discovery
    Queue window). Its last child is the price; "New", "Prepurchase" and the percent come

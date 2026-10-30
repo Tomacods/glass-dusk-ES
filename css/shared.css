@@ -169,6 +169,19 @@ body.DesktopUI .ContextMenuSeparator + .contextMenuItem {
   color: var(--gd-ink) !important;
 }
 
+/* The list a drop-down opens: Steam's grey, with a white row under the keyboard (#32). Steam's
+   own rule is !important and four classes deep, hence the repeats. Colours and corners only:
+   a separator row keeps its top edge straight. */
+.DesktopUI .DialogDropDownMenu.DialogDropDownMenu.DialogDropDownMenu._DialogInputContainer {
+  background: rgb(16, 19, 30) !important;
+  border: 0 !important;
+  border-radius: var(--gd-r-md, 12px) !important;
+  box-shadow: 0 0 0 1px var(--gd-line), 0 18px 40px -12px rgba(0, 0, 0, .85) !important;
+}
+.DialogDropDownMenu .DropDownItems { border-radius: 8px !important; color: var(--gd-ink-soft) !important; }
+.DialogDropDownMenu .DropDownItems:is(:hover, :focus) { background: var(--gd-hover) !important; color: var(--gd-ink) !important; }
+.DialogDropDownMenu .DropDownItems.OptionsRule { border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; }
+
 /* ═══════════════ settings and other modal windows ═══════════════ */
 
 /* In-game overlay panels are ModalDialogBody windows too (plus OverlayPopupBody), framed
