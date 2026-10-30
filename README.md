@@ -93,6 +93,7 @@ The theme is free and stays free. If you like it, you can leave a tip on [Ko-fi]
 - Code: [MIT](LICENSE).
 - Number font: JetBrains Mono ExtraBold, [SIL OFL 1.1](assets/OFL-JetBrainsMono.txt).
 - Meadow background: by the author.
+- French translation: [Warzox](https://github.com/ImWarzox).
 - Game art is shown straight from your Steam library and belongs to its owners.
 
 Changes: [CHANGELOG.md](CHANGELOG.md). How the theme is put together: [DEVELOPMENT.md](DEVELOPMENT.md).

@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org). The repository starts
 ## 1.7.6 — 2026-10-30
 
 **Theme language**
-- Français, translated by Warzox: Look → Theme language → Français puts the library home's header, the Big Picture chip and the dates in French.
+- Français, translated by @ImWarzox: Look → Theme language → Français puts the library home's header, the Big Picture chip and the dates in French.
 
 **Library**
 - The *Recent Games* shelf: the big card's *Play* button covered the start of *TIME PLAYED*, which Steam sets further left than the lines under it ([#24](https://github.com/Yareli0i/glass-dusk/issues/24), reported by @Scrapper1824). The heading lines up with them now, and the button on a capsule is the theme's own *Play*, round and in the accent, instead of Steam's green square.
