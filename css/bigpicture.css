@@ -47,6 +47,30 @@
 .GamepadMode .Header.GamepadMode .HeaderItem.Clock { font-weight: 650; }
 .GamepadMode .Header.GamepadMode .Avatar img,
 .GamepadMode .Header.GamepadMode .avatarHolder { border-radius: 50%; }
+/* An item under the pointer was a grey square the height of the bar, and one the controller
+   is on a white square with black icons (#24). Rounded, and the accent for the controller. */
+.GamepadMode .Header.GamepadMode .HeaderItem.Clickable { border-radius: 12px; }
+.GamepadMode .Header.GamepadMode .HeaderItem.Clickable:hover { background: rgba(255, 255, 255, .14) !important; }
+.GamepadMode .Header.GamepadMode .HeaderItem.gpfocus,
+.GamepadMode .Header.GamepadMode .HeaderItem.gpfocuswithin {
+  background: color-mix(in srgb, var(--gd-bpm-accent) 55%, rgba(10, 12, 20, .6)) !important;
+  color: #fff !important;
+}
+/* the status beside the round avatar was a square 3 px bar down its side; a dot at its foot */
+.GamepadMode .Header.GamepadMode .CurrentUserAvatar .avatarStatus {
+  width: 9px !important; height: 9px !important; max-height: 9px !important;
+  top: auto !important; bottom: -1px !important; right: -1px !important; left: auto !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 2px rgba(10, 12, 20, .9);
+}
+/* once the home is scrolled, Steam lays a 100 px blur with a black wash under the top bar and
+   the tabs: over the art it read as a grey band (#24), and it blurred the whole width on every
+   frame. Smoked glass instead, with nothing to recompute. */
+.GamepadMode .TabHeaderRowWrapper.ScrolledDown::before {
+  background: rgba(10, 12, 20, .8) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 
 /* ── the carousel: rounded art, accent ring on focus ── */
 .GamepadMode .LibraryItemBox { border-radius: 14px !important; overflow: hidden; }

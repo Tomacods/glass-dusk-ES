@@ -157,12 +157,30 @@ body.DesktopUI .ContextMenuSeparator + .contextMenuItem {
 .AllNotificationsTitle { color: var(--gd-ink) !important; }
 /* the pinned "N friend requests" row sat on Steam's grey slab */
 .PinnedTemplateDesktop { background: var(--gd-soft) !important; border-radius: 10px !important; }
+/* and every other row on a square one of its own, a lighter grey while unread (#24); the
+   row's hover is its wrapper's, above */
+.StandardTemplateDesktop { background: transparent !important; border-radius: 10px !important; }
+.StandardTemplateDesktop.Unread { background: var(--gd-soft) !important; }
+.StandardTemplateDesktop:hover { background: transparent !important; }
 .AllNotificationsButton {
   background: var(--gd-field) !important;
   border: 0 !important;
   border-radius: 999px !important;
   color: var(--gd-ink) !important;
 }
+
+/* The list a drop-down opens: Steam's grey, with a white row under the keyboard (#32). Steam's
+   own rule is !important and four classes deep, hence the repeats. Colours and corners only:
+   a separator row keeps its top edge straight. */
+.DesktopUI .DialogDropDownMenu.DialogDropDownMenu.DialogDropDownMenu._DialogInputContainer {
+  background: rgb(16, 19, 30) !important;
+  border: 0 !important;
+  border-radius: var(--gd-r-md, 12px) !important;
+  box-shadow: 0 0 0 1px var(--gd-line), 0 18px 40px -12px rgba(0, 0, 0, .85) !important;
+}
+.DialogDropDownMenu .DropDownItems { border-radius: 8px !important; color: var(--gd-ink-soft) !important; }
+.DialogDropDownMenu .DropDownItems:is(:hover, :focus) { background: var(--gd-hover) !important; color: var(--gd-ink) !important; }
+.DialogDropDownMenu .DropDownItems.OptionsRule { border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; }
 
 /* ═══════════════ settings and other modal windows ═══════════════ */
 
@@ -298,6 +316,32 @@ body.ModalDialogBody .BetaRow.Selected {
   background: color-mix(in srgb, var(--gd-accent, var(--gd-house)) 22%, transparent) !important;
   border-color: var(--gd-accent, var(--gd-house)) !important;
 }
+/* the bar beside the chosen branch, and the size and drive under Installed Files, were Steam's
+   blue (#24); so is every plain radio button and box Chromium draws itself */
+body.ModalDialogBody .BetaRow .BetaRadioButton { border-left-color: var(--gd-accent, var(--gd-house)) !important; }
+body.ModalDialogBody .BrowseDiskSize { color: var(--gd-accent, var(--gd-house)) !important; }
+input[type=radio],
+input[type=checkbox] { accent-color: var(--gd-accent, var(--gd-house)); }
+
+/* the dialog that asks how to launch a game with several ways to start (#24): grey rows in a
+   dark well, and Steam's blue Play */
+.LaunchOptionDialog .OptionList,
+.LaunchOptionDialog .ListContainer {
+  background: var(--gd-soft) !important;
+  border: none !important;
+  border-radius: var(--gd-r-md, 12px) !important;
+}
+.LaunchOptionDialog .ListItem {
+  background: var(--gd-field) !important;
+  border-radius: var(--gd-r-sm, 8px) !important;
+}
+.LaunchOptionDialog .ListItem:hover { background: rgba(255, 255, 255, .14) !important; }
+.LaunchOptionDialog .PlayButton {
+  background: var(--gd-accent, var(--gd-house)) !important;
+  color: var(--gd-accent-ink, #fff) !important;
+  border-radius: 999px !important;
+}
+.LaunchOptionDialog .CancelButton { border-radius: 999px !important; }
 /* the tick in a checked box is Steam's blue */
 body.DesktopUI .DialogCheckbox.Active svg,
 body.DesktopUI .DialogCheckbox.Active svg * { fill: var(--gd-accent, var(--gd-house)) !important; }
@@ -614,11 +658,14 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
   outline: 3px solid var(--gd-accent, var(--gd-house));
   outline-offset: 4px;
 }
-/* "Add Account": a tile of the same size, drawn with a dashed edge */
-&[data-gd-login] .UserChooser .User.New { width: 100px !important; min-width: 100px !important; }
+/* "Add Account": a tile like the accounts', drawn with a dashed edge. With several accounts
+   Steam narrows them all to fit and this tile narrows with them; at a fixed 100 px it stood
+   twice their size beside four accounts (Discord). */
+&[data-gd-login] .UserChooser .User.New { flex: 0 1 100px !important; width: auto !important; min-width: 0 !important; }
 &[data-gd-login] .UserChooser .User.New .Icon {
-  width: 100px !important;
-  height: 100px !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1;
   box-sizing: border-box;
   border: 2px dashed rgba(238, 241, 248, .32);
   display: flex;
@@ -629,6 +676,17 @@ body .ChatTabs .ChatTab:not(.Active):hover { background: var(--gd-hover) !import
 &[data-gd-login] .UserChooser .User.New .Icon svg,
 &[data-gd-login] .UserChooser .User.New .Icon svg * { color: rgba(238, 241, 248, .85); fill: currentColor; }
 &[data-gd-login] .UserChooser .User.New:is(:hover, :focus-visible, .gpfocus) .Icon { border-color: transparent; background: rgba(255, 255, 255, .08); }
+/* Three accounts and more: the card takes the window's width and the tiles close up, so four
+   accounts still get full-size tiles and five only a little smaller. Steam keeps the accounts
+   all in one wrapper or each in its own; either way is counted. */
+&[data-gd-login] .UserChooser .AvatarContainer:has(.User.Existing ~ .User.Existing ~ .User.Existing, .UserList > :nth-child(4)) {
+  width: 100%;
+  padding-left: 22px;
+  padding-right: 22px;
+}
+&[data-gd-login] .UserChooser .CachedUsers:has(.User.Existing ~ .User.Existing ~ .User.Existing, .UserList > :nth-child(4)) { width: calc(100% + 28px) !important; max-width: none !important; }
+&[data-gd-login] .UserChooser .UserList:has(.User.Existing ~ .User.Existing ~ .User.Existing, > :nth-child(4)) { column-gap: 14px !important; }
+&[data-gd-login] .UserChooser .UserList:has(.User.Existing ~ .User.Existing ~ .User.Existing, > :nth-child(4)) .User { margin: 0 !important; }
 /* signing in: the spinner, the bar under the status line and the account in the accent */
 &[data-gd-login] .StatusThrobber img.Small { filter: hue-rotate(var(--gd-login-hue, 0deg)); }
 &[data-gd-login] .StatusThrobber .ProgressBar {

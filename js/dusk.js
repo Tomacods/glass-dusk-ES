@@ -83,13 +83,7 @@
   // recolouring anything and --gd-accent stays whatever the Colors tab says
   const accentLocked = () => getComputedStyle(root).getPropertyValue('--gd-accent-lock').trim() === '1';
 
-  const paint = (src, accent, ink) => {
-    if (src) {
-      layer.style.backgroundImage = `url("${src}")`;
-      layer.classList.add('on');
-    } else {
-      layer.classList.remove('on');
-    }
+  const tint = (accent, ink) => {
     if (accent && !accentLocked()) {
       root.style.setProperty('--gd-accent', accent);
       root.style.setProperty('--gd-accent-ink', ink || '#fff');
@@ -97,6 +91,15 @@
       root.style.removeProperty('--gd-accent');
       root.style.removeProperty('--gd-accent-ink');
     }
+  };
+  const paint = (src, accent, ink) => {
+    if (src) {
+      layer.style.backgroundImage = `url("${src}")`;
+      layer.classList.add('on');
+    } else {
+      layer.classList.remove('on');
+    }
+    tint(accent, ink);
   };
 
   /* ── web pages: the store gets its app's art; community and profiles are left alone ── */
@@ -191,7 +194,9 @@
         ['rv', 'div:has(> span + div.Focusable > span)', 'data-gd-rv-score'],
         ['rv', '[role=list] [role=button] > .Panel > div > .Panel', 'data-gd-rv-inner'],         // a card's inside
         ['rv', '[data-gd-rv-inner] a > .Focusable', 'data-gd-rv-thumbwrap'],  // its head: thumb and verdict
-        ['rv', '[data-gd-rv-thumbwrap] > div:first-child:not([class*=" "])', 'data-gd-rv-thumb'],
+        // the thumb, known by the svg in it: while the head is hovered Steam slips a screen-wide
+        // tooltip layer, a plain div as well, in front of it, and that one stays unpainted (#23)
+        ['rv', '[data-gd-rv-thumbwrap] > div:not([class*=" "]):has(> svg)', 'data-gd-rv-thumb'],
         ['rv', '[data-gd-rv-inner] .Panel.Focusable > div:not(.Panel):not(.Focusable):has(> div + div)', 'data-gd-rv-specs'],   // the reviewer's PC
       ];
       const markReviews = ctn => {
@@ -212,6 +217,23 @@
       };
       const parts = {};
       let page = '', last = 0, queued = 0;
+      // The wishlist is a virtual list: its height is worked out from a fixed row height. An
+      // extension that adds to a row (Allkeyshop's prices) makes the rows taller than that, they
+      // run past the end of the list, and the footer, which follows the list, lies over the last
+      // games. It only matters with the footer on screen, so only then is it measured.
+      const fitFooter = () => {
+        const foot = document.getElementById('footer');
+        if (!foot) return;
+        if (page !== 'wishlist') { if (foot.style.marginTop) foot.style.marginTop = ''; return; }
+        const set = parseFloat(foot.style.marginTop) || 0;
+        const top = foot.getBoundingClientRect().top - set;
+        if (top > innerHeight) return;
+        const rows = document.querySelectorAll('[data-rfd-draggable-id^="WishlistItem-"]');
+        if (!rows.length) return;
+        const over = rows[rows.length - 1].getBoundingClientRect().bottom - top;
+        const want = over > 1 ? Math.ceil(over) : 0;
+        if (want !== set) foot.style.marginTop = want ? want + 'px' : '';
+      };
       const mark = () => {
         queued = 0; last = performance.now();
         const kind = (PAGES.find(([, re]) => re.test(location.pathname)) || [''])[0];
@@ -254,6 +276,7 @@
             }
           }
         }
+        fitFooter();
       };
       // at most four times a second while the page keeps changing, and once more after it settles
       const soon = () => {
@@ -459,33 +482,61 @@
     catch (e) { /* no storage: the sign-in window falls back to dusk */ }
   };
 
+  // every picture's colour once worked out, so a game seen before turns over at once
+  const picks = new Map();
+  // and each game's colour from the last time its page was open, kept between sessions for the
+  // 400 most recent: the Play button takes it with the page, before the picture is in (#27)
+  let artForApp = '';
+  const appAccents = (() => {
+    try { return new Map(JSON.parse(localStorage.getItem('gd-app-accents') || '[]')); } catch (e) { return new Map(); }
+  })();
+  const keepAppAccent = (id, picked) => {
+    const v = picked ? [picked.accent, picked.ink] : null;
+    if (JSON.stringify(appAccents.get(id)) === JSON.stringify(v)) return;
+    appAccents.delete(id);
+    appAccents.set(id, v);
+    try { localStorage.setItem('gd-app-accents', JSON.stringify([...appAccents].slice(-400))); } catch (e) { /* this session only */ }
+  };
+
   const applyArt = list => {
     const urls = (Array.isArray(list) ? list : [list]).filter(Boolean);
     const key = urls.join('|');
     if (key === state.art) return;
+    // the page's own hero arriving after the game's candidates: the picture already up
+    if (urls.length === 1 && state.src && new URL(urls[0], location.href).href === state.src) { state.art = key; return; }
     state.art = key;
     const homeId = artFromHome;
+    const appId = artForApp;
 
     const clear = () => {
       paint(null, null);
       state.accent = HOUSE;
+      state.src = null;
       publish(null, null);
     };
     if (!urls.length) { clear(); return; }
 
+    // art with no colour in it (black and white) leaves the Colors tab's Accent on, not Steam's blue
+    const show = (src, picked) => {
+      state.accent = picked ? picked.accent : HOUSE;
+      state.src = src;
+      paint(src, picked && picked.accent, picked && picked.ink);
+      publish(src, picked && picked.accent, picked && picked.ink);
+      if (homeId) rememberForSignIn(src, homeId, picked || {});
+      if (appId) keepAppAccent(appId, picked);
+    };
     const attempt = i => {
       if (state.art !== key) return;
       if (i >= urls.length) { clear(); return; }
       const src = new URL(urls[i], location.href).href;
+      if (picks.has(src)) { show(src, picks.get(src)); return; }
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
         if (state.art !== key) return;
-        const picked = accentFrom(img) || { accent: HOUSE, ink: '#fff' };
-        state.accent = picked.accent;
-        paint(src, picked.accent, picked.ink);
-        publish(src, picked.accent, picked.ink);
-        if (homeId) rememberForSignIn(src, homeId, picked);
+        const picked = accentFrom(img);
+        picks.set(src, picked);
+        show(src, picked);
       };
       img.onerror = () => attempt(i + 1);
       img.src = src;
@@ -593,20 +644,70 @@
       .sort((a, b) => b.rt_last_time_played - a.rt_last_time_played)[0] || null;
   };
 
+  // A web page in the main window (the store, the community): Steam hides the library and
+  // shows the web view. Pages of the client's own with the library hidden, such as Millennium's
+  // settings, hide the web view too.
+  const onWebPage = () => {
+    const lc = document.querySelector('.LocalContentContainer');
+    const web = document.querySelector('.BrowserWrapper');
+    return !!lc && lc.style.display === 'none' && !!web && web.style.display !== 'none';
+  };
+  // The game whose page the main window is on, from its route. Between two games the old page
+  // is gone a moment before the new one's hero is in, and the home's art filled that gap: the
+  // Play button went from the last game's colour through the home's to the new one's (#27).
+  const gamePage = o => {
+    let m = null;
+    try { m = /^\/library\/app\/(\d+)/.exec(o.SteamUIStore.WindowStore.MainWindowInstance.m_history.location.pathname); } catch (e) { return null; }
+    if (!m) return null;
+    try { return { id: m[1], app: o.appStore.GetAppOverviewByAppID(Number(m[1])) }; } catch (e) { return { id: m[1], app: null }; }
+  };
+  const artOf = (src, id) => new RegExp(`(^|[/_])${id}[/_]`).test(new URL(src, location.href).pathname);
+  // Steam's copy of the picture, read on the spot where it is ours to read (its cache, custom
+  // art): loading it a second time put the colour a few frames behind the picture
+  const readHero = hero => {
+    if (hero.gdRead !== hero.src) {
+      hero.gdRead = hero.src;
+      const p = picks.has(hero.src) ? null : accentFrom(hero);
+      if (p) picks.set(hero.src, p);
+    }
+    return [hero.src];
+  };
+
   const wantedArt = () => {
     artFromHome = 0;
+    artForApp = '';
+    // On the store, community or downloads there is no game in view, so the client stays
+    // neutral — that way the window chrome never disagrees with the page inside it. Steam keeps
+    // the library in the page, hidden, once it has been shown, so what the page holds says
+    // nothing here: the store went on wearing the last game's colour, and the Colors tab's
+    // Accent never came back.
+    if (onWebPage()) return null;
+    const o = shared();
     const hero = heroElement();
-    if (hero) return hero.complete && hero.naturalWidth > 0 ? [hero.src] : KEEP;   // a game page is open
+    const page = o && gamePage(o);
+    if (page) {
+      artForApp = page.id;
+      // Steam's own pick once it is in; until then the game's candidates, so the colour
+      // turns over with the page instead of after its picture
+      const own = hero && artOf(hero.src, page.id);
+      if (own && hero.complete && hero.naturalWidth > 0) return readHero(hero);
+      if (appAccents.has(page.id) && !(state.src && artOf(state.src, page.id))) tint(...(appAccents.get(page.id) || []));
+      // a picture coming in changes nothing the page watches, so its arrival is a cue of its own
+      if (own && !hero.gdCue) { hero.gdCue = true; hero.addEventListener('load', () => soon(), { once: true }); }
+      if (!page.app) return KEEP;
+      const ready = detailsReady(o, page.app);
+      if (ready.done) return artFor(o, page.app).hero;
+      if (!ready.woken) { ready.woken = true; ready.promise.then(() => soon()); }
+      return KEEP;
+    }
+    if (hero) return hero.complete && hero.naturalWidth > 0 ? readHero(hero) : KEEP;   // a game page is open
 
     const mode = getComputedStyle(root).getPropertyValue('--gd-bg-mode').trim();
     if (mode === 'meadow' || mode === 'plain') return null;   // the options take over
 
-    // Only the library home borrows the last game's art. On the store, community
-    // or downloads there is no game in view, so the client stays neutral — that
-    // way the window chrome never disagrees with the page inside it.
+    // Only the library home borrows the last game's art.
     if (!document.querySelector('.LeftListSizableContainer')) return null;
 
-    const o = shared();
     const last = o ? lastPlayed(o) : null;
     if (!last) return null;
     const ready = detailsReady(o, last);
@@ -795,19 +896,20 @@
 
   /* ═════════════ the home header ═════════════ */
 
-  // The language option sets --gd-lang; English needs no override.
+  // The language option sets --gd-lang through lang-es.css, lang-uk.css or lang-fr.css.
+  // English needs no override.
   const locale = () => {
     const lang = getComputedStyle(root).getPropertyValue('--gd-lang').trim();
-    return lang === 'es' || lang === 'uk' ? lang : 'en';
+    return WORDS[lang] ? lang : 'en';
   };
-  // `sub` is the small second line under each number (switch «Home numbers: second line»)
+  // `sub` is the small second line under each number (switch «Home numbers: second line»);
+  // `ago` is how long since a game was played, after the hours on the Big Picture chip
+  const relativeEs = new Intl.RelativeTimeFormat('es', { numeric: 'always' });
   const WORDS = {
     es: { cont: 'Continuar', recent: 'Jugados recientemente', play: 'Jugar', stop: 'Detener', cancel: 'Cancelar', install: 'Instalar', games: 'Juegos', hours: 'Horas jugadas',
         disk: 'En disco, GB', twoWeeks: 'Horas en 2 semanas', unplayed: 'Sin jugar', perfect: 'Juegos perfectos',
-        today: 'Hoy', yday: 'Ayer', inGame: 'de juego', inTwoWeeks: 'en las últimas dos semanas',
+        today: 'Hoy', yday: 'Ayer', inGame: 'de juego', inTwoWeeks: 'en las últimas dos semanas', min: 'min', h: 'h',
         slOpen: 'Mostrar la lista de juegos', slClose: 'Ocultar la lista de juegos',
-        minute: 'min', hour: 'h', neverPlayed: 'sin jugar',
-        ago: (n, unit) => new Intl.RelativeTimeFormat('es', { numeric: 'always' }).format(-n, unit),
         ach: (n, of) => `${n} de ${of} ${plural(of, { one: 'logro', other: 'logros' })}`,
         sub: {
           games: n => `${n} ${plural(n, { one: 'instalado', other: 'instalados' })}`,
@@ -816,13 +918,13 @@
           average: n => `${n}% de promedio`,
           drives: n => `en ${n} ${plural(n, { one: 'unidad', other: 'unidades' })}`,
         },
+        ago: { never: 'sin jugar', min: n => relativeEs.format(-n, 'minute'), h: n => relativeEs.format(-n, 'hour'),
+          days: n => relativeEs.format(-n, 'day'), months: n => relativeEs.format(-n, 'month'), years: n => relativeEs.format(-n, 'year') },
         hello: h => (h < 5 ? 'Buenas noches,' : h < 12 ? 'Buenos días,' : h < 20 ? 'Buenas tardes,' : 'Buenas noches,') },
     uk: { cont: 'Продовжити', recent: 'Нещодавні ігри', play: 'Грати', stop: 'Зупинити', cancel: 'Скасувати', install: 'Встановити', games: 'Ігор', hours: 'Награно, год',
         disk: 'На дисках, ГБ', twoWeeks: 'За 2 тижні, год', unplayed: 'Не запущено', perfect: 'Ідеальні ігри',
-        today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні',
+        today: 'Сьогодні', yday: 'Учора', inGame: 'у грі', inTwoWeeks: 'за два тижні', min: 'хв', h: 'год',
         slOpen: 'Показати список ігор', slClose: 'Сховати список ігор',
-        minute: 'хв', hour: 'год', neverPlayed: 'ще не запускав',
-        ago: (n, unit) => `${n} ${{ minute: 'хв', hour: 'год', day: 'дн.', month: 'міс.', year: 'р.' }[unit]} тому`,
         ach: (n, of) => `${n} з ${of} досягнень`,
         sub: {
           games: n => `${n} встановлено`,
@@ -831,13 +933,13 @@
           average: n => `${n}% у середньому`,
           drives: n => `на ${n} ${plural(n, { one: 'диску', other: 'дисках' })}`,
         },
+        ago: { never: 'ще не запускав', min: n => `${n} хв тому`, h: n => `${n} год тому`, days: n => `${n} дн. тому`,
+          months: n => `${n} міс. тому`, years: n => `${n} р. тому` },
         hello: h => (h < 5 ? 'Доброї ночі,' : h < 12 ? 'Доброго ранку,' : h < 18 ? 'Доброго дня,' : h < 23 ? 'Доброго вечора,' : 'Доброї ночі,') },
     en: { cont: 'Continue', recent: 'Recently played', play: 'Play', stop: 'Stop', cancel: 'Cancel', install: 'Install', games: 'Games', hours: 'Hours played',
         disk: 'On disk, GB', twoWeeks: 'Hours, 2 weeks', unplayed: 'Unplayed', perfect: 'Perfect games',
-        today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks',
+        today: 'Today', yday: 'Yesterday', inGame: 'played', inTwoWeeks: 'in two weeks', min: 'min', h: 'h',
         slOpen: 'Show the game list', slClose: 'Hide the game list',
-        minute: 'min', hour: 'h', neverPlayed: 'never played',
-        ago: (n, unit) => `${n} ${unit === 'minute' ? 'min' : unit === 'hour' ? 'h' : n === 1 ? unit : unit + 's'} ago`,
         ach: (n, of) => `${n} of ${of} achievements`,
         sub: {
           games: n => `${n} installed`,
@@ -846,10 +948,28 @@
           average: n => `${n}% average`,
           drives: n => `on ${n} ${plural(n, { one: 'drive', other: 'drives' })}`,
         },
+        ago: { never: 'never played', min: n => `${n} min ago`, h: n => `${n} h ago`, days: n => `${n} days ago`,
+          months: n => `${n} ${n === 1 ? 'month' : 'months'} ago`, years: n => `${n} ${n === 1 ? 'year' : 'years'} ago` },
         hello: h => (h < 5 ? 'Good night,' : h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : h < 23 ? 'Good evening,' : 'Good night,') },
+    // French by Warzox. The chip's phrases follow "54 h ·" in mid-line, hence the small letters.
+    fr: { cont: 'Continuer', recent: 'Récemment joués', play: 'Jouer', stop: 'Arrêter', cancel: 'Annuler', install: 'Installer', games: 'Jeux', hours: 'Heures jouées',
+        disk: 'Espace disque (Go)', twoWeeks: 'Heures (14 jours)', unplayed: 'Non lancés', perfect: 'Jeux terminés à 100%',
+        today: 'Aujourd’hui', yday: 'Hier', inGame: 'jouées', inTwoWeeks: 'ces deux dernières semaines', min: 'min', h: 'h',
+        slOpen: 'Afficher la liste des jeux', slClose: 'Masquer la liste des jeux',
+        ach: (n, of) => `${n} sur ${of} succès`,
+        sub: {
+          games: n => `${n} ${plural(n, { one: 'installé', other: 'installés' })}`,
+          inGames: n => `sur ${n} ${plural(n, { one: 'jeu', other: 'jeux' })}`,
+          share: n => `${n} % de la bibliothèque`,
+          average: n => `${n} % en moyenne`,
+          drives: n => `sur ${n} ${plural(n, { one: 'disque', other: 'disques' })}`,
+        },
+        ago: { never: 'jamais joué', min: n => `il y a ${n} min`, h: n => `il y a ${n} h`, days: n => `il y a ${n} jours`,
+          months: n => `il y a ${n} mois`, years: n => `il y a ${n} ${n === 1 ? 'an' : 'ans'}` },
+        hello: h => (h < 5 ? 'Bonne nuit,' : h < 12 ? 'Bonjour,' : h < 18 ? 'Bon après-midi,' : h < 23 ? 'Bonsoir,' : 'Bonne nuit,') },
   };
   const W = () => WORDS[locale()];
-  // "one" or everything else is all the header's phrases need.
+  // "one" or everything else is all the header's phrases need, in any of the languages
   const plural = (n, forms) => (new Intl.PluralRules(locale()).select(n) === 'one' ? forms.one : forms.other);
   // A day of this year needs no year. An older one does, or "12 Oct" could be any October; with
   // «Home games → Whole library» the home shows games last played years ago.
@@ -866,21 +986,8 @@
     return dayShort.format(d);
   };
   const hoursOf = min => (min < 60
-    ? `${min} ${W().minute}`
-    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${W().hour}`);
-
-  const ago = ts => {
-    if (!ts) return W().neverPlayed;
-    const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
-    if (m < 60) return W().ago(m, 'minute');
-    if (m < 1440) return W().ago(Math.round(m / 60), 'hour');
-    const d = Math.round(m / 1440);
-    if (d === 1) return W().yday.toLowerCase();
-    if (d < 45) return W().ago(d, 'day');
-    // Past a month and a half, months; past a year, years.
-    if (d < 365) return W().ago(Math.round(d / 30.44), 'month');
-    return W().ago(Math.floor(d / 365.25), 'year');
-  };
+    ? `${min} ${W().min}`
+    : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${W().h}`);
 
   /* ═════════════ Big Picture: the focused game paints the screen ═════════════ */
 
@@ -913,8 +1020,21 @@
       return m ? Number(m[1]) : null;
     };
 
-    const hours = min => (min < 60 ? `${min} ${W().minute}`
-      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${W().hour}`);
+    const ago = ts => {
+      const say = W().ago;
+      if (!ts) return say.never;
+      const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
+      if (m < 60) return say.min(m);
+      if (m < 1440) return say.h(Math.round(m / 60));
+      const d = Math.round(m / 1440);
+      if (d === 1) return W().yday.toLowerCase();
+      if (d < 45) return say.days(d);
+      // past a month and a half, months; past a year, years ("843 days ago" says little)
+      if (d < 365) return say.months(Math.round(d / 30.44));
+      return say.years(Math.floor(d / 365.25));
+    };
+    const hours = min => (min < 60 ? `${min} ${W().min}`
+      : `${(min / 60).toLocaleString(locale(), { maximumFractionDigits: min < 6000 ? 1 : 0 })} ${W().h}`);
 
     /* the art layer */
     const WIDTH = 192, HEIGHT = 108, PAD = 12;
@@ -947,7 +1067,9 @@
     chip.id = 'gd-bpm-chip';
     let chipToken = 0;
     const renderChip = (o, app) => {
-      const header = document.querySelector('.BasicHome .Header');
+      // the top bar only: Steam's newer home calls each section's heading an h2.Header too,
+      // and the chip ended up beside "What's New" halfway down the screen (#24)
+      const header = document.querySelector('.BasicHome .Header:not(h1, h2, h3)');
       const mine = ++chipToken;
       if (!header || !app) { chip.remove(); return; }
       const min = app.minutes_playtime_forever || 0;
@@ -1649,7 +1771,7 @@
     const follow = el => new MutationObserver(() => soon()).observe(el, { attributes: true, attributeFilter: ['style'] });
     if (lc && lc !== slWatched) { slWatched = lc; follow(lc); }
     if (web && web !== slWatchedWeb) { slWatchedWeb = web; follow(web); }
-    const onWeb = !!lc && lc.style.display === 'none' && !!web && web.style.display !== 'none';
+    const onWeb = onWebPage();
     root.classList.toggle('gd-on-web', !!mode && onWeb);
     if (!mode || !onWeb) return;
     const list = document.querySelector('.LeftListSizableContainer');
@@ -1689,6 +1811,53 @@
     } catch (e) { reclassLooks = 30; /* Steam's code changed: nothing to fix this way */ }
   };
 
+  /* ═════════════ the Recent Games shelf: its big card like the home's Continue ═════════════ */
+
+  // Steam shows the last game on its header capsule, logo baked in low down, right where the
+  // time played goes. The card gets the hero and the logo the home's Continue card uses, laid
+  // over Steam's picture inside its own frame; Steam's picture stays under them until the hero
+  // has decoded, and stays alone for a game with no hero. css/steam.css draws the rest.
+  const appOfCard = card => {
+    const key = Object.keys(card).find(k => k.startsWith('__reactFiber'));
+    for (let f = key && card[key], i = 0; f && i < 10; f = f.return, i++) {
+      const p = f.memoizedProps;
+      if (p && p.app && typeof p.app.appid === 'number') return p.app;
+    }
+    return null;
+  };
+  const dressFeatured = () => {
+    if (!isMain) return;
+    const o = shared();
+    const card = o && document.querySelector('.RecentGames .FeaturedCapsule');
+    const frame = card && card.querySelector('.LandscapeImage');
+    if (!frame) return;
+    const app = appOfCard(card);
+    if (!app) return;
+    let art = frame.querySelector(':scope > .gd-feat');
+    if (art && art.dataset.app === String(app.appid)) return;
+    if (art) art.remove();
+    card.removeAttribute('data-gd-feat');
+    art = document.createElement('div');
+    art.className = 'gd-feat';
+    art.dataset.app = String(app.appid);
+    art.innerHTML = '<img class="gd-feat-art" alt=""><img class="gd-feat-logo" alt="">';
+    frame.append(art);
+    const hero = art.querySelector('.gd-feat-art');
+    const logo = art.querySelector('.gd-feat-logo');
+    // only a hero with a logo replaces Steam's picture: the hero has no name on it. A game
+    // missing either keeps the element, empty, so it is not asked for again every second.
+    const both = () => {
+      if (hero.complete && hero.naturalWidth && logo.complete && logo.naturalWidth && art.isConnected) card.setAttribute('data-gd-feat', '');
+    };
+    hero.addEventListener('load', both);
+    logo.addEventListener('load', both);
+    detailsReady(o, app).promise.then(() => {
+      const urls = artFor(o, app);
+      chain(hero, urls.hero, () => { art.hidden = true; });
+      chain(logo, urls.logo, () => { art.hidden = true; });
+    });
+  };
+
   const tick = () => {
     mountLayer();
     fixReclassAnimation();
@@ -1699,6 +1868,7 @@
     const want = wantedArt();
     if (want !== KEEP) applyArt(want);
     try { buildHome(); } catch (e) { /* the home header is a bonus, never break the client over it */ }
+    try { dressFeatured(); } catch (e) { /* Steam's own card stays */ }
     syncPlay();
   };
 

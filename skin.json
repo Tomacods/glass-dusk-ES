@@ -2,7 +2,7 @@
   "name": "Glass Dusk ES",
   "description": "Cristal ahumado sobre la ilustración del juego abierto, que define el color de acento del cliente. Personaliza la biblioteca, la tienda, los menús, Big Picture y la superposición del juego. Traducción al español de Glass Dusk.",
   "author": "Yareli",
-  "version": "1.7.2",
+  "version": "1.7.8",
   "tags": [
     "Dark",
     "Glass",
@@ -41,6 +41,14 @@
               ".*"
             ],
             "src": "css/options/lang-uk.css"
+          }
+        },
+        "Français": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/lang-fr.css"
           }
         }
       }

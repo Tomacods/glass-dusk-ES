@@ -22,6 +22,14 @@
   box-shadow: none !important;
 }
 [data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child { border-radius: 10px; }
+/* the section you are on, the one link there with a second class: Steam's blue wash, edge and
+   lettering (#24) */
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child[class*=" "] {
+  background-image: none !important;
+  background-color: color-mix(in srgb, var(--gd-accent) 26%, transparent) !important;
+  border-right-color: var(--gd-accent) !important;
+}
+[data-gd-event-calendar] > div > .Panel > .Panel:first-child a.Focusable > div:only-child[class*=" "] * { color: var(--gd-ink) !important; }
 /* a day: its ground, and its heading, which stays under the top while the day scrolls past */
 [data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div { background: none !important; }
 [data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div > div:first-child:not(:only-child) {
@@ -34,6 +42,16 @@
   border-radius: var(--gd-r-md) !important;
   overflow: hidden;
 }
+/* one game's news (/news/app/…): its band over the feed, the column's one other child, was
+   Steam's grey (#24). The panel at the left, the band and the first day's heading meet there, so
+   they read as one piece: round where it faces the page, square where they touch (#32). */
+[data-gd-event-calendar] > div > .Panel > .Panel:nth-child(2) > div:first-child:not(:only-child) {
+  background: rgba(14, 17, 27, .82) !important;
+  background-image: none !important;
+  border-radius: 0 var(--gd-r-md) 0 0;
+}
+[data-gd-event-calendar] > div > .Panel:has(> .Panel:nth-child(2) > div:first-child:not(:only-child)) > .Panel:first-child { border-top-right-radius: 0; }
+[data-gd-event-calendar] > div > .Panel > .Panel + .Panel .Panel[style] > div > div:first-child:not(:only-child) { border-radius: 0 0 var(--gd-r-md) 0; }
 
 
 /* a piece of news opened from the News Hub: the article and its column are one card */
