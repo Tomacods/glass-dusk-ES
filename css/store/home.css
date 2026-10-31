@@ -73,4 +73,12 @@
   background-image: linear-gradient(77deg, color-mix(in srgb, var(--gd-accent) 46%, #0b0f18) 0%, rgba(14, 17, 27, .94) 50%, rgba(14, 17, 27, 0) 70%) !important;
 }
 
+/* ═══════════════ store home: the preview beside the tabs ═══════════════
+   At 910 px and less the store drops the preview beside New Releases, Top Sellers and the
+   rest. With the game list out beside the store (#17) the page often ends up just under
+   that, so the preview went whenever the list came out (#26). It stays down to 760 px. */
+@media (min-width: 760px) and (max-width: 910px) {
+  .home_rightcol { display: flex !important; }
+}
+
 }   /* :where(html.gd-store) */

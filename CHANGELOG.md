@@ -1,5 +1,11 @@
 # Changelog
 
+## Sincronización con Glass Dusk 1.7.8 — 2026-10-31
+
+- Se incorporan las actualizaciones 1.7.3 a 1.7.8 del repositorio original.
+- Se conservan la traducción, los ajustes en español y el español como idioma predeterminado.
+- Se incorpora el francés del tema original y se adaptan los textos de última partida al nuevo formato de traducciones.
+
 ## Traducción al español — 2026-10-28
 
 - Versión **Glass Dusk ES**, basada en Glass Dusk 1.7.2 de Yareli.
@@ -8,6 +14,84 @@
 - Se conservan a continuación las notas originales del autor, en inglés.
 
 Versions follow [semantic versioning](https://semver.org). The repository starts at 1.2.0. The two earlier versions were built before it existed, and they are described from the development notes.
+
+## 1.7.8 — 2026-10-30
+
+**Store**
+- Wishlist: with an extension that adds to the rows, such as Allkeyshop's prices, the footer lay over the last games, see-through, its text on theirs (from Discord). Steam works out the list's height from a fixed row height. The footer now moves down past the last game whenever the rows run longer than that.
+
+## 1.7.7 — 2026-10-30
+
+**Library**
+- In a narrow window *Achievements* dropped off the play bar as soon as a game started, and came back a good while after it closed ([#31](https://github.com/Yareli0i/glass-dusk/issues/31), reported by @Samet-Yilmazz). The bar shows one row of stats and hides what does not fit, and the controller button that comes with a running game took the last of the room. The stats now close up when room is short, and *Cloud Status* is the first to go.
+- Opening *Library Filters* left a grey bar on the search field ([#32](https://github.com/Yareli0i/glass-dusk/issues/32), reported by @Scrapper1824). It came in with 1.7.4.
+- A shelf's heading: the text had no room inside its drop-down, the sort one kept a grey square inside the pill, the grip sat off the middle of its bar, and the arrows filled their buttons (#32).
+- The lists drop-downs open, such as the one that picks a shelf, were in Steam's grey (#32).
+
+**Store**
+- A piece of news in its window: the votes, comments and share buttons at its foot were Steam's, and so were the close and previous / next buttons beside it (#32).
+- One game's news: the panel at the left, the band at the top and the first day's heading read as one piece, round on the outside and square where they meet (#32).
+
+## 1.7.6 — 2026-10-30
+
+**Theme language**
+- Français, translated by @ImWarzox: Look → Theme language → Français puts the library home's header, the Big Picture chip and the dates in French.
+
+**Library**
+- The *Recent Games* shelf: the big card's *Play* button covered the start of *TIME PLAYED*, which Steam sets further left than the lines under it ([#24](https://github.com/Yareli0i/glass-dusk/issues/24), reported by @Scrapper1824). The heading lines up with them now, and the button on a capsule is the theme's own *Play*, round and in the accent, instead of Steam's green square.
+- The rest of that shelf is in the theme too. Its big card is laid out like the home's *Continue* card: the game's hero across the whole card, its logo at the top left, the time played on the dark at its foot. A game with no hero or logo keeps Steam's picture over a dark glass footer. The dates over each group take the theme's small heading, and *New to library* is a dark tab with the accent instead of Steam's blue slab.
+- A game's activity: the news cards had a square hairline around their rounded corners, Steam's own frame showing past them (#24).
+- The *+2* after the friends who play a game, under its capsule, was a square grey tile (#24).
+- Notifications: every row but the pinned ones sat on a square grey slab, lighter while unread (#24).
+
+**Store**
+- In the search box's suggestions, *On Wishlist* and *In Library* were black on the theme's dark chip, both the icon and the words that open on hover ([#29](https://github.com/Yareli0i/glass-dusk/issues/29), reported by @FenrirM70).
+- The reviews line in the preview beside *New & Trending* touched the edges of its plate (#24).
+- One game's news (*Steam News* and the like): the band with the game across the top was Steam's grey, and so was a piece of news opened in its window (#24).
+
+**Big Picture**
+- The top bar: an item under the pointer sat on a grey square, and the one the controller is on on a white square with black icons. Both are rounded now, the controller's in the accent (#24).
+- The status beside your round avatar was a square bar down its side; it is a dot at its foot.
+
+## 1.7.5 — 2026-10-29
+
+**Accent**
+- Opening another game, the *Play* button changed colour twice: it kept the last game's colour, went to the colour of the game on the library home, and only then to its own ([#27](https://github.com/Yareli0i/glass-dusk/issues/27), reported by @Takeshi06). Between two pages the old one is gone a moment before the new one's art is in, and the theme filled that gap with the home's art. It now goes by the game the page is for, and remembers each game's colour, so a game you have opened before comes up in its colour straight away, and a new one turns over once, as its art comes in.
+- The *Accent* from the Colors tab stopped coming back once the library had been open: the store and the other web pages went on wearing the last game's colour until Steam was restarted (from Discord). Steam now keeps the library in the window, hidden, while a web page is shown, and the theme took it for the page on screen.
+- Game art with no colour in it, black and white, gave Steam's blue. It leaves the Colors tab's *Accent* on instead.
+
+## 1.7.4 — 2026-10-29
+
+**Game list**
+- The edge of the list you could drag to change its width was not the edge you could see: Steam's grip sat in the gap beside the list's glass. It now reaches over the glass edge, with the list on either side ([#26](https://github.com/Yareli0i/glass-dusk/issues/26), reported by @PlzCarryMe).
+- *Library Filters* opened over the list itself, the very games it filters. It opens beside the list now, level with the search row, so the list stays in view while you pick ([#24](https://github.com/Yareli0i/glass-dusk/issues/24), reported by @Scrapper1824). Its headings and the chips of picked tags and friends lost Steam's blue, and the button no longer grows a grey tab while the panel is open.
+
+**Library**
+- On a game's page, the tab under the pointer (*Discussions*, *Guides*…) showed a square grey box inside its pill.
+- Properties: the bar beside the chosen beta branch, the radio buttons, and the size and drive under *Installed Files* were Steam's blue.
+- The dialog that asks how to launch a game with several ways to start is in the theme: rows on glass, the accent on *Play* (#24).
+
+**Millennium**
+- Millennium's own settings (Steam → Millennium) sat in Steam's grey with a blue title. They are on the theme's glass now, like the library, with the page you are on in the accent (#24).
+
+**Store**
+- On the front page, the preview beside *New & Trending*, *Top Sellers* and the rest went away whenever the game list came out beside the store (#26): the store drops it once the page is 910 px wide or less, and with the list out the page often is. It now stays down to 760 px.
+- News Hub: the section you are on was marked in Steam's blue (#24).
+
+**Big Picture**
+- Once the home was scrolled, a grey band lay under the top bar and the tabs: Steam's own wide blur over the art. It is smoked glass now, and Big Picture no longer blurs the whole width on every frame there (#24).
+- The hours chip of the focused game could land beside a section heading halfway down the home, since Steam now calls those headings *Header* too. It keeps to the top bar (#24).
+
+**Sign-in**
+- With four accounts or more, *Who's playing?* looked cramped: Steam shrank the accounts to fit while the *Add Account* tile stayed full size. The card now takes the window's width and the tiles close up, so four accounts keep full-size tiles, and *Add Account* always matches them (from Discord).
+
+## 1.7.3 — 2026-10-28
+
+**Library**
+- On the page of a game with every achievement unlocked, the ribbon covered *You've unlocked all achievements* and the bar under it ([#25](https://github.com/Yareli0i/glass-dusk/issues/25), reported by @aalhelou). The slip is Steam's own, and it shows without the theme too: Steam leaves room on the left for the ribbon, then a later rule of its own takes that room away. The theme gives it back and fits the ribbon inside the slab.
+
+**Store**
+- On a game's page, pointing at the head of a review (its thumb and hours, most often in the narrow *Recently Posted* column) turned the whole window one colour, the one of the accent, until the pointer moved on ([#23](https://github.com/Yareli0i/glass-dusk/issues/23), reported by @Kvtg-dotcom). Steam shows its *Read full review* tip there on a layer that covers the window, and the theme took that layer for the thumb and painted it. It tells them apart now.
 
 ## 1.7.2 — 2026-10-26
 

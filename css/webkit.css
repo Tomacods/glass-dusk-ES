@@ -592,6 +592,35 @@ dialog [role=dialog] [role=button][aria-label=Previous] {
 }
 .CapsuleDecorators span svg * { fill: currentColor !important; }
 
+/* A piece of news in its window (from the News Hub or a game's page): the game's band across
+   the top and each article were Steam's grey (#24) */
+.AppPartnerEventsBanner {
+  background: rgba(14, 17, 27, .82) !important;
+  background-image: none !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div {
+  background: rgba(14, 17, 27, .94) !important;
+  background-image: none !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > img:first-child { border-radius: var(--gd-r-md) var(--gd-r-md) 0 0; }
+/* Its foot: votes, comments and share, on the same plates and pills as on the news page itself,
+   and the close and previous / next buttons beside it (#32) */
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child { background: none !important; background-image: none !important; }
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:first-child > div,
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:not(:first-child) {
+  background: rgba(255, 255, 255, .045) !important;
+  border-radius: var(--gd-r-md) !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child :is(.Panel[role=button], a.Focusable > div) {
+  background: var(--gd-field) !important;
+  border-radius: 999px !important;
+  color: var(--gd-ink) !important;
+}
+.AppPartnerEventsBanner + .Panel > div:nth-child(2) > div > .Panel:last-child > div:first-child > div > div:first-child { color: var(--gd-accent, var(--gd-house)) !important; }
+.AppPartnerEventsBanner + .Panel > div:first-child div:has(> svg) { background: rgba(12, 15, 24, .84) !important; border-radius: 999px !important; }
+.AppPartnerEventsBanner + .Panel > div:first-child div:has(> svg):hover { background: rgba(255, 255, 255, .16) !important; }
+
 /* The price plate of the newer pages (hubs, charts, the calendar, the cart, the Discovery
    Queue window). Its last child is the price; "New", "Prepurchase" and the percent come
    before it as leaves: lime on green there, and the final price lime too. */
@@ -901,7 +930,8 @@ button.DialogButton.Secondary:hover { background: rgba(255, 255, 255, .16) !impo
 .home_rightcol,
 #tab_preview_container { background: none !important; }
 .tab_preview .tab_title { color: var(--gd-ink) !important; }
-.tab_review_summary { background: rgba(255, 255, 255, .06) !important; border-radius: 8px !important; }
+/* Steam's reviews line sat bare at the column's edge; on its own plate it needs room inside */
+.tab_review_summary { background: rgba(255, 255, 255, .06) !important; border-radius: 8px !important; padding: 6px 10px !important; }
 
 /* the two large capsules that open New Releases and Upcoming */
 .newonsteam_headercap,
@@ -1094,8 +1124,9 @@ form:has(> div > input[type=text]) button { background: var(--gd-accent) !import
 }
 .Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile]:hover,
 .Panel[data-gd-strip] form[role=search] + div a:not(.Focusable):hover { background: rgba(255, 255, 255, .11) !important; }
-/* "in library" on a row */
-.Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile] > div:nth-child(n+3) { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; border-radius: 0 0 6px 0; }
+/* "in library" / "on wishlist" on a row: an icon that opens into its words on hover. Steam's
+   pale tab had black text and a black icon; on the dark chip they take our ink. */
+.Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile] > div:nth-child(n+3) { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; border-radius: 0 0 6px 0; color: var(--gd-ink) !important; }
 /* a row's discount: lime on green */
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child { background: var(--gd-accent) !important; border-radius: 4px !important; }
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child,

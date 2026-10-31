@@ -2,7 +2,7 @@
 
 Traducción al español de [Glass Dusk](https://github.com/Yareli0i/glass-dusk), el tema de Yareli para el cliente de escritorio de Steam con [Millennium](https://steambrew.app). Los paneles de cristal ahumado se superponen a la ilustración del juego abierto, y sus colores se usan en los botones y elementos destacados. Al abrir otro juego, cambia el color de todo el cliente.
 
-Esta versión incluye los textos del tema y sus ajustes en español. El español está seleccionado de forma predeterminada; también se conservan el inglés y el ucraniano para los textos del tema. Los textos propios de Steam siguen el idioma configurado en Steam.
+Esta versión incluye los textos del tema y sus ajustes en español. El español está seleccionado de forma predeterminada; también están disponibles el inglés, el ucraniano y el francés para los textos del tema. Los textos propios de Steam siguen el idioma configurado en Steam.
 
 ![Inicio de la biblioteca](images/library.jpg)
 
@@ -44,7 +44,7 @@ Los cambios se aplican después de reiniciar Steam. Los valores en **negrita** s
 
 | Ajuste | Valores | Función |
 |---|---|---|
-| Idioma del tema | **Español** · English · Українська | Idioma del encabezado de inicio, la etiqueta de Big Picture y las fechas. El idioma propio de Steam se configura por separado. |
+| Idioma del tema | **Español** · English · Українська · Français | Idioma del encabezado de inicio, la etiqueta de Big Picture y las fechas. El idioma propio de Steam se configura por separado. |
 | Fondo | **Ilustración del juego** · Pradera · Atardecer liso | Imagen o color que aparece detrás del cristal. |
 | Ilustración de fondo | **Normal** · Suave · Intensa | Intensidad con la que se ve la ilustración del juego. |
 | Color de acento | **Ilustración del juego** · Fijo | *Fijo* mantiene en todo el cliente el color de acento elegido en la pestaña de colores. |
@@ -104,6 +104,7 @@ El tema original es gratuito. Puedes apoyar a su autor, Yareli, en [Ko-fi](https
 - Código: [licencia MIT](LICENSE).
 - Fuente de las cifras: JetBrains Mono ExtraBold, [SIL OFL 1.1](assets/OFL-JetBrainsMono.txt).
 - Fondo de pradera: creado por el autor original.
+- Traducción al francés: [Warzox](https://github.com/ImWarzox).
 - Las ilustraciones de los juegos proceden de tu biblioteca de Steam y pertenecen a sus titulares.
 
 Cambios de esta traducción e historial original: [CHANGELOG.md](CHANGELOG.md). Documentación técnica del tema original, en inglés: [DEVELOPMENT.md](DEVELOPMENT.md).
