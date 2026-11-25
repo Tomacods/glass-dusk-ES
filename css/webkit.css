@@ -327,12 +327,11 @@ header#global_header { display: none !important; }
 :is([data-gd-discounts-and-events], [data-gd-personal-calendar-home]) .carousel__dot--selected rect { fill: var(--gd-accent) !important; }
 /* On a wide page the front page's main carousel shows its neighbours at both sides, and
    an arrow there is as large as the neighbour it sits on: the round backdrop became a
-   pale oval over a square picture (#10). No backdrop there, and the neighbours get the
-   corners of a card. */
+   pale oval over a square picture (#10). No backdrop there. Every capsule gets the corners
+   of a card: the one in the middle stuck out of the rounded carousel around it. */
 .carousel_wide_mode .arrow.left,
 .carousel_wide_mode .arrow.right { background: none !important; border-radius: 0 !important; }
-.carousel_wide_mode .store_main_capsule.prev,
-.carousel_wide_mode .store_main_capsule.next { border-radius: var(--gd-r-md) !important; overflow: hidden; }
+.store_main_capsule { border-radius: var(--gd-r-md) !important; overflow: hidden; }
 .carousel_thumbs div.focus,
 .handle.focus { background: var(--gd-accent) !important; }
 
@@ -386,9 +385,10 @@ header#global_header { display: none !important; }
 
 /* The strip under a capsule's picture (tags, an update's text, a creator's name) is Steam's
    blue radial gradient; here it is the capsule's own quiet half. */
-.deep_dive_key_tags,
 .recently_updated_desc,
 .creator_capsule_ctn { background: rgba(255, 255, 255, .05) !important; }
+/* under the cards of "Because You Played" that read as grey; the store's navy instead (#33) */
+.deep_dive_key_tags { background: rgba(120, 140, 255, .08) !important; }
 .deep_dive_tag,
 .tab_preview .tags a {
   background: var(--gd-field) !important;
@@ -625,7 +625,7 @@ dialog [role=dialog] [role=button][aria-label=Previous] {
    Queue window). Its last child is the price; "New", "Prepurchase" and the percent come
    before it as leaves: lime on green there, and the final price lime too. */
 .StoreSalePriceWidgetContainer { background: none !important; align-items: center; }
-.StoreSalePriceWidgetContainer > div:not(:last-child) {
+.StoreSalePriceWidgetContainer > div:not(:last-child):not(:empty):not(:has(*)) {
   margin-right: 4px;
   background: var(--gd-accent) !important;
   border-radius: 6px !important;
@@ -784,6 +784,8 @@ body:has(> #StoreTemplate) { background: transparent !important; }
 }
 /* a discount there: the percent lime on green, as everywhere in the newer store */
 #StoreTemplate [role=link][aria-label*="%"] > div:first-child { background: var(--gd-accent) !important; border-radius: 8px; }
+/* with one discount Steam paints the percent itself, green and square, over that plate */
+#StoreTemplate [role=link][aria-label*="%"] > div:first-child > div { background: none !important; }
 #StoreTemplate [role=link][aria-label*="%"] > div:first-child,
 #StoreTemplate [role=link][aria-label*="%"] > div:first-child * { color: var(--gd-accent-ink) !important; }
 #StoreTemplate [role=link][aria-label*="%"] > div:last-child > div:first-child { color: rgba(238, 241, 248, .45) !important; }
@@ -1129,6 +1131,7 @@ form:has(> div > input[type=text]) button { background: var(--gd-accent) !import
 .Panel[data-gd-strip] a.Focusable[href*="/app/"][data-gd-imgtile] > div:nth-child(n+3) { background: rgba(12, 15, 24, .84) !important; box-shadow: none !important; border-radius: 0 0 6px 0; color: var(--gd-ink) !important; }
 /* a row's discount: lime on green */
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child { background: var(--gd-accent) !important; border-radius: 4px !important; }
+.Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child > div { background: none !important; }
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child,
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:first-child * { color: var(--gd-accent-ink) !important; }
 .Panel[data-gd-strip] [role=link][aria-label*="%"] > div:last-child > div:first-child { color: rgba(238, 241, 248, .45) !important; }
@@ -1462,6 +1465,16 @@ a.linkbar,
 p.reason a,
 a.all_languages,
 .block_header .right a { color: var(--gd-link) !important; }
+/* and in the older blocks: the headings inside a description, the ticks in the table of
+   languages, "Bundle" before a bundle's name and "Includes N items" under it, "Your New Release
+   Queue"; the kind of news on an event card, which js/dusk.js marks */
+.game_area_description h2.bb_tag,
+.game_area_description h2.bb_tag strong,
+td.checkcol span,
+.game_area_purchase_game .bundle_label,
+.package_contents b,
+.discovery_queue_h2 > a,
+[data-gd-evtype] { color: var(--gd-link) !important; }
 
 /* ═══════════════ new since the first pass (October 2026) ═══════════════
    What Steam added or redrew after the store was first done, and is not tied to one kind of
@@ -1490,6 +1503,32 @@ a.all_languages,
   background: var(--gd-accent) !important;
   border-radius: 6px !important;
   color: var(--gd-accent-ink) !important;
+}
+
+/* ═══════════════ the design pass (November 2026) ═══════════════
+   What was still Steam's own colour once every page had been gone through. */
+
+/* selected text */
+::selection { background: color-mix(in srgb, var(--gd-accent) 60%, transparent) !important; color: #fff !important; }
+
+/* home: the line under the open list (Popular New Releases, Top Sellers…) */
+.home_tab_button.active { border-bottom-color: var(--gd-accent) !important; }
+
+/* a game's page: Steam's blue glow behind its top, over the art */
+.game_page_background_ctn { background-image: none !important; }
+/* "In library" on a package you own: a lime tab */
+.package_in_library_flag.in_own_library {
+  background: var(--gd-accent) !important;
+  border-radius: 6px 6px 0 0;
+  color: var(--gd-accent-ink) !important;
+}
+/* what a game supports (Single-player, Steam Cloud…): each name on a plate of Steam's blue */
+.game_area_details_specs_ctn .label { background: rgba(255, 255, 255, .05) !important; }
+
+/* "Pre-Purchase" beside a price, on a slate tab */
+.StoreSalePrepurchaseLabel > span {
+  background: rgba(12, 15, 24, .84) !important;
+  color: var(--gd-ink) !important;
 }
 
 }   /* :where(html.gd-store) */

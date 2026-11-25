@@ -2,7 +2,7 @@
   "name": "Glass Dusk ES",
   "description": "Cristal ahumado sobre la ilustración del juego abierto, que define el color de acento del cliente. Personaliza la biblioteca, la tienda, los menús, Big Picture y la superposición del juego. Traducción al español de Glass Dusk.",
   "author": "Yareli",
-  "version": "1.7.8",
+  "version": "2.0.4",
   "tags": [
     "Dark",
     "Glass",
@@ -21,6 +21,22 @@
   "Steam-WebKit": "css/webkit.css",
   "RootColors": "css/root.css",
   "Conditions": {
+    "Saldo de la cartera": {
+      "description": "El saldo de la barra superior. Desenfocado, se muestra al pasar el puntero por encima.",
+      "tab": "Apariencia",
+      "default": "Mostrar",
+      "values": {
+        "Mostrar": {},
+        "Desenfocar hasta pasar el puntero": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/wallet-blur.css"
+          }
+        }
+      }
+    },
     "Idioma del tema": {
       "description": "Textos propios del tema: encabezado del inicio, información de juego en Big Picture y fechas.",
       "tab": "Apariencia",
@@ -102,7 +118,7 @@
       }
     },
     "Color de acento": {
-      "description": "Color de los botones y elementos destacados. Fijo utiliza el color de acento de la pestaña Colores.",
+      "description": "Color de los botones y elementos destacados. Ilustración del juego: los colores del juego en pantalla y, si no hay ninguno (tienda, comunidad), los del último. Fijo utiliza el color de acento de la pestaña Colores.",
       "tab": "Apariencia",
       "default": "Ilustración del juego",
       "values": {
@@ -113,6 +129,22 @@
               ".*"
             ],
             "src": "css/options/accent-fixed.css"
+          }
+        }
+      }
+    },
+    "Estilo del acento": {
+      "description": "Bicolor toma un segundo color de la ilustración del juego, cercano al primero e igual de luminoso, y lleva los botones principales y las barras de progreso de uno a otro. Sólido usa un solo color.",
+      "tab": "Apariencia",
+      "default": "Bicolor",
+      "values": {
+        "Bicolor": {},
+        "Sólido": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/accent-solid.css"
           }
         }
       }
@@ -141,6 +173,38 @@
         }
       }
     },
+    "Acabado del cristal": {
+      "description": "La superficie de los paneles de cristal: un grano fino y los bordes que miran a la luz iluminados con el color de acento. Liso es el cristal suave de las versiones anteriores.",
+      "tab": "Apariencia",
+      "default": "Grano y borde iluminado",
+      "values": {
+        "Grano y borde iluminado": {},
+        "Grano": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/finish-grain.css"
+          }
+        },
+        "Borde iluminado": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/finish-lit.css"
+          }
+        },
+        "Liso": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/finish-plain.css"
+          }
+        }
+      }
+    },
     "Esquinas": {
       "description": "Redondez de las esquinas de paneles y tarjetas.",
       "tab": "Apariencia",
@@ -161,6 +225,22 @@
               ".*"
             ],
             "src": "css/options/radius-sharp.css"
+          }
+        }
+      }
+    },
+    "Transiciones": {
+      "description": "Al abrir otro juego, el color de acento pasa gradualmente del anterior al nuevo y la ilustración detrás del cristal se funde con la siguiente. Instantáneas cambia ambas cosas de golpe.",
+      "tab": "Apariencia",
+      "default": "Graduales",
+      "values": {
+        "Graduales": {},
+        "Instantáneas": {
+          "TargetCss": {
+            "affects": [
+              ".*"
+            ],
+            "src": "css/options/motion-off.css"
           }
         }
       }
@@ -209,6 +289,38 @@
               ".*"
             ],
             "src": "css/options/login-steam.css"
+          }
+        }
+      }
+    },
+    "En reposo": {
+      "description": "Si dejas la biblioteca sin tocar, Steam muestra la ilustración del juego en pantalla con su logotipo, la hora y la fecha; el primer movimiento lo devuelve todo. Nunca ocurre mientras se descarga algo o se reproduce un video.",
+      "tab": "Apariencia",
+      "default": "A los 5 minutos",
+      "values": {
+        "A los 5 minutos": {},
+        "A los 2 minutos": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/still-2.css"
+          }
+        },
+        "A los 15 minutos": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/still-15.css"
+          }
+        },
+        "Nunca": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/still-off.css"
           }
         }
       }
@@ -337,6 +449,22 @@
               "^Steam$"
             ],
             "src": "css/options/stat-sub-on.css"
+          }
+        }
+      }
+    },
+    "Inicio: dos semanas en color": {
+      "description": "Una barra bajo el saludo con cada juego jugado en las últimas dos semanas, tan ancho como su parte de las horas y con sus propios colores. Pasa el puntero por una parte para ver el juego y sus horas; un clic lo abre.",
+      "tab": "Biblioteca",
+      "default": "yes",
+      "values": {
+        "yes": {},
+        "no": {
+          "TargetCss": {
+            "affects": [
+              "^Steam$"
+            ],
+            "src": "css/options/fortnight-off.css"
           }
         }
       }
@@ -517,8 +645,24 @@
         "Steam": {}
       }
     },
+    "Inicio de Big Picture": {
+      "description": "Ilustración grande: la ilustración del juego seleccionado, nítida, ocupa toda la primera pantalla con el carrusel al pie, como en el modo Big Art de Steam, esté o no activado ese ajuste de Steam (Configuración → Inicio). De Steam: la disposición depende de ese ajuste, sobre la ilustración suavizada del tema.",
+      "tab": "Big Picture y superposición",
+      "default": "Ilustración grande",
+      "values": {
+        "Ilustración grande": {},
+        "De Steam": {
+          "TargetCss": {
+            "affects": [
+              "GamepadUIPopupWindowBody"
+            ],
+            "src": "css/options/bpm-home-steam.css"
+          }
+        }
+      }
+    },
     "Información de juego en Big Picture": {
-      "description": "Información en la esquina superior izquierda: logotipo, horas jugadas y última partida.",
+      "description": "Los datos del juego seleccionado bajo el carrusel, junto a la etiqueta de Steam: tiempo de juego, última sesión y logros.",
       "tab": "Big Picture y superposición",
       "default": "yes",
       "values": {
